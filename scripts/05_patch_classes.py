@@ -41,6 +41,32 @@ def _resolve(p, base):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
+# 제외 목록
+# ──────────────────────────────────────────────────────────────────────────────
+
+def _load_exclusions(paths, base):
+    """patches/exclusions.json에서 blocked_classes, blocked_strings 로드."""
+    excl_file = _resolve(paths.get('exclusions', ''), base)
+    if excl_file and os.path.exists(excl_file):
+        with open(excl_file, encoding='utf-8') as f:
+            excl = json.load(f)
+        return set(excl.get('blocked_classes', [])), set(excl.get('blocked_strings', []))
+    return set(), set()
+
+
+def _is_blocked_class(classname: str, blocked_classes: set) -> bool:
+    """클래스 경로가 blocked_classes에 포함되는지 확인 (접미 '/'는 패키지 전체 매치)."""
+    for bc in blocked_classes:
+        if bc.endswith('/'):
+            if classname.startswith(bc):
+                return True
+        else:
+            if classname == bc:
+                return True
+    return False
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Java Modified UTF-8 디코딩/인코딩
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -243,6 +269,15 @@ def main():
         elif key == 'translations':
             print(f"ERROR: Translation file not found: {p}", file=sys.stderr)
             sys.exit(1)
+
+    # exclusions 로드: blocked_classes, blocked_strings
+    blocked_classes, blocked_strings = _load_exclusions(paths, base)
+    if blocked_strings:
+        before = len(translations)
+        translations = {k: v for k, v in translations.items() if k not in blocked_strings}
+        removed = before - len(translations)
+        if removed:
+            print(f"  제외: blocked_strings {removed}개")
     print(f"Loaded {len(translations)} translations (common + api)")
 
     os.makedirs(os.path.dirname(out_jar), exist_ok=True)
@@ -264,6 +299,9 @@ def main():
 
             if info.filename.endswith('.class'):
                 total += 1
+                if _is_blocked_class(info.filename, blocked_classes):
+                    dst_zip.writestr(info, data)
+                    continue
                 result = rebuild_class(data, translations)
                 if result is not None:
                     dst_zip.writestr(info, result)

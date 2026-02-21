@@ -1,0 +1,16 @@
+{
+  "_comment": "JAR 패치 제외 목록. blocked_classes: 절대 패치하지 않을 클래스 경로 (접미 '/'는 패키지 전체). blocked_strings: 번역 사전에 있더라도 절대 교체하지 않을 문자열 (클래스 단위 제외가 불가능한 경우에만 사용).",
+
+  "blocked_classes": [
+    "com/fs/starfarer/launcher/",
+    "com/fs/starfarer/StarfarerLauncher.class",
+
+    "com/fs/starfarer/campaign/accidents/A.class",
+
+    "com/fs/starfarer/campaign/save/CampaignGameManager.class",
+
+    "com/fs/starfarer/api/impl/campaign/CoreLifecyclePluginImpl.class"
+  ],
+
+  "blocked_strings": []
+}

@@ -143,7 +143,17 @@ def apply_translations_to_dir(mod_dir: Path, translations: dict):
     print(f"  번역 적용: JSON {json_changed}개, CSV {csv_changed}개 파일 변경")
 
 
-def build_mod(mod_cfg: dict, paths: dict, python_cmd: str):
+def _load_blocked_strings(paths) -> set:
+    """patches/exclusions.json에서 blocked_strings 로드."""
+    excl_file = _resolve(paths.get('exclusions', ''))
+    if excl_file and os.path.exists(excl_file):
+        with open(excl_file, encoding='utf-8') as f:
+            excl = json.load(f)
+        return set(excl.get('blocked_strings', []))
+    return set()
+
+
+def build_mod(mod_cfg: dict, paths: dict, python_cmd: str, blocked_strings: set = None):
     mod_id = mod_cfg['id']
     game_mods = Path(_resolve(paths['game_mods']))
     patches = Path(_resolve(paths['patches']))
@@ -172,6 +182,13 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str):
             with open(trans_file, encoding='utf-8') as f:
                 mod_translations = json.load(f)
             if mod_translations:
+                if blocked_strings:
+                    before = len(mod_translations)
+                    mod_translations = {k: v for k, v in mod_translations.items()
+                                        if k not in blocked_strings}
+                    removed = before - len(mod_translations)
+                    if removed:
+                        print(f"  제외: blocked_strings {removed}개")
                 print(f"  번역 사전 {len(mod_translations)}개 항목 적용 중...")
                 apply_translations_to_dir(dst, mod_translations)
             else:
@@ -211,11 +228,13 @@ def main():
     output_mods = Path(_resolve(paths['output_mods']))
     output_mods.mkdir(parents=True, exist_ok=True)
 
+    blocked_strings = _load_blocked_strings(paths)
+
     enabled = [m for m in mods if m.get('enabled', True)]
     print(f"빌드 대상 모드: {[m['id'] for m in enabled]}")
 
     for mod_cfg in enabled:
-        build_mod(mod_cfg, paths, python_cmd)
+        build_mod(mod_cfg, paths, python_cmd, blocked_strings)
 
     print("\nbuild_mods 완료.")
 

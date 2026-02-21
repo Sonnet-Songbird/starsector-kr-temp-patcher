@@ -11,6 +11,7 @@
 | **번역 사전 (공통)** | `kr_work/patches/common.json` | 주 사전 (커밋 대상) |
 | **번역 사전 (api 전용)** | `kr_work/patches/api_jar.json` | api JAR 전용 (커밋 대상) |
 | **번역 사전 (obf 전용)** | `kr_work/patches/obf_jar.json` | obf JAR 전용 (커밋 대상) |
+| **패치 제외 목록** | `kr_work/patches/exclusions.json` | blocked_classes + blocked_strings (커밋 대상) |
 | api JAR 원본 클래스 | `kr_work/api_classes/` | 게임 업데이트 비교용 (패칭에는 .bak 직접 사용) |
 | api 디컴파일 소스 | `kr_work/api_src/` | 16MB, 분석 스크립트 입력 |
 | **모드 오버레이** | `kr_work/patches/starsectorkorean/` | 커밋 대상 (translations.json, data/, graphics/) |
@@ -52,12 +53,14 @@
 
 번역 시: 파생 키 변경 → `Preferences.get()` null → 인증 실패 → 게임 실행 불가.
 
-`06_patch_obf.py`의 `SKIP_CLASSES` 목록에 명시되어 있다. 이 목록에서 제거하지 말 것.
+`patches/exclusions.json`의 `blocked_classes`(`accidents/A.class`)에 등록되어 있다. 이 항목을 제거하지 말 것.
 
 ### launcher 클래스
 
 - `com/fs/starfarer/launcher/` 패키지 전체
 - `com/fs/starfarer/StarfarerLauncher.class`
+
+`patches/exclusions.json`의 `blocked_classes`에 등록되어 있다.
 
 ### 게임 내부 ID
 

@@ -29,14 +29,14 @@ CombatMain.main()
 
 **결과:** 번역 시 파생 키 변경 → `Preferences.get()` null 반환 → 인증 항상 실패 → 게임 실행 불가.
 
-**현재 상태:** `scripts/06_patch_obf.py`에 `SKIP_CLASSES` 목록으로 명시됨. 이 목록에서 절대 제거하지 말 것.
+**현재 상태:** `patches/exclusions.json`의 `blocked_classes`에 `accidents/A.class`로 등록됨. 이 항목을 절대 제거하지 말 것.
 
 ### 1-2. launcher 클래스
 ```
 com/fs/starfarer/launcher/ 패키지 전체
 com/fs/starfarer/StarfarerLauncher.class
 ```
-런처 UI 문자열 번역은 게임 실행 과정에 영향을 줄 수 있음.
+런처 UI는 비트맵 폰트를 사용하므로 한국어 문자를 렌더링할 수 없음. `patches/exclusions.json`의 `blocked_classes`에 등록됨.
 
 ### 1-3. 게임 내부 ID/키 역할을 하는 문자열
 
@@ -49,7 +49,19 @@ com/fs/starfarer/StarfarerLauncher.class
 | `"HARD"` | 난이도 코드 | 동일 |
 | `"IMPOSSIBLE"` | 난이도 코드 | 동일 |
 | `"VARIABLE"` | 난이도 코드 | 동일 |
+| `"Hyperspace"` | XStream 클래스 alias | 세이브 파일 로드 실패 (`CannotResolveClassException`) |
+| `"Farming"` | XStream 클래스 alias | 동일 |
+| `"Mining"` | XStream 클래스 alias | 동일 |
 | `"fleet"`, `"credits"` 등 단일 소문자 단어 | 내부 ID 가능 | 기능 오동작 가능 |
+
+**XStream alias 메커니즘:**
+게임은 세이브 파일 직렬화에 XStream을 사용하며, 클래스 이름을 짧은 별칭으로 등록한다:
+```java
+xstream.alias("Hyperspace", Hyperspace.class);
+```
+세이브 XML에는 `cl="Hyperspace"` 형태로 기록되며, 로드 시 별칭으로 클래스를 역직렬화한다. JAR 패치로 `"Hyperspace"` 문자열이 `"하이퍼스페이스"`로 교체되면 alias 등록 시 한국어로 등록되어 기존 세이브의 `cl="Hyperspace"` 속성을 해석하지 못하게 된다.
+
+이러한 alias를 등록하는 클래스는 `patches/exclusions.json`의 `blocked_classes`에 등록해야 한다. 해당 클래스 전체가 패치에서 제외되므로, 번역 사전에 alias 문자열이 있더라도 그 클래스에서는 적용되지 않는다. alias 문자열을 표시 텍스트로도 사용하는 다른 클래스에서는 정상적으로 번역된다.
 
 **판별 기준:**
 
