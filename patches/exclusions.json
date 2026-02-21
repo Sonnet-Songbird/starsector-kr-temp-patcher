@@ -9,7 +9,9 @@
 
     "com/fs/starfarer/campaign/save/CampaignGameManager.class",
 
-    "com/fs/starfarer/api/impl/campaign/CoreLifecyclePluginImpl.class"
+    "com/fs/starfarer/api/impl/campaign/CoreLifecyclePluginImpl.class",
+
+    "com/fs/starfarer/loading/scripts/"
   ],
 
   "blocked_strings": []
