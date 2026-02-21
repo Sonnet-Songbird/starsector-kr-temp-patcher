@@ -6,6 +6,7 @@
     "translations": "./patches/common.json",
     "api_trans":    "./patches/api_jar.json",
     "obf_trans":    "./patches/obf_jar.json",
+    "exclusions":   "./patches/exclusions.json",
     "output":       "./output",
     "output_core":  "./output/starsector-core",
     "output_mods":  "./output/mods",
