@@ -1,0 +1,8 @@
+{
+	"id":"missile_specialization",
+	"governingAptitude":"combat",
+	"compressHullmods":false,
+	"elite":true,
+	"scope":"PILOTED_SHIP",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

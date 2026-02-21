@@ -1,0 +1,6 @@
+{
+	"id":"ship_design",
+	"governingAptitude":"technology",
+	"compressHullmods":false,
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

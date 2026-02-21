@@ -1,0 +1,7 @@
+{
+	"id":"omega_ecm",
+	"governingAptitude":"combat",
+	"compressHullmods":false,
+	"scope":"PILOTED_SHIP",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

@@ -1,0 +1,7 @@
+{
+	"id":"containment_procedures",
+	"governingAptitude":"industry",
+	"compressHullmods":false,
+	"scope":"FLEET",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

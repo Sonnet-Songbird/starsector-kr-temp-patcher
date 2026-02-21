@@ -1,0 +1,6 @@
+{
+	"id":"carrier_command",
+	"governingAptitude":"leadership",
+	"compressHullmods":false,
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

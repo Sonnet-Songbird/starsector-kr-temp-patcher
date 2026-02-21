@@ -1,0 +1,7 @@
+{
+	"id":"officer_management",
+	"governingAptitude":"leadership",
+	"compressHullmods":false,
+	"scope":"FLEET",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

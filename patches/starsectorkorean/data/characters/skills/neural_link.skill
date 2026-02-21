@@ -1,0 +1,8 @@
+{
+	"id":"neural_link",
+	"governingAptitude":"technology",
+	"compressHullmods":false,
+	"scope":CUSTOM,
+	"scopeStr":"신경 인터페이스 헐모드가 장착된 함선",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

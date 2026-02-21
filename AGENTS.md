@@ -1,0 +1,181 @@
+# 유지보수 참고
+
+번역 규칙·파일 위치·함정 등 유지보수에 필요한 정보를 빠르게 참조하기 위한 문서.
+
+---
+
+## 파일 위치
+
+| 파일 | 경로 | 비고 |
+|------|------|------|
+| **번역 사전 (공통)** | `kr_work/patches/common.json` | 주 사전 (커밋 대상) |
+| **번역 사전 (api 전용)** | `kr_work/patches/api_jar.json` | api JAR 전용 (커밋 대상) |
+| **번역 사전 (obf 전용)** | `kr_work/patches/obf_jar.json` | obf JAR 전용 (커밋 대상) |
+| api JAR 원본 클래스 | `kr_work/api_classes/` | 게임 업데이트 비교용 (패칭에는 .bak 직접 사용) |
+| api 디컴파일 소스 | `kr_work/api_src/` | 16MB, 분석 스크립트 입력 |
+| **모드 오버레이** | `kr_work/patches/starsectorkorean/` | 커밋 대상 (translations.json, data/, graphics/) |
+| 패치된 api JAR | `kr_work/output/starsector-core/starfarer.api.jar` | 7.0MB, 빌드 산출물 |
+| 패치된 obf JAR | `kr_work/output/starsector-core/starfarer_obf.jar` | 빌드 산출물 |
+| 완전한 모드 폴더 | `kr_work/output/mods/starsectorkorean/` | 빌드 산출물 (릴리즈 ZIP 소스) |
+| 영어 원본 백업 | `starsector-core/starfarer.api.jar.bak` | restore 파이프라인 필수 |
+| 영어 원본 백업 | `starsector-core/starfarer_obf.jar.bak` | restore 파이프라인 필수 |
+| 모드 디렉토리 | `mods/starsectorkorean/` | |
+| 파이프라인 설정 | `kr_work/config.json` | 경로·파이프라인 정의 |
+| 스크립트 카탈로그 | `kr_work/scripts/SCRIPTS.md` | |
+
+### intermediate/ 파일
+
+| 파일 | 내용 | 재생성 |
+|------|------|--------|
+| `consistency_gaps.json` | 일관성 기반 미번역 분석 | `find_consistency_gaps.py` |
+| `short_ui_gaps.json` | 짧은 레이블 미번역 분석 | `find_short_ui_gaps.py` |
+| `more_untrans.json` | 추가 미번역 후보 | `find_more_ui.py` |
+| `targeted_untrans.json` | 타깃 미번역 후보 | `extract_strings.py` |
+| `more_labels.json` | 레이블 그룹화 | `find_more_ui.py` |
+| `priority_untrans.json` | 우선순위 미번역 | `get_important_strings.py` |
+| `json_keys.txt` | 모드 strings.json 키 목록 | `check_missing_strings.py` |
+
+---
+
+## 절대 번역 금지
+
+### DRM 인증 문자열
+
+`starfarer_obf.jar`의 `com/fs/starfarer/campaign/accidents/A.class`에 있는 문자열들은 농담처럼 보이지만 시리얼 번호 저장용 Preferences 키를 파생하는 데 암호학적으로 사용된다.
+
+```
+"Nobody will ever pirate starfarer, "
+"because starfarer is not pirateable. "
+"It is not pirateable because I am so "
+"god damned good at writing top secret code "
+```
+
+번역 시: 파생 키 변경 → `Preferences.get()` null → 인증 실패 → 게임 실행 불가.
+
+`06_patch_obf.py`의 `SKIP_CLASSES` 목록에 명시되어 있다. 이 목록에서 제거하지 말 것.
+
+### launcher 클래스
+
+- `com/fs/starfarer/launcher/` 패키지 전체
+- `com/fs/starfarer/StarfarerLauncher.class`
+
+### 게임 내부 ID
+
+단일 소문자 단어, 대문자 상수형 식별자는 번역 금지:
+- 난이도 코드: `EASY`, `MEDIUM`, `HARD`, `IMPOSSIBLE`, `VARIABLE`
+- `fleet`, `credits`, `colony` 등 단일 단어
+
+번역 전 안전성 확인 (ID로 쓰이는지):
+```bash
+python scripts/check_dangerous_strings.py
+```
+
+코드 내 다음 패턴으로 쓰이는 문자열은 번역하면 안 된다:
+- `return "string"` — ID 반환
+- `.equals("string")`, `.get("string")` — 비교/조회 키
+- `.put("string", ...)` — Map 키
+
+---
+
+## 작업 전 체크리스트
+
+```bash
+# Python 버전 확인 (3.9+)
+python --version
+
+# .bak 파일 존재 확인
+ls ../starsector-core/*.bak
+
+# 현재 적용 상태 확인 (kr_work/ 에서 실행)
+python build.py check
+```
+
+---
+
+## 작업 패턴
+
+### 번역 추가
+
+```bash
+# 1. patches/common.json에 "영어": "한국어" 추가
+# 2. 재패치 및 적용
+python build.py patch apply
+# 3. 검증
+python build.py verify
+```
+
+### 전체 재현 테스트
+
+```bash
+python build.py rebuild
+# restore → patch → apply → verify 순서
+```
+
+### 모드 파일만 갱신 (JAR 재패치 없이)
+
+```bash
+python build.py update_mod
+```
+
+### 추가 번역 대상 탐색
+
+```bash
+python scripts/find_consistency_gaps.py
+python scripts/extract_strings.py
+python scripts/find_more_ui.py
+```
+
+---
+
+## 파이프라인 구조
+
+파이프라인 정의는 `config.json`에 있다. `build.py`는 실행기일 뿐이며 로직을 포함하지 않는다.
+
+```
+patch      → 05_patch_classes.py (인메모리) → 06_patch_obf.py (인메모리)
+build_mod  → 게임 mods/ + patches/ 오버레이 → output/mods/ (build_mods.py) → post_build 훅
+apply      → JAR 복사 → apply_mods.py → game mods/ 동기화
+restore    → .bak 파일로 starsector-core JAR 복원
+verify     → verify_cr.py
+status     → verify_cr.py --status
+update_mod → build_mod → apply
+check      → verify → status
+all        → patch → build_mod → apply → verify
+rebuild    → restore → patch → build_mod → apply → verify
+```
+
+---
+
+## 알려진 함정
+
+### EASY/MEDIUM/HARD는 게임 내부 난이도 코드
+
+`EASY`, `MEDIUM`, `HARD`, `IMPOSSIBLE`, `VARIABLE`은 게임 로직에서 난이도 판별에 직접 사용되는 키값이다. 번역하면 난이도 선택 UI가 동작하지 않는다. `patches/common.json`에 포함하지 말 것.
+
+### rules.csv 항목 오염
+
+rules.csv의 조건/스크립트 텍스트가 `patches/common.json`에 들어가면 패치 시 오염된다. 멀티라인 항목(개행 포함), 숫자로 시작하는 항목은 제외해야 한다.
+
+### Windows bash에서 Python 경로
+
+bash에서 `/d/...` 경로로 Python을 실행하면 파일을 인식 못하는 경우가 있다. `D:/...` Windows 경로를 사용할 것.
+
+### Long/Double 상수 2슬롯
+
+Java .class 상수 풀에서 `Long`(tag 5) / `Double`(tag 6) 타입은 슬롯 2개를 차지한다. 파싱 시 인덱스 카운터를 2 증가시켜야 하며, 이를 빠뜨리면 이후 전체 파싱이 어긋나 클래스 파일이 깨진다.
+
+### Java Modified UTF-8
+
+Java `.class` 파일의 CONSTANT_Utf8은 Python 표준 UTF-8과 다르다 (null을 `0xC0 0x80`으로 인코딩, 보조 평면 문자를 서로게이트 쌍으로 처리). 한국어 BMP 문자(U+AC00–U+D7A3)는 차이가 없으나, 이모지 등 보조 평면 문자가 포함된 문자열이 나타나면 `cesu8` 패키지가 필요하다.
+
+---
+
+## 환경
+
+| 항목 | 값 |
+|------|----|
+| Python | `python` (PATH 또는 config.json에서 지정, 3.9+) |
+| JDK 11 jar | `jar` (PATH, JDK 11+) |
+| Starsector JRE | `/d/Starsector/jre/bin/java` (Java 17, 디컴파일용) |
+| CFR | `tools/cfr.jar` (0.152) |
+| OS | Windows 11 Pro, bash (Git Bash) |

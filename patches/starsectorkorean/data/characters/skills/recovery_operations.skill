@@ -1,0 +1,5 @@
+{
+	"id":"recovery_operations",
+	"governingAptitude":"industry",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

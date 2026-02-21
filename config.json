@@ -1,0 +1,62 @@
+{
+  "paths": {
+    "game_core":    "../starsector-core",
+    "game_mods":    "../mods",
+    "patches":      "./patches",
+    "translations": "./patches/common.json",
+    "api_trans":    "./patches/api_jar.json",
+    "obf_trans":    "./patches/obf_jar.json",
+    "output":       "./output",
+    "output_core":  "./output/starsector-core",
+    "output_mods":  "./output/mods",
+    "api_classes":  "./api_classes",
+    "jar_cmd":      "jar",
+    "python":       "python"
+  },
+  "mods": [
+    {
+      "id":      "starsectorkorean",
+      "enabled": true,
+      "post_build": [
+        "scripts/update_mod_version.py",
+        "scripts/translate_mission_java.py"
+      ]
+    },
+    {
+      "id":      "Nexerelin",
+      "enabled": false,
+      "post_build": []
+    }
+  ],
+  "pipelines": {
+    "patch": [
+      {"script": "scripts/05_patch_classes.py"},
+      {"script": "scripts/06_patch_obf.py"}
+    ],
+    "build_mod": [
+      {"script": "scripts/build_mods.py"}
+    ],
+    "apply": [
+      {"copy": "{output_core}/starfarer.api.jar",  "to": "{game_core}/starfarer.api.jar"},
+      {"copy": "{output_core}/starfarer_obf.jar",  "to": "{game_core}/starfarer_obf.jar"},
+      {"script": "scripts/apply_mods.py"}
+    ],
+    "restore": [
+      {"copy": "{game_core}/starfarer.api.jar.bak", "to": "{game_core}/starfarer.api.jar"},
+      {"copy": "{game_core}/starfarer_obf.jar.bak", "to": "{game_core}/starfarer_obf.jar"}
+    ],
+    "verify": [
+      {"script": "scripts/verify_cr.py"}
+    ],
+    "status": [
+      {"script": "scripts/verify_cr.py", "args": ["--status"]}
+    ],
+    "check": [
+      {"script": "scripts/verify_cr.py"},
+      {"script": "scripts/verify_cr.py", "args": ["--status"]}
+    ],
+    "update_mod": ["build_mod", "apply"],
+    "all":        ["patch", "build_mod", "apply", "verify"],
+    "rebuild":    ["restore", "patch", "build_mod", "apply", "verify"]
+  }
+}

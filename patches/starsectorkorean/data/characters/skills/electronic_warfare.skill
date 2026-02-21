@@ -1,0 +1,7 @@
+{
+	"id":"electronic_warfare",
+	"governingAptitude":"technology",
+	"compressHullmods":false,
+	"scope":"ALL_COMBAT_SHIPS",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

@@ -1,0 +1,7 @@
+{
+	"id":"evasive_action",
+	"governingAptitude":"combat",
+	"compressHullmods":false,
+	"elite":true,
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

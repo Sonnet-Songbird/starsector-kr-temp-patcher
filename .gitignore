@@ -1,0 +1,24 @@
+# 파이프라인 빌드 산출물 (python build.py all로 재생성)
+/output/
+
+# 재생성 가능 클래스/소스 (01_extract_jars.sh, 02_decompile.sh로 재생성)
+/api_classes/
+/api_src/
+
+# 분석 캐시 전체 (재생성 가능)
+/intermediate/
+
+# 릴리즈 관련 (로컬 생성)
+/starsector-kr-patch-*.zip
+/release_notes.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

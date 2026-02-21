@@ -1,0 +1,7 @@
+{
+	"id":"force_concentration",
+	"governingAptitude":"leadership",
+	"compressHullmods":false,
+	"scope":"ALL_SHIPS",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

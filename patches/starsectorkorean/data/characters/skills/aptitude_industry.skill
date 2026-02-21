@@ -1,0 +1,5 @@
+{
+	"id":"aptitude_industry",
+	"governingAptitude":"industry",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}

@@ -1,0 +1,7 @@
+{
+	"id":"industrial_planning",
+	"governingAptitude":"industry",
+	"compressHullmods":false,
+	"scope":"GOVERNED_OUTPOST",
+	# effectGroups는 기본 게임 파일에서 상속됨
+}
