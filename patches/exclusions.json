@@ -1,5 +1,14 @@
 {
-  "_comment": "JAR 패치 제외 목록. blocked_classes: 절대 패치하지 않을 클래스 경로 (접미 '/'는 패키지 전체). blocked_strings: 번역 사전에 있더라도 절대 교체하지 않을 문자열 (클래스 단위 제외가 불가능한 경우에만 사용).",
+  "_comment": [
+    "핵심 게임 JAR(starfarer.api.jar, starfarer_obf.jar) 전역 패치 제외 목록.",
+    "모드 JAR 패치(patch_mod_jar.py)에도 동시에 적용됨.",
+    "",
+    "=== 제외 수단 선택 원칙 (최소 적용 원칙) ===",
+    "범위가 좁은 수단을 먼저 선택할 것. 자세한 가이드: patches/exclusions.json.template",
+    "  1. blocked_classes      (가장 정밀): UI 문자열 없는 유틸/설정 클래스 전체 차단",
+    "  2. blocked_jar_strings  (중간):     JAR 동적 키 구성에만 쓰이는 문자열 (데이터 파일 번역은 유지)",
+    "  3. blocked_strings      (최후의 수단): JAR + 데이터 파일 양쪽 모두 차단"
+  ],
 
   "blocked_classes": [
     "com/fs/starfarer/launcher/",
@@ -13,6 +22,8 @@
 
     "com/fs/starfarer/loading/scripts/"
   ],
+
+  "blocked_jar_strings": [],
 
   "blocked_strings": []
 }

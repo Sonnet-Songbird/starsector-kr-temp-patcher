@@ -25,14 +25,17 @@
     },
     {
       "id":      "Nexerelin",
-      "enabled": false,
-      "post_build": []
+      "enabled": true,
+      "mod_jar": "jars/ExerelinCore.jar",
+      "post_build": [
+        "scripts/patch_mod_jar.py"
+      ]
     }
   ],
   "pipelines": {
     "patch": [
-      {"script": "scripts/05_patch_classes.py"},
-      {"script": "scripts/06_patch_obf.py"}
+      {"script": "scripts/patch_api_jar.py"},
+      {"script": "scripts/patch_obf_jar.py"}
     ],
     "build_mod": [
       {"script": "scripts/build_mods.py"}
@@ -56,8 +59,11 @@
       {"script": "scripts/verify_cr.py"},
       {"script": "scripts/verify_cr.py", "args": ["--status"]}
     ],
-    "update_mod": ["build_mod", "apply"],
-    "all":        ["patch", "build_mod", "apply", "verify"],
-    "rebuild":    ["restore", "patch", "build_mod", "apply", "verify"]
+    "test": [
+      {"script": "run_tests.py"}
+    ],
+    "update_mod": ["build_mod", "test", "apply"],
+    "all":        ["patch", "build_mod", "test", "apply", "verify"],
+    "rebuild":    ["restore", "patch", "build_mod", "test", "apply", "verify"]
   }
 }
