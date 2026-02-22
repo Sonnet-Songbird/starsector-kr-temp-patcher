@@ -10,8 +10,10 @@
 
 | 스크립트 | 목적 | 입력 | 출력 | build.py 연동 |
 |----------|------|------|------|---------------|
+| `patch_utils.py` | Java .class 상수 풀 패칭 공유 라이브러리 | (라이브러리, 직접 실행 없음) | — | 05/06/patch_mod_jar 공통 import |
 | `05_patch_classes.py` | starfarer.api.jar 상수 풀 패치 (인메모리 ZIP) | `starfarer.api.jar.bak` + `patches/common.json` + `patches/api_jar.json` + `patches/exclusions.json` | `output/starsector-core/starfarer.api.jar` | `patch` 파이프라인 1단계 |
 | `06_patch_obf.py` | starfarer_obf.jar 인메모리 패치 | `starfarer_obf.jar.bak` + `patches/common.json` + `patches/obf_jar.json` + `patches/exclusions.json` | `output/starsector-core/starfarer_obf.jar` | `patch` 파이프라인 2단계 |
+| `patch_mod_jar.py` | 범용 모드 JAR 상수 풀 패치 (post_build 훅) | `output/mods/{id}/{mod_jar}` + `patches/common.json` + `patches/{id}/translations.json` + `patches/exclusions.json` (전역) + `patches/{id}/exclusions.json` (모드 전용, 선택) | `output/mods/{id}/{mod_jar}` (in-place) | `build_mod` post_build 훅 |
 | `06_package.sh` | **[레거시]** patched_jar/ → api JAR 패키징 | `patched_jar/` | `output/starsector-core/starfarer.api.jar` | 미사용 (05_patch_classes.py가 인메모리 방식으로 전환되어 파이프라인에서 제거됨) |
 | `build_mods.py` | 게임 원본 모드 + patches/ 오버레이 → output/mods/ 빌드 | `game_mods/<id>/` + `patches/<id>/` + `patches/exclusions.json` | `output/mods/<id>/` | `build_mod` 파이프라인 |
 | `apply_mods.py` | output/mods/ → 게임 mods/ 동기화 | `output/mods/<id>/` | `game_mods/<id>/` | `apply` 파이프라인 |
@@ -25,6 +27,24 @@
 4. `forlornhope/MissionDefinition.java` → `'인빈서블'` 포함 여부
 
 `--status` 플래그: PASS/FAIL 대신 한/영 상태 요약만 출력.
+
+### patch_mod_jar.py 제외 규칙 우선순위
+
+```
+patches/exclusions.json         ← 전역 (DRM, launcher, XStream alias 등)
+  ∪
+patches/{mod_id}/exclusions.json ← 모드 전용 (XStreamConfig 클래스, 모드 내부 ID 등)
+  ↓
+ExerelinCore.jar 등 모드 JAR에 합집합으로 적용
+```
+
+모드 전용 `exclusions.json` 형식:
+```json
+{
+  "blocked_classes": ["exerelin/plugins/XStreamConfig.class"],
+  "blocked_strings": ["SomeModInternalId"]
+}
+```
 
 ---
 
@@ -69,6 +89,7 @@ python build.py all
 
 | 스크립트 | 목적 | 입력 | 사용 시점 |
 |----------|------|------|----------|
+| `extract_mod_strings.py` | 모드 JAR + 데이터 파일에서 번역 후보 추출 | `game_mods/{id}/` (JAR+data) | 신규 모드 번역 시작 전 1회 실행 |
 | `extract_strings.py` | JAR에서 미번역 UI 문자열 추출 | `starsector-core/*.jar` | 추가 번역 항목 탐색 |
 | `extract_obf_ui.py` | obf JAR 전용 UI 문자열 정밀 추출 | `starsector-core/starfarer_obf.jar` | obf 번역 확장 시 |
 | `prepare_obf_batches.py` | obf 번역 후보를 100개씩 배치 분할 | `extract_obf_ui.py` 출력 | obf 번역 배치 작업 준비 |

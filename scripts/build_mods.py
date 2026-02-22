@@ -22,6 +22,7 @@ import csv
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -31,11 +32,22 @@ SCRIPT_DIR = Path(__file__).parent.parent
 
 # CSV에서 번역하지 않을 컬럼 헤더 (식별자/인덱스 컬럼)
 CSV_SKIP_COLUMNS = {
+    # 기본 식별자
     'id', 'system id', 'type', 'sprite', 'tags', 'tier', 'rarity',
     'hints', 'turret covers', 'fighter bays', 'defense id', 'base value',
     'order', 'reqPoints', 'reqPointsPerExtraSkill', 'combat officer', 'admiral',
     'is player npc', 'ship id', 'wing id', 'weapon id', 'hullmod id',
     'sub id', 'tech/manufacturer', 'source',
+    # 이벤트/상태 식별자 (reports.csv 등에서 key 구성에 사용)
+    'event_type', 'event_stage', 'trigger',
+    # 세력/시스템 ID (프로그래밍 식별자)
+    'faction', 'system',
+    # Java 클래스/스크립트 경로
+    'plugin', 'script', 'ai', 'effectPlugin', 'class',
+    # 파일 경로/에셋 ID
+    'icon', 'image', 'sound_id', 'channels', 'spritePath', 'iconPath',
+    # 기타 기술적 컬럼
+    'implementation notes', 'uiTags', 'sortOrder',
 }
 
 
@@ -43,6 +55,33 @@ def _resolve(p, base=SCRIPT_DIR):
     if isinstance(p, str) and (p.startswith('./') or p.startswith('../') or p == '.'):
         return str((base / p).resolve())
     return p
+
+
+def _load_json_lazy(text: str):
+    """
+    Starsector 비표준 JSON 파서 (3단계 시도).
+
+    1. 표준 json.loads
+    2. # 주석 + 후행 쉼표 제거
+    3. 추가로 unquoted 키 자동 인용 (tips.json 등 대응)
+    """
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # 단계 2: # 주석 + 후행 쉼표
+    cleaned = re.sub(r'(?m)#[^\n]*', '', text)
+    cleaned = re.sub(r',(\s*[}\]])', r'\1', cleaned)
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError:
+        pass
+
+    # 단계 3: unquoted 키 자동 인용 (예: tips:[ → "tips":[)
+    # 문자열 리터럴 안이 아닌 위치의 bareword key 만 처리
+    cleaned2 = re.sub(r'(?<!["\w])([a-zA-Z_][a-zA-Z0-9_]*)(\s*:)(?!\s*:)', r'"\1"\2', cleaned)
+    return json.loads(cleaned2)
 
 
 def translate_json_value(obj, translations: dict):
@@ -60,7 +99,7 @@ def translate_json_file(filepath: Path, translations: dict) -> bool:
     """JSON 파일에 번역 적용. 변경 있으면 True."""
     try:
         text = filepath.read_text(encoding='utf-8')
-        obj = json.loads(text)
+        obj = _load_json_lazy(text)
     except Exception as e:
         print(f"    JSON 읽기 실패 {filepath.name}: {e}")
         return False
@@ -153,6 +192,16 @@ def _load_blocked_strings(paths) -> set:
     return set()
 
 
+def _load_mod_blocked_strings(patch_dir: Path) -> set:
+    """patches/{mod_id}/exclusions.json에서 blocked_strings 로드 (모드별 추가 제외)."""
+    excl_file = patch_dir / 'exclusions.json'
+    if excl_file.exists():
+        with open(excl_file, encoding='utf-8') as f:
+            excl = json.load(f)
+        return set(excl.get('blocked_strings', []))
+    return set()
+
+
 def build_mod(mod_cfg: dict, paths: dict, python_cmd: str, blocked_strings: set = None):
     mod_id = mod_cfg['id']
     game_mods = Path(_resolve(paths['game_mods']))
@@ -182,10 +231,12 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str, blocked_strings: set 
             with open(trans_file, encoding='utf-8') as f:
                 mod_translations = json.load(f)
             if mod_translations:
-                if blocked_strings:
+                # 전역 + 모드별 blocked_strings 합산
+                mod_blocked = (blocked_strings or set()) | _load_mod_blocked_strings(patch_dir)
+                if mod_blocked:
                     before = len(mod_translations)
                     mod_translations = {k: v for k, v in mod_translations.items()
-                                        if k not in blocked_strings}
+                                        if k not in mod_blocked}
                     removed = before - len(mod_translations)
                     if removed:
                         print(f"  제외: blocked_strings {removed}개")

@@ -25,8 +25,11 @@
     },
     {
       "id":      "Nexerelin",
-      "enabled": false,
-      "post_build": []
+      "enabled": true,
+      "mod_jar": "jars/ExerelinCore.jar",
+      "post_build": [
+        "scripts/patch_mod_jar.py"
+      ]
     }
   ],
   "pipelines": {
