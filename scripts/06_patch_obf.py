@@ -3,7 +3,7 @@
 06_patch_obf.py - starfarer_obf.jar 번역 패치 (인메모리)
 
 사용법:
-    python 06_patch_obf.py
+    python 06_patch_obf.py [--no-restore]
 
 입력:
     ../starsector-core/starfarer_obf.jar.bak   (영어 원본 백업)
@@ -11,10 +11,15 @@
 
 출력:
     ./output/starsector-core/starfarer_obf.jar  (패치본)
+
+옵션:
+    --no-restore    .bak → live JAR 복원 단계 건너뜀 (기본: 복원 후 패치)
 """
 
+import argparse
 import json
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -44,18 +49,32 @@ def _load_exclusions(paths, base):
 
 
 def main():
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('--no-restore', action='store_true',
+                        default=os.environ.get('STARSECTOR_NO_RESTORE') == '1')
+    args, _ = parser.parse_known_args()
+    restore = not args.no_restore
+
     with open(SCRIPT_DIR / 'config.json', encoding='utf-8') as f:
         paths = json.load(f)['paths']
 
     base = SCRIPT_DIR
-    bak_jar = os.path.join(_resolve(paths['game_core'], base), 'starfarer_obf.jar.bak')
-    out_jar = os.path.join(_resolve(paths['output_core'], base), 'starfarer_obf.jar')
+    game_core = _resolve(paths['game_core'], base)
+    bak_jar  = os.path.join(game_core, 'starfarer_obf.jar.bak')
+    live_jar = os.path.join(game_core, 'starfarer_obf.jar')
+    out_jar  = os.path.join(_resolve(paths['output_core'], base), 'starfarer_obf.jar')
 
     if not os.path.exists(bak_jar):
         print(f"ERROR: {bak_jar} not found")
         print("게임 업데이트 전에 백업을 먼저 생성하세요:")
         print("  cp starsector-core/starfarer_obf.jar starsector-core/starfarer_obf.jar.bak")
         sys.exit(1)
+
+    if restore:
+        print(f"[복원] starfarer_obf.jar.bak → starfarer_obf.jar")
+        shutil.copy2(bak_jar, live_jar)
+    else:
+        print("[복원 건너뜀] --no-restore")
 
     # translations 병합: common + obf_trans
     translations = {}

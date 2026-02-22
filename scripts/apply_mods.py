@@ -51,10 +51,8 @@ def main():
         elif bak.exists():
             print(f"  백업 이미 존재: {bak} (skip)")
 
-        # 적용 (덮어쓰기)
-        if dst.exists():
-            shutil.rmtree(dst)
-        shutil.copytree(str(src), str(dst))
+        # 적용 (덮어쓰기, dirs_exist_ok=True로 Windows 파일 잠금 방지)
+        shutil.copytree(str(src), str(dst), dirs_exist_ok=True)
         print(f"  적용: {src} → {dst}")
 
     print("\napply_mods 완료.")

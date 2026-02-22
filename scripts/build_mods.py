@@ -3,11 +3,15 @@
 build_mods.py - config.json의 mods 배열을 기반으로 모드 빌드
 
 흐름 (모드별):
-  1. 원본 모드 복사: game_mods/{id}/ → output/mods/{id}/
-  2. 번역 사전 적용: patches/{id}/translations.json → 출력 디렉토리 텍스트 파일
+  1. 복원 (기본값): game_mods/{id}.bak/ → game_mods/{id}/ (이중 패치 방지)
+  2. 원본 모드 복사: game_mods/{id}/ → output/mods/{id}/
+  3. 번역 사전 적용: patches/{id}/translations.json → 출력 디렉토리 텍스트 파일
      (비어있으면 skip)
-  3. 파일 오버레이: patches/{id}/data/, patches/{id}/graphics/ → output/{id}/
-  4. post_build 스크립트 실행
+  4. 파일 오버레이: patches/{id}/data/, patches/{id}/graphics/ → output/{id}/
+  5. post_build 스크립트 실행
+
+옵션:
+  --no-restore    .bak → live 복원 단계 건너뜀. live 디렉토리를 그대로 소스로 사용.
 
 CSV 번역 규칙:
   - 셀 단위 정확 일치
@@ -18,6 +22,7 @@ JSON 번역 규칙:
   - mod_info.json은 번역 제외
 """
 
+import argparse
 import csv
 import io
 import json
@@ -202,7 +207,8 @@ def _load_mod_blocked_strings(patch_dir: Path) -> set:
     return set()
 
 
-def build_mod(mod_cfg: dict, paths: dict, python_cmd: str, blocked_strings: set = None):
+def build_mod(mod_cfg: dict, paths: dict, python_cmd: str,
+              blocked_strings: set = None, restore: bool = True):
     mod_id = mod_cfg['id']
     game_mods = Path(_resolve(paths['game_mods']))
     patches = Path(_resolve(paths['patches']))
@@ -210,23 +216,30 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str, blocked_strings: set 
 
     patch_dir = patches / mod_id
     dst = output_mods / mod_id
+    bak = game_mods / (mod_id + '.bak')
+    src = game_mods / mod_id
 
     print(f"\n[{mod_id}]")
 
-    # .bak 디렉터리가 있으면 원본 소스로 사용 (이중 패치 방지)
-    bak = game_mods / (mod_id + '.bak')
-    src = bak if bak.is_dir() else (game_mods / mod_id)
+    # 1. 복원: .bak → live (기본값, 이중 패치 방지)
+    # dirs_exist_ok=True로 삭제 없이 덮어쓰기 — Windows 파일 잠금(WinError 32) 방지
+    if restore and bak.is_dir():
+        shutil.copytree(str(bak), str(src), dirs_exist_ok=True)
+        print(f"  복원: {mod_id}.bak → {mod_id}")
+    elif restore:
+        print(f"  복원 건너뜀: {mod_id}.bak 없음")
+    else:
+        print(f"  복원 건너뜀: --no-restore")
 
     if not src.is_dir():
         print(f"  WARN: 원본 모드 없음: {src} — 건너뜀")
         return
 
-    # 1. 원본 모드 → output
+    # 2. 원본 모드 → output
     if dst.exists():
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
-    src_label = f"{mod_id}.bak" if bak.is_dir() else mod_id
-    print(f"  원본 복사: {src_label} → {dst}")
+    print(f"  원본 복사: {mod_id} → {dst}")
 
     # 2. 번역 사전 적용 (translations.json 비어있으면 skip)
     trans_file = patch_dir / 'translations.json'
@@ -273,6 +286,12 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str, blocked_strings: set 
 
 
 def main():
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('--no-restore', action='store_true',
+                        default=os.environ.get('STARSECTOR_NO_RESTORE') == '1')
+    args, _ = parser.parse_known_args()
+    restore = not args.no_restore
+
     with open(SCRIPT_DIR / 'config.json', encoding='utf-8') as f:
         cfg = json.load(f)
 
@@ -289,7 +308,7 @@ def main():
     print(f"빌드 대상 모드: {[m['id'] for m in enabled]}")
 
     for mod_cfg in enabled:
-        build_mod(mod_cfg, paths, python_cmd, blocked_strings)
+        build_mod(mod_cfg, paths, python_cmd, blocked_strings, restore=restore)
 
     print("\nbuild_mods 완료.")
 

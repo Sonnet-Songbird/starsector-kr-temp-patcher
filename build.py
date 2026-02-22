@@ -4,7 +4,7 @@
 build.py — Starsector 한글화 단일 진입점 CLI
 
 사용법:
-    python build.py <pipeline> [pipeline2 ...]
+    python build.py <pipeline> [pipeline2 ...] [--no-restore]
 
 파이프라인 목록 (config.json에 정의):
     patch       — 양쪽 JAR 재패치 (output/ 에 생성)
@@ -17,9 +17,15 @@ build.py — Starsector 한글화 단일 진입점 CLI
     all         — patch → apply → verify
     rebuild     — restore → patch → apply → verify
 
+옵션:
+    --no-restore    패치/빌드 전 .bak 복원 단계를 건너뜀.
+                    기본값: .bak가 있으면 복원 후 패치/빌드.
+
 예시:
     python build.py all
     python build.py patch apply
+    python build.py patch --no-restore
+    python build.py update_mod --no-restore
     python build.py rebuild
     python build.py restore
     python build.py verify
@@ -158,8 +164,18 @@ def main():
         print(__doc__)
         sys.exit(0)
 
+    raw_args = sys.argv[1:]
+    no_restore = '--no-restore' in raw_args
+    pipelines_to_run = [a for a in raw_args if not a.startswith('--')]
+
+    if not pipelines_to_run:
+        print(__doc__)
+        sys.exit(0)
+
+    if no_restore:
+        os.environ['STARSECTOR_NO_RESTORE'] = '1'
+
     config = load_config()
-    pipelines_to_run = sys.argv[1:]
 
     failed = []
     for pipeline_name in pipelines_to_run:
