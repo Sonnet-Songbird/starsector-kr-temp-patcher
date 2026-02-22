@@ -223,3 +223,99 @@ Starsector는 모드의 데이터 파일이 게임 원본 파일을 오버라이
 | `data/missions/*/MissionDefinition.java` | 모드 내 | 16개 임무 번역 |
 
 JAR 패치는 모드 오버라이드로 처리할 수 없는 **Java 하드코딩 문자열**을 번역하기 위함.
+
+---
+
+## 7. 모드 JAR 패칭
+
+### 7-1. 구조
+
+핵심 게임 JAR 패칭(`05_patch_classes.py`, `06_patch_obf.py`)과 동일한 알고리즘을 사용하지만, 모드 JAR은 `scripts/patch_mod_jar.py`가 처리한다. `build_mods.py`의 post_build 훅으로 자동 호출됨.
+
+**패치 흐름:**
+```
+game_mods/Nexerelin/ → (build_mods.py 복사) → output/mods/Nexerelin/
+                                              ↓ post_build
+                             patch_mod_jar.py → ExerelinCore.jar (in-place 패치)
+```
+
+**번역 사전 우선순위:** `patches/common.json` → `patches/{mod_id}/translations.json` (모드가 공통 번역보다 우선)
+
+### 7-2. 모드 전용 exclusions.json
+
+각 모드는 `patches/{mod_id}/exclusions.json`에 자체 제외 목록을 가질 수 있다.
+
+```json
+{
+  "blocked_classes": [
+    "exerelin/plugins/XStreamConfig.class"
+  ],
+  "blocked_jar_strings": [
+    "invasions"
+  ],
+  "blocked_strings": [
+    "SomeAliasString"
+  ]
+}
+```
+
+이 파일은 **전역 `patches/exclusions.json`과 합집합**으로 적용된다. 모드에서만 금지할 항목을 전역 파일에 넣지 말고 이 파일에 분리해서 관리.
+
+#### 3단계 제외 수단 선택 원칙 (최소 적용 원칙)
+
+제외 수단은 아래 순서로 적용. **범위가 좁은 수단을 먼저 선택**할 것.
+
+| 수단 | 범위 | 사용 기준 | 예시 |
+|------|------|---------|------|
+| `blocked_classes` | 클래스 전체 차단 | UI 문자열이 없는 유틸/설정 클래스. 내부 키 비교(`.equals`)가 있는 경우. XStream alias 등록 클래스. | `XStreamConfig.class`, `NexConfig.class` |
+| `blocked_jar_strings` | JAR 상수 풀만 차단 | 동적 키 구성(`"header_" + id`)에 쓰이는 리터럴. 데이터 파일 번역은 유지해야 할 때. | `"invasions"` |
+| `blocked_strings` | JAR + 데이터 파일 모두 차단 | 다수 클래스에 걸쳐 JSON/CSV 키로 쓰임. 클래스 차단으로 해결 불가. 최후의 수단. | `"diplomacy"`, `"ceasefire"` |
+
+**NexConfig.class 사례 (blocked_classes 적용):**
+```
+문제: factionId.equals("neutral") → 번역 시 "중립"이 되어 defaultConfig = null
+      → DiplomacyManager.<clinit>에서 NullPointerException
+해결: NexConfig.class 전체를 blocked_classes에 추가 (클래스 내 UI 문자열 없음)
+대안이 나쁜 이유: blocked_strings에 "neutral"을 추가하면 다른 컨텍스트의 "neutral" 번역도 차단됨
+```
+
+**invasions 사례 (blocked_jar_strings 적용):**
+```
+문제: LunaConfigHelper.addHeader("invasions", ...) → "header_" + "침공" = 없는 키
+해결: blocked_jar_strings에 "invasions" 추가 (JAR 패칭에서만 제외, 데이터 파일 번역 유지)
+대안이 나쁜 이유: blocked_classes를 쓰면 같은 클래스의 다른 UI 문자열도 번역 못함
+```
+
+완전한 가이드: `patches/exclusions.json.template`
+
+### 7-3. 모드 XStream 세이브 호환성
+
+모드도 핵심 게임과 동일하게 XStream으로 세이브 파일을 직렬화한다. 모드 JAR의 `XStreamConfig.class` (또는 유사 클래스)가 `x.alias("ShortName", MyClass.class)` 형태로 등록한 alias 문자열이 번역되면 기존 세이브 파일 로드 실패.
+
+**대응:** 해당 클래스를 `patches/{mod_id}/exclusions.json`의 `blocked_classes`에 추가.
+
+```
+# Nexerelin 예시
+blocked_classes: ["exerelin/plugins/XStreamConfig.class"]
+→ ExerelinCore.jar 패치 시 이 클래스 파일은 수정 없이 원본 그대로 복사됨
+→ 110개 alias("AllianceMngr", "NexStratAI", ...) 모두 보존됨
+```
+
+alias 목록은 소스에서 확인 가능:
+```bash
+python -c "
+import zipfile, re
+with zipfile.ZipFile('mods/{ModId}/jars/{ModId}.jar') as z:
+    src = z.read('path/to/XStreamConfig.java').decode()
+for a in re.findall(r'alias\(\"([^\"]+)\"', src):
+    print(a)
+"
+```
+
+### 7-4. 새 모드 추가 체크리스트
+
+1. `config.json`에 `mod_jar`, `post_build: ["scripts/patch_mod_jar.py"]` 추가
+2. 모드 JAR에서 XStream alias 클래스 확인
+3. `patches/{mod_id}/exclusions.json` 작성 (`blocked_classes`에 alias 클래스 추가)
+4. `patches/{mod_id}/translations.json`에 모드 전용 번역 추가
+5. `python build.py update_mod` 로 빌드 검증
