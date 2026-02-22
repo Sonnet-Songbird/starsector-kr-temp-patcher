@@ -12,7 +12,13 @@
     "translations.json에 neutral → 중립 번역이 있으면 DiplomacyManager.<clinit>에서",
     "NexConfig.getFactionConfig(\"중립\") → null → NullPointerException 발생.",
     "DiplomacyManager는 UI 문자열도 있으므로 클래스 전체 차단은 부적절.",
-    "blocked_jar_strings로 JAR 내 \"neutral\" 리터럴만 번역에서 제외."
+    "blocked_jar_strings로 JAR 내 \"neutral\" 리터럴만 번역에서 제외.",
+    "",
+    "=== RepLevel enum 값들 blocked_strings 이유 ===",
+    "data/config/exerelin/diplomacyConfig.json 에서 RepLevel 이름을 문자열로 읽어",
+    "RepLevel.valueOf(StringHelper.flattenToAscii(repLimit.toUpperCase())) 로 변환.",
+    "번역 시 'hostile' → '적대' 등으로 교체되면 valueOf() 호출 시 IllegalArgumentException.",
+    "JSON 데이터 파일 번역에서 제외하려면 blocked_jar_strings가 아닌 blocked_strings에 있어야 함."
   ],
 
   "blocked_classes": [
@@ -46,6 +52,7 @@
     "confirm",
     "conquest",
     "continue",
+    "cooperative",
     "credits",
     "crisis",
     "decline",
@@ -65,15 +72,20 @@
     "faction",
     "factions",
     "failed",
+    "favorable",
     "fleet",
     "fleets",
     "force",
     "formed",
+    "friendly",
+    "hostile",
+    "inhospitable",
     "invasion",
     "leave",
     "level",
     "marines",
     "morality",
+    "neutral",
     "officers",
     "options",
     "outmatched",
@@ -101,11 +113,14 @@
     "successful",
     "superior",
     "suspended",
+    "suspicious",
     "their",
     "transfer",
     "unknown",
     "value",
+    "vengeful",
     "victory",
-    "weapon"
+    "weapon",
+    "welcoming"
   ]
 }
