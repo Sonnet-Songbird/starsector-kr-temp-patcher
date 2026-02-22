@@ -208,11 +208,14 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str, blocked_strings: set 
     patches = Path(_resolve(paths['patches']))
     output_mods = Path(_resolve(paths['output_mods']))
 
-    src = game_mods / mod_id
     patch_dir = patches / mod_id
     dst = output_mods / mod_id
 
     print(f"\n[{mod_id}]")
+
+    # .bak 디렉터리가 있으면 원본 소스로 사용 (이중 패치 방지)
+    bak = game_mods / (mod_id + '.bak')
+    src = bak if bak.is_dir() else (game_mods / mod_id)
 
     if not src.is_dir():
         print(f"  WARN: 원본 모드 없음: {src} — 건너뜀")
@@ -222,7 +225,8 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str, blocked_strings: set 
     if dst.exists():
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
-    print(f"  원본 복사: {src} → {dst}")
+    src_label = f"{mod_id}.bak" if bak.is_dir() else mod_id
+    print(f"  원본 복사: {src_label} → {dst}")
 
     # 2. 번역 사전 적용 (translations.json 비어있으면 skip)
     trans_file = patch_dir / 'translations.json'
