@@ -3,17 +3,25 @@
 patch_utils.py - Java .class 상수 풀 패칭 공유 라이브러리
 
 05_patch_classes.py, 06_patch_obf.py, patch_mod_jar.py 등이 공통으로 사용하는
-알고리즘 모음. config/경로 의존성 없음.
+알고리즘 모음.
 
-공개 API:
+공개 API (JAR 패칭):
     decode_java_utf8(raw: bytes) -> str
     encode_java_utf8(s: str) -> bytes
     parse_constant_pool(data: bytes) -> tuple[list, int]
     rebuild_class(data: bytes, translations: dict) -> Optional[bytes]
     is_blocked_class(classname: str, blocked_classes: set) -> bool
     patch_jar(src_jar, dst_jar, translations, blocked_classes, blocked_strings, label) -> dict
+
+공개 API (설정/경로/제외목록):
+    resolve_path(p, base=None) -> str
+    load_config(base=None) -> dict
+    load_exclusions_file(path) -> tuple[set, set, set]
+    load_exclusions(paths, mod_id=None) -> tuple[set, set, set]
+    load_translations(paths, *extra_keys) -> dict
 """
 
+import json
 import struct
 import sys
 import zipfile
@@ -341,3 +349,78 @@ def patch_jar(
         os.replace(tmp_jar, dst_jar)
 
     return {"total": total, "patched": patched, "errors": errors}
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 공유 유틸리티: 경로/설정/제외목록/번역사전 로드
+# ──────────────────────────────────────────────────────────────────────────────
+
+_UTILS_BASE = Path(__file__).parent.parent  # kr_work/ 루트
+
+
+def resolve_path(p, base=None):
+    """상대경로('./', '../') → 절대경로. 절대경로는 그대로 반환."""
+    if base is None:
+        base = _UTILS_BASE
+    if isinstance(p, str) and (p.startswith('./') or p.startswith('../') or p == '.'):
+        return str((Path(base) / p).resolve())
+    return p
+
+
+def load_config(base=None):
+    """kr_work/config.json 로드."""
+    if base is None:
+        base = _UTILS_BASE
+    with open(Path(base) / 'config.json', encoding='utf-8') as f:
+        return json.load(f)
+
+
+def load_exclusions_file(path) -> tuple:
+    """단일 exclusions.json 로드 → (blocked_classes, blocked_strings, blocked_jar_strings)."""
+    if path and Path(path).exists():
+        with open(path, encoding='utf-8') as f:
+            excl = json.load(f)
+        return (
+            set(excl.get('blocked_classes', [])),
+            set(excl.get('blocked_strings', [])),
+            set(excl.get('blocked_jar_strings', [])),
+        )
+    return set(), set(), set()
+
+
+def load_exclusions(paths: dict, mod_id: str = None) -> tuple:
+    """
+    전역 + 모드 전용 exclusions 합집합.
+    mod_id=None 이면 전역(patches/exclusions.json)만.
+    반환: (blocked_classes, blocked_strings, blocked_jar_strings)
+    """
+    gc, gs, gjs = load_exclusions_file(resolve_path(paths.get('exclusions', '')))
+
+    if mod_id:
+        patches = Path(resolve_path(paths.get('patches', '')))
+        mc, ms, mjs = load_exclusions_file(patches / mod_id / 'exclusions.json')
+        if mc or ms or mjs:
+            print(f"  [{mod_id}] 모드 전용 exclusions: "
+                  f"클래스 {len(mc)}개, 문자열 {len(ms)}개, JAR전용 {len(mjs)}개")
+        return gc | mc, gs | ms, gjs | mjs
+
+    return gc, gs, gjs
+
+
+def load_translations(paths: dict, *extra_keys: str) -> dict:
+    """
+    common.json + extra_keys에 지정된 추가 파일들을 순서대로 병합.
+    extra_keys: paths dict의 키 이름 (예: 'api_trans', 'obf_trans')
+    나중 파일이 이전 파일을 덮어씀.
+    """
+    result = {}
+    common = resolve_path(paths.get('translations', ''))
+    if common and Path(common).exists():
+        with open(common, encoding='utf-8') as f:
+            result.update(json.load(f))
+    for key in extra_keys:
+        p = resolve_path(paths.get(key, ''))
+        if p and Path(p).exists():
+            with open(p, encoding='utf-8') as f:
+                result.update(json.load(f))
+    return result

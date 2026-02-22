@@ -32,64 +32,12 @@ config.json 예시:
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(Path(__file__).parent))
-
-from patch_utils import patch_jar  # noqa: E402
-
-
-def _resolve(p, base=SCRIPT_DIR):
-    if isinstance(p, str) and (p.startswith('./') or p.startswith('../') or p == '.'):
-        return str((base / p).resolve())
-    return p
-
-
-def _load_exclusions_file(path) -> tuple:
-    """단일 exclusions.json 파일 로드. (blocked_classes, blocked_strings, blocked_jar_strings) 반환."""
-    if path and os.path.exists(path):
-        with open(path, encoding='utf-8') as f:
-            excl = json.load(f)
-        return (
-            set(excl.get('blocked_classes', [])),
-            set(excl.get('blocked_strings', [])),
-            set(excl.get('blocked_jar_strings', [])),
-        )
-    return set(), set(), set()
-
-
-def _load_merged_exclusions(paths, mod_id: str, patches_dir: Path) -> tuple:
-    """
-    전역 exclusions + 모드 전용 exclusions를 합집합으로 병합.
-
-    전역: patches/exclusions.json
-    모드 전용: patches/{mod_id}/exclusions.json  (없으면 무시)
-
-    반환: (blocked_classes, blocked_strings_for_jar)
-      blocked_strings_for_jar = blocked_strings | blocked_jar_strings
-      (JAR 패칭에는 두 목록 모두 적용. 데이터 파일에는 blocked_strings만 적용.)
-    """
-    global_classes, global_strings, global_jar_strings = _load_exclusions_file(
-        _resolve(paths.get('exclusions', ''))
-    )
-
-    mod_excl_file = patches_dir / mod_id / 'exclusions.json'
-    mod_classes, mod_strings, mod_jar_strings = _load_exclusions_file(mod_excl_file)
-
-    total_classes = global_classes | mod_classes
-    total_strings = global_strings | mod_strings
-    total_jar_strings = global_jar_strings | mod_jar_strings
-
-    if mod_classes or mod_strings or mod_jar_strings:
-        print(f"  [{mod_id}] 모드 전용 exclusions: 클래스 {len(mod_classes)}개, "
-              f"문자열 {len(mod_strings)}개, JAR전용 {len(mod_jar_strings)}개")
-
-    # JAR 패칭에 적용할 최종 blocked_strings = blocked_strings + blocked_jar_strings
-    jar_blocked_strings = total_strings | total_jar_strings
-    return total_classes, jar_blocked_strings
+from patch_utils import (load_config, load_exclusions, load_translations,
+                          patch_jar, resolve_path)
 
 
 def main():
@@ -98,9 +46,7 @@ def main():
     args = parser.parse_args()
     mod_id = args.mod
 
-    with open(SCRIPT_DIR / 'config.json', encoding='utf-8') as f:
-        cfg = json.load(f)
-
+    cfg = load_config()
     paths = cfg['paths']
 
     # mod 설정 찾기
@@ -117,25 +63,19 @@ def main():
     # string 또는 list 모두 지원
     jar_paths = [mod_jar] if isinstance(mod_jar, str) else list(mod_jar)
 
-    output_mods = Path(_resolve(paths['output_mods']))
-    patches_dir = Path(_resolve(paths['patches']))
+    output_mods = Path(resolve_path(paths['output_mods']))
+    patches_dir = Path(resolve_path(paths['patches']))
 
     # 번역 사전 병합: common → 모드 전용 (모드 전용이 common보다 우선)
-    translations = {}
-    common_file = _resolve(paths.get('translations', ''))
-    if common_file and os.path.exists(common_file):
-        with open(common_file, encoding='utf-8') as f:
-            translations.update(json.load(f))
-    else:
-        print(f"WARN: common.json 없음: {common_file}")
-
+    translations = load_translations(paths)
     mod_trans_file = patches_dir / mod_id / 'translations.json'
     if mod_trans_file.exists():
         with open(mod_trans_file, encoding='utf-8') as f:
             mod_translations = json.load(f)
         if mod_translations:
             translations.update(mod_translations)
-            print(f"  [{mod_id}] 번역 사전: common {len(translations) - len(mod_translations)}개"
+            common_count = len(translations) - len(mod_translations)
+            print(f"  [{mod_id}] 번역 사전: common {common_count}개"
                   f" + 모드 전용 {len(mod_translations)}개 → 합계 {len(translations)}개")
         else:
             print(f"  [{mod_id}] 번역 사전: common {len(translations)}개 (모드 전용 비어있음)")
@@ -143,7 +83,8 @@ def main():
         print(f"  [{mod_id}] 번역 사전: common {len(translations)}개 (모드 전용 없음)")
 
     # 전역 + 모드 전용 exclusions 병합
-    blocked_classes, blocked_strings = _load_merged_exclusions(paths, mod_id, patches_dir)
+    blocked_classes, blocked_strings, blocked_jar_strings = load_exclusions(paths, mod_id)
+    jar_blocked = blocked_strings | blocked_jar_strings
 
     for jar_rel in jar_paths:
         jar_path = output_mods / mod_id / jar_rel
@@ -154,7 +95,7 @@ def main():
         print(f"  [{mod_id}/{jar_rel}] 패치 시작...")
         stats = patch_jar(
             jar_path, jar_path,
-            translations, blocked_classes, blocked_strings,
+            translations, blocked_classes, jar_blocked,
             label=f"{mod_id}/{jar_rel}"
         )
         print(f"  [{mod_id}/{jar_rel}] 패치: {stats['patched']}/{stats['total']} 클래스"

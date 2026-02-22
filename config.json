@@ -34,8 +34,8 @@
   ],
   "pipelines": {
     "patch": [
-      {"script": "scripts/05_patch_classes.py"},
-      {"script": "scripts/06_patch_obf.py"}
+      {"script": "scripts/patch_api_jar.py"},
+      {"script": "scripts/patch_obf_jar.py"}
     ],
     "build_mod": [
       {"script": "scripts/build_mods.py"}

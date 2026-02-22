@@ -33,7 +33,25 @@ import subprocess
 import sys
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).parent.parent
+sys.path.insert(0, str(Path(__file__).parent))
+from patch_utils import load_config, load_exclusions_file, resolve_path
+
+_SCRIPT_ROOT = Path(__file__).parent.parent  # scripts/ → kr_work/
+
+# JSON 값 번역 시 건너뛸 키 (전역 기본값).
+# 이 키 아래 값은 코드 식별자로 간주하여 번역하지 않음.
+# 모드별 추가 키는 patches/{mod_id}/exclusions.json → "blocked_json_keys" 에 등록.
+#
+# CSV_SKIP_COLUMNS 와 유사하나, JSON은 중첩 구조이므로 명확하게 식별자인 키만 포함.
+# (예: "options" 는 JSON에서 사용자 표시 텍스트일 수 있으므로 제외)
+BLOCKED_JSON_KEYS = {
+    # 프로그래밍 식별자
+    'id', 'factionId', 'faction', 'system', 'tags',
+    # Java 클래스/스크립트 경로
+    'className', 'class', 'plugin', 'script', 'ai', 'effectPlugin', 'implementation',
+    # 파일 경로/에셋 ID
+    'icon', 'image', 'sprite', 'sound', 'sound_id', 'spritePath', 'iconPath',
+}
 
 # CSV에서 번역하지 않을 컬럼 헤더 (식별자/인덱스 컬럼)
 CSV_SKIP_COLUMNS = {
@@ -54,12 +72,6 @@ CSV_SKIP_COLUMNS = {
     # 기타 기술적 컬럼
     'implementation notes', 'uiTags', 'sortOrder',
 }
-
-
-def _resolve(p, base=SCRIPT_DIR):
-    if isinstance(p, str) and (p.startswith('./') or p.startswith('../') or p == '.'):
-        return str((base / p).resolve())
-    return p
 
 
 def _load_json_lazy(text: str):
@@ -89,18 +101,32 @@ def _load_json_lazy(text: str):
     return json.loads(cleaned2)
 
 
-def translate_json_value(obj, translations: dict):
-    """JSON 객체를 재귀적으로 순회하며 string 값 교체."""
+def translate_json_value(obj, translations: dict,
+                          blocked_json_keys: set = None, _parent_key: str = None):
+    """
+    JSON 객체를 재귀적으로 순회하며 string 값 교체.
+
+    blocked_json_keys 에 속하는 키 아래의 값은 코드 식별자로 간주하여 번역 건너뜀.
+    예: "specializations": ["saboteur"] → "saboteur" 번역 안 함
+    """
     if isinstance(obj, str):
+        if blocked_json_keys and _parent_key in blocked_json_keys:
+            return obj  # 코드 식별자 키 — 번역 건너뜀
         return translations.get(obj, obj)
     if isinstance(obj, dict):
-        return {k: translate_json_value(v, translations) for k, v in obj.items()}
+        return {k: translate_json_value(v, translations,
+                                        blocked_json_keys=blocked_json_keys, _parent_key=k)
+                for k, v in obj.items()}
     if isinstance(obj, list):
-        return [translate_json_value(item, translations) for item in obj]
+        # 리스트 항목은 부모 키를 계속 전달 (예: "specializations": ["saboteur"])
+        return [translate_json_value(item, translations,
+                                     blocked_json_keys=blocked_json_keys, _parent_key=_parent_key)
+                for item in obj]
     return obj
 
 
-def translate_json_file(filepath: Path, translations: dict) -> bool:
+def translate_json_file(filepath: Path, translations: dict,
+                         blocked_json_keys: set = None) -> bool:
     """JSON 파일에 번역 적용. 변경 있으면 True."""
     try:
         text = filepath.read_text(encoding='utf-8')
@@ -109,7 +135,7 @@ def translate_json_file(filepath: Path, translations: dict) -> bool:
         print(f"    JSON 읽기 실패 {filepath.name}: {e}")
         return False
 
-    new_obj = translate_json_value(obj, translations)
+    new_obj = translate_json_value(obj, translations, blocked_json_keys=blocked_json_keys)
     if new_obj == obj:
         return False
 
@@ -164,7 +190,8 @@ def translate_csv_file(filepath: Path, translations: dict) -> bool:
     return True
 
 
-def apply_translations_to_dir(mod_dir: Path, translations: dict):
+def apply_translations_to_dir(mod_dir: Path, translations: dict,
+                               blocked_json_keys: set = None):
     """모드 출력 디렉토리의 모든 텍스트 파일에 번역 적용."""
     if not translations:
         return
@@ -178,7 +205,7 @@ def apply_translations_to_dir(mod_dir: Path, translations: dict):
             continue
 
         if fpath.suffix == '.json':
-            if translate_json_file(fpath, translations):
+            if translate_json_file(fpath, translations, blocked_json_keys=blocked_json_keys):
                 json_changed += 1
         elif fpath.suffix == '.csv':
             if translate_csv_file(fpath, translations):
@@ -187,32 +214,26 @@ def apply_translations_to_dir(mod_dir: Path, translations: dict):
     print(f"  번역 적용: JSON {json_changed}개, CSV {csv_changed}개 파일 변경")
 
 
-def _load_blocked_strings(paths) -> set:
-    """patches/exclusions.json에서 blocked_strings 로드."""
-    excl_file = _resolve(paths.get('exclusions', ''))
-    if excl_file and os.path.exists(excl_file):
-        with open(excl_file, encoding='utf-8') as f:
-            excl = json.load(f)
-        return set(excl.get('blocked_strings', []))
-    return set()
+def _load_mod_blocked_json_keys(patch_dir: Path) -> set:
+    """patches/{mod_id}/exclusions.json에서 blocked_json_keys 로드.
 
-
-def _load_mod_blocked_strings(patch_dir: Path) -> set:
-    """patches/{mod_id}/exclusions.json에서 blocked_strings 로드 (모드별 추가 제외)."""
+    이 키 아래 JSON 값은 코드 식별자로 간주하여 번역하지 않음.
+    전역 BLOCKED_JSON_KEYS 와 합집합으로 적용됨.
+    """
     excl_file = patch_dir / 'exclusions.json'
     if excl_file.exists():
         with open(excl_file, encoding='utf-8') as f:
             excl = json.load(f)
-        return set(excl.get('blocked_strings', []))
+        return set(excl.get('blocked_json_keys', []))
     return set()
 
 
 def build_mod(mod_cfg: dict, paths: dict, python_cmd: str,
               blocked_strings: set = None, restore: bool = True):
     mod_id = mod_cfg['id']
-    game_mods = Path(_resolve(paths['game_mods']))
-    patches = Path(_resolve(paths['patches']))
-    output_mods = Path(_resolve(paths['output_mods']))
+    game_mods = Path(resolve_path(paths['game_mods']))
+    patches = Path(resolve_path(paths['patches']))
+    output_mods = Path(resolve_path(paths['output_mods']))
 
     patch_dir = patches / mod_id
     dst = output_mods / mod_id
@@ -241,7 +262,7 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str,
     shutil.copytree(src, dst)
     print(f"  원본 복사: {mod_id} → {dst}")
 
-    # 2. 번역 사전 적용 (translations.json 비어있으면 skip)
+    # 3. 번역 사전 적용 (translations.json 비어있으면 skip)
     trans_file = patch_dir / 'translations.json'
     if trans_file.exists():
         try:
@@ -249,7 +270,8 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str,
                 mod_translations = json.load(f)
             if mod_translations:
                 # 전역 + 모드별 blocked_strings 합산
-                mod_blocked = (blocked_strings or set()) | _load_mod_blocked_strings(patch_dir)
+                _, mod_bs, _ = load_exclusions_file(patch_dir / 'exclusions.json')
+                mod_blocked = (blocked_strings or set()) | mod_bs
                 if mod_blocked:
                     before = len(mod_translations)
                     mod_translations = {k: v for k, v in mod_translations.items()
@@ -257,14 +279,17 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str,
                     removed = before - len(mod_translations)
                     if removed:
                         print(f"  제외: blocked_strings {removed}개")
+                # 전역 + 모드별 blocked_json_keys 합산
+                mod_blocked_json_keys = BLOCKED_JSON_KEYS | _load_mod_blocked_json_keys(patch_dir)
                 print(f"  번역 사전 {len(mod_translations)}개 항목 적용 중...")
-                apply_translations_to_dir(dst, mod_translations)
+                apply_translations_to_dir(dst, mod_translations,
+                                          blocked_json_keys=mod_blocked_json_keys)
             else:
                 print(f"  번역 사전: 비어있음 (skip)")
         except Exception as e:
             print(f"  WARN: translations.json 읽기 실패: {e}")
 
-    # 3. 파일 오버레이
+    # 4. 파일 오버레이
     overlaid = 0
     for sub in ['data', 'graphics']:
         p = patch_dir / sub
@@ -274,9 +299,9 @@ def build_mod(mod_cfg: dict, paths: dict, python_cmd: str,
     if overlaid:
         print(f"  오버레이: {overlaid}개 파일")
 
-    # 4. post_build 스크립트
+    # 5. post_build 스크립트
     for script_rel in mod_cfg.get('post_build', []):
-        script = SCRIPT_DIR / script_rel
+        script = _SCRIPT_ROOT / script_rel
         cmd = [python_cmd, str(script), '--mod', mod_id]
         print(f"  post_build: {script_rel}")
         result = subprocess.run(cmd, capture_output=False)
@@ -292,17 +317,16 @@ def main():
     args, _ = parser.parse_known_args()
     restore = not args.no_restore
 
-    with open(SCRIPT_DIR / 'config.json', encoding='utf-8') as f:
-        cfg = json.load(f)
-
+    cfg = load_config()
     paths = cfg['paths']
     python_cmd = paths.get('python', 'python')
     mods = cfg.get('mods', [])
 
-    output_mods = Path(_resolve(paths['output_mods']))
+    output_mods = Path(resolve_path(paths['output_mods']))
     output_mods.mkdir(parents=True, exist_ok=True)
 
-    blocked_strings = _load_blocked_strings(paths)
+    # 전역 blocked_strings 로드
+    _, blocked_strings, _ = load_exclusions_file(resolve_path(paths.get('exclusions', '')))
 
     enabled = [m for m in mods if m.get('enabled', True)]
     print(f"빌드 대상 모드: {[m['id'] for m in enabled]}")
