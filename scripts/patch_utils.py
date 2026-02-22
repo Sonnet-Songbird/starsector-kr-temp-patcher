@@ -144,6 +144,10 @@ def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
     """
     Apply translations to a class file's constant pool.
     Returns new class bytes, or None if no changes were made.
+
+    CONSTANT_Utf8 entries referenced by CONSTANT_String (tag 8) 만 번역.
+    필드명·메서드명·클래스명·디스크립터 Utf8은 건드리지 않아
+    XStream aliasAttribute, 리플렉션 기반 코드의 필드 탐색이 정상 동작함.
     """
     try:
         entries, rest_start = parse_constant_pool(data)
@@ -151,17 +155,29 @@ def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
         print(f"  Parse error: {e}", file=sys.stderr)
         return None
 
+    # Pass 1: CONSTANT_String(tag 8)이 참조하는 Utf8 인덱스 수집.
+    # 이 집합에 속한 항목만 실제 문자열 리터럴이며 번역 대상임.
+    # 필드/메서드명은 NameAndType(tag 12)이 참조하므로 이 집합에 포함되지 않음.
+    string_utf8_indices: set = set()
+    for entry in entries:
+        if entry is not None:
+            tag, val = entry
+            if tag == 8:  # CONSTANT_String
+                idx = struct.unpack_from('>H', val)[0]
+                string_utf8_indices.add(idx)
+
     modified = False
     new_pool = bytearray()
 
-    for entry in entries:
+    # Pass 2: 상수 풀 재조립 — 문자열 리터럴 Utf8만 번역.
+    for i, entry in enumerate(entries):
         if entry is None:
             # Long/Double dummy slot - skip (already accounted for by previous entry)
             continue
 
         tag, val = entry
 
-        if tag == 1:  # CONSTANT_Utf8
+        if tag == 1 and i in string_utf8_indices:  # CONSTANT_Utf8 (string literal only)
             try:
                 text = decode_java_utf8(val)
             except Exception:
