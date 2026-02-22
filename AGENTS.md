@@ -134,10 +134,8 @@ python build.py check
 
 ```bash
 # 1. patches/common.json에 "영어": "한국어" 추가
-# 2. 재패치 및 적용
-python build.py patch apply
-# 3. 검증
-python build.py verify
+# 2. 전체 재빌드 및 검증
+python build.py all
 ```
 
 ### 전체 재현 테스트
@@ -280,11 +278,8 @@ Java `.class` 파일의 CONSTANT_Utf8은 Python 표준 UTF-8과 다르다 (null�
 # 2. 안전성 확인 (ID로 쓰이는지 검사)
 python scripts/check_dangerous_strings.py
 
-# 3. 재패치 및 적용
-python build.py patch apply
-
-# 4. 검증
-python build.py verify
+# 3. 전체 재빌드 및 검증 (patch → build_mod → test → apply → verify)
+python build.py all
 ```
 
 **주의:** 번역을 추가하기 전 반드시 아래를 확인할 것:

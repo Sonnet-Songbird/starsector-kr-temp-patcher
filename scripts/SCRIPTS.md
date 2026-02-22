@@ -51,7 +51,7 @@ ExerelinCore.jar 등 모드 JAR에 합집합으로 적용
 ## [SETUP] 초기 환경 구성 (게임 업데이트 시 재실행)
 
 게임 버전이 변경될 때 새 JAR 클래스를 추출/분석하기 위해 실행.
-**실행 순서**: `01` → `02` → `04` → 번역 추가 → `build.py all`
+**실행 순서**: `extract_jars.sh` → `decompile.sh` → `find_strings.py` → 번역 추가 → `build.py all`
 
 | 스크립트 | 목적 | 입력 | 출력 |
 |----------|------|------|------|

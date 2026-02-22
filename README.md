@@ -4,7 +4,7 @@
 
 스타섹터(Starsector)를 위한 **임시 한글 패치**입니다.
 
-Java 클래스 파일의 상수 풀(Constant Pool)을 직접 수정하여 게임 하드코딩 UI 문자열을 한국어로 번역하며, 모드 데이터 파일(CSV/JSON)로는 처리할 수 없는 텍스트까지 번역합니다. 또한 `starsectorkorean` 모드 원본에 추가 번역 데이터를 패치하여 완전한 한글화 모드를 생성합니다.
+Java 클래스 파일의 상수 풀(Constant Pool)을 직접 수정하여 게임 하드코딩 UI 문자열을 한국어로 번역하며, 모드 데이터 파일(CSV/JSON)로는 처리할 수 없는 텍스트까지 번역합니다. 또한 `starsectorkorean` 모드 원본에 추가 번역 데이터를 패치하여 완전한 한글화 모드를 생성하고, Nexerelin 등 주요 모드의 번역도 포함합니다.
 
 > **주의:** 이 프로젝트는 Discord 커뮤니티 비공식 번역 작업의 임시 성과물입니다. 정식 한글화가 완료되면 종료됩니다.
 >
@@ -29,7 +29,6 @@ Java 클래스 파일의 상수 풀(Constant Pool)을 직접 수정하여 게임
 | 항목 | 요구사항 |
 |------|---------|
 | Python | 3.9 이상 (`python` 명령이 PATH에 있어야 함) |
-| JDK | 11 이상 (`jar` 명령이 PATH에 있어야 함) |
 | Starsector | 설치 완료 |
 | `starsectorkorean` 모드 | 사전 설치 필요 (`mods/starsectorkorean/` 존재해야 함) |
 | `.bak` 파일 | `starsector-core/starfarer.api.jar.bak`, `starfarer_obf.jar.bak` |
@@ -65,8 +64,7 @@ Starsector/               ← 게임 설치 폴더
 git clone https://github.com/Sonnet-Songbird/starsector-kr-temp-patcher.git kr_work
 cd kr_work
 
-# 2. 전체 빌드 (패치 + 적용 + 검증)
-# config.json은 상대경로 기본값으로 커밋되어 있으므로 별도 생성 불필요
+# 2. 전체 빌드 (패치 + 테스트 + 적용 + 검증)
 python build.py all
 ```
 
@@ -75,9 +73,9 @@ python build.py all
 | 상황 | 명령 |
 |------|------|
 | 전체 재패치 및 적용 | `python build.py all` |
-| 번역 추가 후 재적용 | `python build.py patch build_mod apply` |
-| 모드 파일만 갱신 | `python build.py update_mod` |
+| 모드 파일만 갱신 (JAR 재패치 없이) | `python build.py update_mod` |
 | 영어 원본 복원 후 전체 재적용 | `python build.py rebuild` |
+| 빌드 산출물 테스트만 실행 | `python build.py test` |
 | 적용 상태 확인 | `python build.py check` |
 | 영어 원본으로 복원 | `python build.py restore` |
 
@@ -88,43 +86,59 @@ python build.py all
 ```
 kr_work/
 ├── build.py              — 파이프라인 실행기 (단일 진입점)
+├── run_tests.py          — 빌드 산출물 자동 테스트 진입점
 ├── config.json           — 경로·파이프라인 설정 (상대경로 기본값으로 커밋됨)
 ├── README.md             — 이 파일
-├── AGENTS.md             — 유지보수 참고 (규칙·경로·함정)
+├── AGENTS.md             — 유지보수 참고 (규칙·경로·파이프라인·함정)
 ├── TRANSLATION_NOTES.md  — 번역 주의사항 및 기술 특징
 ├── CONTRIBUTING.md       — 기여 방법 안내
 │
 ├── scripts/              — 스크립트 (scripts/SCRIPTS.md 참고)
-│   ├── 05_patch_classes.py  — api JAR 인메모리 패치
-│   ├── 06_patch_obf.py      — obf JAR 인메모리 패치
+│   ├── patch_utils.py       — Java .class 상수 풀 패칭 공유 라이브러리
+│   ├── patch_api_jar.py     — api JAR 인메모리 패치
+│   ├── patch_obf_jar.py     — obf JAR 인메모리 패치
+│   ├── patch_mod_jar.py     — 범용 모드 JAR 상수 풀 패처 (post_build 훅)
 │   ├── build_mods.py        — 모드 빌드 (원본 + 패치 오버레이)
 │   ├── apply_mods.py        — 모드 적용 (게임 폴더로 복사)
-│   └── ...
+│   ├── verify_cr.py         — 한글화 적용 spot-check 검증
+│   └── ...                  — 분석/탐색 도구 (SCRIPTS.md 참고)
+│
+├── tests/                — 자동 테스트 (unittest, 추가 설치 불필요)
+│   ├── base_test.py         — 공통 BaseTestCase
+│   ├── helpers.py           — JAR 파싱 헬퍼
+│   ├── test_output.py       — 빌드 산출물 존재·ZIP 무결성
+│   ├── test_jars.py         — JAR 번역 확인·DRM 안전·blocked_class 검증
+│   └── test_mods.py         — 모드 파일 유효성·번역 샘플 확인
 │
 ├── patches/              ★ 커밋 대상 (번역 사전 + 모드 패치 파일)
-│   ├── common.json           — 주 사전 (JAR 공통 번역, 모드 파일 번역)
-│   ├── api_jar.json          — api JAR 전용 번역
+│   ├── common.json           — 주 사전 (JAR 공통 번역)
+│   ├── api_jar.json          — api JAR 전용 번역 (스킬 fragment 등)
 │   ├── obf_jar.json          — obf JAR 전용 번역
-│   └── starsectorkorean/
-│       ├── translations.json — starsectorkorean 전용 번역 사전
-│       └── data/             — 모드 오버레이 파일 (missions/ 제외)
-│           ├── strings/      — strings.json, tooltips.json
-│           ├── characters/skills/  — 59개 스킬 파일
-│           ├── hulls/        — ship_data.csv, skins/
-│           └── campaign/     — rules.csv, descriptions.csv
+│   ├── exclusions.json       — 전역 제외 목록 (DRM·launcher·XStream alias)
+│   ├── exclusions.json.template — 제외 수단 선택 가이드
+│   ├── starsectorkorean/     — starsectorkorean 모드 오버레이
+│   │   └── data/
+│   │       ├── strings/      — strings.json, tooltips.json
+│   │       ├── characters/skills/  — 59개 스킬 파일
+│   │       ├── hulls/        — ship_data.csv, skins/
+│   │       ├── campaign/     — rules.csv, descriptions.csv
+│   │       └── missions/     — 16개 임무 descriptor.json, mission_text.txt
+│   └── Nexerelin/            — Nexerelin 모드 오버레이
+│       ├── translations.json — Nexerelin 전용 번역 사전 (4,233개)
+│       └── exclusions.json   — Nexerelin 전용 제외 목록
 │
 ├── intermediate/         — 분석 캐시 (.gitignore, 재생성 가능)
 │
 ├── api_classes/          — api JAR 클래스 추출본 (게임 업데이트 비교용)
+├── api_src/              — api JAR 디컴파일 소스 (분석 스크립트 입력용)
 │
 ├── output/               ★ 빌드 산출물 (.gitignore, 재생성 가능)
 │   ├── starsector-core/
 │   │   ├── starfarer.api.jar    — 패치된 api JAR
 │   │   └── starfarer_obf.jar   — 패치된 obf JAR
-│   └── mods/starsectorkorean/  — 완전한 한글화 모드 (Releases ZIP 소스)
-│       ├── mod_info.json
-│       ├── graphics/fonts/
-│       └── data/               — 원본 모드 + 패치 적용 + 생성된 missions/
+│   └── mods/
+│       ├── starsectorkorean/   — 완전한 한글화 모드 (Releases ZIP 소스)
+│       └── Nexerelin/          — 번역된 Nexerelin 모드
 │
 └── tools/cfr.jar         — CFR 0.152 디컴파일러 (MIT License, Lee Benfield)
 ```
@@ -133,8 +147,8 @@ kr_work/
 
 | 항목 | 재생성 방법 |
 |------|-----------|
-| `api_classes/` | `bash scripts/01_extract_jars.sh` |
-| `api_src/` | `bash scripts/02_decompile.sh` |
+| `api_classes/` | `bash scripts/extract_jars.sh` |
+| `api_src/` | `bash scripts/decompile.sh` |
 | `output/` 전체 | `python build.py all` |
 | `intermediate/` 분석 캐시 | 해당 `find_*.py` 스크립트 재실행 |
 
@@ -146,7 +160,8 @@ kr_work/
 |------|------|
 | api JAR 수정 클래스 | 913개 |
 | obf JAR 수정 클래스 | 665개 |
-| 번역 사전 합계 | ~16,280개 (common 9,663 + api 3,467 + obf 3,150) |
+| 번역 사전 합계 (핵심 게임) | 16,356개 (common 9,667 + api 3,472 + obf 3,217) |
+| **Nexerelin 모드 번역** | **4,233개** |
 | 스킬 파일 | 59개 |
 | descriptions.csv 항목 | 721개 |
 | rules.csv 번역 | 2,245개 |
