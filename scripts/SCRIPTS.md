@@ -14,7 +14,6 @@
 | `patch_api_jar.py` | starfarer.api.jar 상수 풀 패치 (인메모리 ZIP) | `starfarer.api.jar.bak` + `patches/common.json` + `patches/api_jar.json` + `patches/exclusions.json` | `output/starsector-core/starfarer.api.jar` | `patch` 파이프라인 1단계 |
 | `patch_obf_jar.py` | starfarer_obf.jar 인메모리 패치 | `starfarer_obf.jar.bak` + `patches/common.json` + `patches/obf_jar.json` + `patches/exclusions.json` | `output/starsector-core/starfarer_obf.jar` | `patch` 파이프라인 2단계 |
 | `patch_mod_jar.py` | 범용 모드 JAR 상수 풀 패치 (post_build 훅) | `output/mods/{id}/{mod_jar}` + `patches/common.json` + `patches/{id}/translations.json` + `patches/exclusions.json` (전역) + `patches/{id}/exclusions.json` (모드 전용, 선택) | `output/mods/{id}/{mod_jar}` (in-place) | `build_mod` post_build 훅 |
-| `06_package.sh` | **[레거시]** patched_jar/ → api JAR 패키징 | `patched_jar/` | `output/starsector-core/starfarer.api.jar` | 미사용 (인메모리 방식 전환 후 파이프라인에서 제거됨) |
 | `build_mods.py` | 게임 원본 모드 + patches/ 오버레이 → output/mods/ 빌드 | `game_mods/<id>/` + `patches/<id>/` + `patches/exclusions.json` | `output/mods/<id>/` | `build_mod` 파이프라인 |
 | `apply_mods.py` | output/mods/ → 게임 mods/ 동기화 | `output/mods/<id>/` | `game_mods/<id>/` | `apply` 파이프라인 |
 | `translate_mission_java.py` | 16개 임무 MissionDefinition.java 번역 | `starsector-core/data/missions/` (게임 원본) | `output/mods/starsectorkorean/data/missions/` | `build_mod` post_build 훅 |

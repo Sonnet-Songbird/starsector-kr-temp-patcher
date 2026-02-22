@@ -59,8 +59,11 @@
       {"script": "scripts/verify_cr.py"},
       {"script": "scripts/verify_cr.py", "args": ["--status"]}
     ],
-    "update_mod": ["build_mod", "apply"],
-    "all":        ["patch", "build_mod", "apply", "verify"],
-    "rebuild":    ["restore", "patch", "build_mod", "apply", "verify"]
+    "test": [
+      {"script": "run_tests.py"}
+    ],
+    "update_mod": ["build_mod", "test", "apply"],
+    "all":        ["patch", "build_mod", "test", "apply", "verify"],
+    "rebuild":    ["restore", "patch", "build_mod", "test", "apply", "verify"]
   }
 }

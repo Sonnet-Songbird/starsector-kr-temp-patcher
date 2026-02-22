@@ -12,7 +12,7 @@
 | **번역 사전 (api 전용)** | `kr_work/patches/api_jar.json` | api JAR 전용 (커밋 대상) |
 | **번역 사전 (obf 전용)** | `kr_work/patches/obf_jar.json` | obf JAR 전용 (커밋 대상) |
 | **전역 패치 제외 목록** | `kr_work/patches/exclusions.json` | blocked_classes + blocked_strings (커밋 대상) |
-| **상수 풀 패칭 라이브러리** | `kr_work/scripts/patch_utils.py` | 05/06/patch_mod_jar 공통 import |
+| **상수 풀 패칭 라이브러리** | `kr_work/scripts/patch_utils.py` | patch_api_jar/patch_obf_jar/patch_mod_jar 공통 import |
 | **모드 JAR 패처** | `kr_work/scripts/patch_mod_jar.py` | post_build 훅으로 자동 호출 |
 | api JAR 원본 클래스 | `kr_work/api_classes/` | 게임 업데이트 비교용 (패칭에는 .bak 직접 사용) |
 | api 디컴파일 소스 | `kr_work/api_src/` | 16MB, 분석 스크립트 입력 |
@@ -198,21 +198,38 @@ python scripts/find_more_ui.py
 파이프라인 정의는 `config.json`에 있다. `build.py`는 실행기일 뿐이며 로직을 포함하지 않는다.
 
 ```
-patch      → 05_patch_classes.py (인메모리) → 06_patch_obf.py (인메모리)
+patch      → patch_api_jar.py (인메모리) → patch_obf_jar.py (인메모리)
 build_mod  → 게임 mods/ + patches/ 오버레이 → output/mods/ (build_mods.py) → post_build 훅
              post_build 훅 예시:
                update_mod_version.py --mod {id}   (mod_info.json 버전 갱신)
                patch_mod_jar.py --mod {id}         (모드 JAR 상수 풀 패치)
                translate_mission_java.py --mod {id} (Java 임무 파일 번역)
+test       → run_tests.py → unittest discover tests/  (빌드 산출물 자동 검증)
 apply      → JAR 복사 → apply_mods.py → game mods/ 동기화
 restore    → .bak 파일로 starsector-core JAR 복원
 verify     → verify_cr.py
 status     → verify_cr.py --status
-update_mod → build_mod → apply
+update_mod → build_mod → test → apply
 check      → verify → status
-all        → patch → build_mod → apply → verify
-rebuild    → restore → patch → build_mod → apply → verify
+all        → patch → build_mod → test → apply → verify
+rebuild    → restore → patch → build_mod → test → apply → verify
 ```
+
+**테스트 구조 (tests/):**
+```
+tests/
+  base_test.py       BaseTestCase — config/paths/exclusions 공유 setUpClass
+  helpers.py         get_string_literals(), has_korean(), jar_has_korean() — 비pytest 헬퍼
+  test_output.py     파일 존재 + ZIP 무결성
+  test_jars.py       JAR 번역 적용 + DRM 안전 + blocked_class 규칙 검증
+  test_mods.py       모드 파일 유효성 + 번역 샘플 확인
+run_tests.py         python -m unittest discover 진입점
+```
+
+> **테스트 프레임워크: `unittest.TestCase` (표준 라이브러리, 추가 설치 불필요)**
+> - 모든 테스트 클래스는 `base_test.BaseTestCase`를 상속
+> - 새 테스트 추가 시 `class TestXxx(BaseTestCase)` 형식 사용
+> - pytest 의존성 없음
 
 **patch_mod_jar.py 제외 규칙 적용 순서:**
 ```

@@ -194,7 +194,7 @@ cp starsector-core/starfarer_obf.jar starsector-core/starfarer_obf.jar.bak
 ```
 
 ### 5-2. .bak 파일에서 인메모리 패치
-`scripts/05_patch_classes.py`는 `starfarer.api.jar.bak`에서 직접 읽어 인메모리로 번역 후 `output/starsector-core/starfarer.api.jar`에 바로 쓴다. `api_classes/`는 게임 업데이트 전후 비교(`compare_jars.py`)에만 필요하며 패칭에는 사용되지 않는다.
+`scripts/patch_api_jar.py`는 `starfarer.api.jar.bak`에서 직접 읽어 인메모리로 번역 후 `output/starsector-core/starfarer.api.jar`에 바로 쓴다. `api_classes/`는 게임 업데이트 전후 비교(`compare_jars.py`)에만 필요하며 패칭에는 사용되지 않는다.
 
 ### 5-3. 패치 소스와 output/ 분리
 - `patches/starsectorkorean/` (리포 내) → 모드 오버레이 파일. 커밋 대상. `translations.json`, `data/`, `graphics/` 포함.
@@ -230,7 +230,7 @@ JAR 패치는 모드 오버라이드로 처리할 수 없는 **Java 하드코딩
 
 ### 7-1. 구조
 
-핵심 게임 JAR 패칭(`05_patch_classes.py`, `06_patch_obf.py`)과 동일한 알고리즘을 사용하지만, 모드 JAR은 `scripts/patch_mod_jar.py`가 처리한다. `build_mods.py`의 post_build 훅으로 자동 호출됨.
+핵심 게임 JAR 패칭(`patch_api_jar.py`, `patch_obf_jar.py`)과 동일한 알고리즘을 사용하지만, 모드 JAR은 `scripts/patch_mod_jar.py`가 처리한다. `build_mods.py`의 post_build 훅으로 자동 호출됨.
 
 **패치 흐름:**
 ```
@@ -319,3 +319,43 @@ for a in re.findall(r'alias\(\"([^\"]+)\"', src):
 3. `patches/{mod_id}/exclusions.json` 작성 (`blocked_classes`에 alias 클래스 추가)
 4. `patches/{mod_id}/translations.json`에 모드 전용 번역 추가
 5. `python build.py update_mod` 로 빌드 검증
+
+---
+
+## 8. 자동화 테스트
+
+### 8-1. 테스트 실행
+
+```bash
+# 파이프라인 내 자동 실행 (build_mod 후, apply 전)
+python build.py test
+
+# 독립 실행
+python run_tests.py        # 간략
+python run_tests.py -v     # 상세 출력
+```
+
+### 8-2. 테스트 구조
+
+```
+tests/
+  base_test.py   BaseTestCase — config/경로/exclusions setUpClass 공유
+  helpers.py     JAR 파싱 헬퍼 (unittest 비의존)
+  test_output.py 빌드 산출물 존재 + ZIP 무결성
+  test_jars.py   번역 적용 확인 + DRM 안전 + blocked_class 규칙
+  test_mods.py   모드 JSON/CSV 유효성 + 번역 샘플
+```
+
+**테스트 프레임워크: `unittest.TestCase` (표준 라이브러리, 추가 설치 불필요)**
+pytest는 사용하지 않음. 새 테스트 추가 시:
+```python
+from base_test import BaseTestCase
+
+class TestSomething(BaseTestCase):
+    def test_example(self):
+        self.assertTrue(...)
+```
+
+### 8-3. CRITICAL: DRM 안전 확인
+
+`test_drm_strings_intact` — `accidents/A.class`의 anti-piracy 문자열이 번역되지 않았는지 빌드마다 자동 확인함. 이 테스트가 실패하면 즉시 조치 필요.
