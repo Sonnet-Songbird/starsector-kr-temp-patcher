@@ -35,8 +35,12 @@ def _load_exclusions(paths, base):
     if excl_file and os.path.exists(excl_file):
         with open(excl_file, encoding='utf-8') as f:
             excl = json.load(f)
-        return set(excl.get('blocked_classes', [])), set(excl.get('blocked_strings', []))
-    return set(), set()
+        return (
+            set(excl.get('blocked_classes', [])),
+            set(excl.get('blocked_strings', [])),
+            set(excl.get('blocked_jar_strings', [])),
+        )
+    return set(), set(), set()
 
 
 def main():
@@ -64,12 +68,13 @@ def main():
             print(f"ERROR: Translation file not found: {p}", file=sys.stderr)
             sys.exit(1)
 
-    blocked_classes, blocked_strings = _load_exclusions(paths, base)
+    blocked_classes, blocked_strings, blocked_jar_strings = _load_exclusions(paths, base)
+    jar_blocked = blocked_strings | blocked_jar_strings
     print(f"Loaded {len(translations)} translations (common + api)")
 
     os.makedirs(os.path.dirname(out_jar), exist_ok=True)
 
-    stats = patch_jar(bak_jar, out_jar, translations, blocked_classes, blocked_strings, "api")
+    stats = patch_jar(bak_jar, out_jar, translations, blocked_classes, jar_blocked, "api")
 
     print(f"\nProcessed {stats['total']} class files")
     print(f"  Patched:  {stats['patched']}")
