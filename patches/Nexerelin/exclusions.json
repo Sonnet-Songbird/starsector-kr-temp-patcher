@@ -6,10 +6,13 @@
     "",
     "=== NexConfig 블락 이유 ===",
     "exerelin/utilities/NexConfig.class 는 순수 설정 로더로 UI 문자열이 없음.",
-    "내부에서 faction ID를 문자열로 비교(factionId.equals(\"neutral\"))하므로",
-    "JAR 패칭 시 \"neutral\" → \"중립\" 교체가 일어나면 defaultConfig가 null로 남아",
-    "DiplomacyManager.<clinit>에서 NullPointerException 발생.",
-    "→ 클래스 전체 차단이 blocked_strings 추가보다 정밀하고 안전한 해결책."
+    "안전성 차원에서 클래스 전체 차단.",
+    "",
+    "=== \"neutral\" blocked_jar_strings 이유 ===",
+    "translations.json에 neutral → 중립 번역이 있으면 DiplomacyManager.<clinit>에서",
+    "NexConfig.getFactionConfig(\"중립\") → null → NullPointerException 발생.",
+    "DiplomacyManager는 UI 문자열도 있으므로 클래스 전체 차단은 부적절.",
+    "blocked_jar_strings로 JAR 내 \"neutral\" 리터럴만 번역에서 제외."
   ],
 
   "blocked_classes": [
@@ -18,7 +21,8 @@
   ],
 
   "blocked_jar_strings": [
-    "invasions"
+    "invasions",
+    "neutral"
   ],
 
   "blocked_strings": [
