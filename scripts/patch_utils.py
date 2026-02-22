@@ -145,9 +145,13 @@ def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
     Apply translations to a class file's constant pool.
     Returns new class bytes, or None if no changes were made.
 
-    CONSTANT_Utf8 entries referenced by CONSTANT_String (tag 8) 만 번역.
-    필드명·메서드명·클래스명·디스크립터 Utf8은 건드리지 않아
-    XStream aliasAttribute, 리플렉션 기반 코드의 필드 탐색이 정상 동작함.
+    번역 대상 = CONSTANT_String(tag 8) 참조 Utf8
+              - 클래스명/필드명/메서드명으로도 사용되는 Utf8
+
+    Java enum 클래스는 'static { VARIABLE = new TokenType("VARIABLE", 0); }'
+    형태로 초기화되어 필드명 Utf8과 string literal Utf8이 같은 인덱스를 공유
+    (컴파일러 중복 제거)할 수 있음. 이 경우 string_utf8_indices 에 포함되지만
+    name_utf8_indices 에도 포함되어 번역 대상에서 제외됨 → NoSuchFieldError 방지.
     """
     try:
         entries, rest_start = parse_constant_pool(data)
@@ -155,21 +159,56 @@ def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
         print(f"  Parse error: {e}", file=sys.stderr)
         return None
 
-    # Pass 1: CONSTANT_String(tag 8)이 참조하는 Utf8 인덱스 수집.
-    # 이 집합에 속한 항목만 실제 문자열 리터럴이며 번역 대상임.
-    # 필드/메서드명은 NameAndType(tag 12)이 참조하므로 이 집합에 포함되지 않음.
-    string_utf8_indices: set = set()
-    for entry in entries:
-        if entry is not None:
-            tag, val = entry
-            if tag == 8:  # CONSTANT_String
-                idx = struct.unpack_from('>H', val)[0]
-                string_utf8_indices.add(idx)
+    # --- Pass 1a: 상수 풀에서 인덱스 분류 ---
+    string_utf8_indices: set = set()  # CONSTANT_String 이 참조하는 Utf8 (string literal)
+    name_utf8_indices: set = set()    # 식별자로 사용되는 Utf8 (번역 금지)
 
+    for entry in entries:
+        if entry is None:
+            continue
+        tag, val = entry
+        if tag == 8:    # CONSTANT_String → utf8_index
+            string_utf8_indices.add(struct.unpack_from('>H', val)[0])
+        elif tag == 7:  # CONSTANT_Class → name_index (클래스명)
+            name_utf8_indices.add(struct.unpack_from('>H', val)[0])
+        elif tag == 12: # CONSTANT_NameAndType → name_index, descriptor_index
+            name_utf8_indices.add(struct.unpack_from('>H', val)[0])
+            # descriptor_index 는 "I", "Ljava/lang/String;" 형태 — 번역 대상 아님
+
+    # --- Pass 1b: 클래스 바디에서 자신의 field/method name_index 수집 ---
+    # NameAndType 은 타 클래스의 외부 참조만 커버함.
+    # 클래스가 자신의 필드를 선언할 때 field_info.name_index 는 바디에만 존재.
+    # enum 의 VARIABLE 필드가 이에 해당함.
+    try:
+        pos = rest_start + 6  # access_flags(2) + this_class(2) + super_class(2)
+        icount = struct.unpack_from('>H', data, pos)[0]; pos += 2
+        pos += icount * 2  # interfaces 배열 건너뜀
+
+        # fields 와 methods 는 동일한 구조: count(2) + [access(2)+name(2)+desc(2)+attrs...]
+        for _section in range(2):  # 0=fields, 1=methods
+            count = struct.unpack_from('>H', data, pos)[0]; pos += 2
+            for _ in range(count):
+                # access_flags(2), name_index(2), descriptor_index(2)
+                name_utf8_indices.add(struct.unpack_from('>H', data, pos + 2)[0])
+                pos += 6
+                # attributes
+                acount = struct.unpack_from('>H', data, pos)[0]; pos += 2
+                for _ in range(acount):
+                    name_utf8_indices.add(struct.unpack_from('>H', data, pos)[0])
+                    attr_len = struct.unpack_from('>I', data, pos + 2)[0]
+                    pos += 6 + attr_len
+    except (struct.error, IndexError):
+        pass  # 파싱 실패 시 상수 풀에서 얻은 정보만 사용
+
+    # 실제 번역 대상: string literal 이면서 식별자가 아닌 Utf8
+    translatable = string_utf8_indices - name_utf8_indices
+    if not translatable:
+        return None  # 번역할 항목 없음 — 빠른 경로
+
+    # --- Pass 2: 상수 풀 재조립 ---
     modified = False
     new_pool = bytearray()
 
-    # Pass 2: 상수 풀 재조립 — 문자열 리터럴 Utf8만 번역.
     for i, entry in enumerate(entries):
         if entry is None:
             # Long/Double dummy slot - skip (already accounted for by previous entry)
@@ -177,7 +216,7 @@ def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
 
         tag, val = entry
 
-        if tag == 1 and i in string_utf8_indices:  # CONSTANT_Utf8 (string literal only)
+        if tag == 1 and i in translatable:  # CONSTANT_Utf8, 번역 안전
             try:
                 text = decode_java_utf8(val)
             except Exception:
