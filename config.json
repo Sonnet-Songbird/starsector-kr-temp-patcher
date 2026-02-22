@@ -28,7 +28,8 @@
       "enabled": true,
       "mod_jar": "jars/ExerelinCore.jar",
       "post_build": [
-        "scripts/patch_mod_jar.py"
+        "scripts/patch_mod_jar.py",
+        "scripts/translate_nex_rules_options.py"
       ]
     }
   ],
