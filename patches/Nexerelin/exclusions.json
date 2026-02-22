@@ -2,11 +2,19 @@
   "_comment": [
     "Nexerelin 모드 전용 패치 제외 목록.",
     "전역 patches/exclusions.json + 이 파일의 합집합이 ExerelinCore.jar 패치에 적용됨.",
-    "자세한 원칙 설명은 patches/exclusions.json.template 참조."
+    "자세한 원칙 설명은 patches/exclusions.json.template 참조.",
+    "",
+    "=== NexConfig 블락 이유 ===",
+    "exerelin/utilities/NexConfig.class 는 순수 설정 로더로 UI 문자열이 없음.",
+    "내부에서 faction ID를 문자열로 비교(factionId.equals(\"neutral\"))하므로",
+    "JAR 패칭 시 \"neutral\" → \"중립\" 교체가 일어나면 defaultConfig가 null로 남아",
+    "DiplomacyManager.<clinit>에서 NullPointerException 발생.",
+    "→ 클래스 전체 차단이 blocked_strings 추가보다 정밀하고 안전한 해결책."
   ],
 
   "blocked_classes": [
-    "exerelin/plugins/XStreamConfig.class"
+    "exerelin/plugins/XStreamConfig.class",
+    "exerelin/utilities/NexConfig.class"
   ],
 
   "blocked_jar_strings": [
