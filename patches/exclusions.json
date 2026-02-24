@@ -20,7 +20,10 @@
 
     "com/fs/starfarer/api/impl/campaign/CoreLifecyclePluginImpl.class",
 
-    "com/fs/starfarer/loading/scripts/"
+    "com/fs/starfarer/loading/scripts/",
+    "com/fs/starfarer/loading/ShipHullSpreadsheetLoader.class",
+    "com/fs/starfarer/loading/WeaponSpreadsheetLoader.class",
+    "com/fs/starfarer/loading/FighterWingSpreadsheetLoader.class"
   ],
 
   "blocked_jar_strings": [],
