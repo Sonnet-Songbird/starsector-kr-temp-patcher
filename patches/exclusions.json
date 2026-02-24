@@ -20,16 +20,13 @@
 
     "com/fs/starfarer/api/impl/campaign/CoreLifecyclePluginImpl.class",
 
-    "com/fs/starfarer/loading/",
-
-    "com/fs/starfarer/title/TitleScreenState.class",
-    "com/fs/starfarer/campaign/CampaignState.class",
-    "com/fs/starfarer/combat/CombatState.class",
-    "com/fs/starfarer/combat/CombatEngine.class",
-    "com/fs/starfarer/settings/StarfarerSettings$1.class"
+    "com/fs/starfarer/loading/"
   ],
 
-  "blocked_jar_strings": [],
+  "blocked_jar_strings": [
+    "Title Screen State",
+    "Campaign State"
+  ],
 
   "blocked_strings": []
 }
