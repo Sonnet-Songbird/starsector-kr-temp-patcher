@@ -1,0 +1,94 @@
+id,name,cost mult,build time,income,upkeep,downgrade,upgrade,tags,data,image,plugin,desc,order,disruptDanger
+population,인구 & 기반시설,,,10,3,,,"population, unraidable, no_saturation_bombardment",,graphics/icons/industry/population.png,com.fs.starfarer.api.impl.campaign.econ.impl.PopulationAndInfrastructure,구불구불한 궤도 거주 모듈부터 거대 도시 및 그 사이의 모든 것에 이르기까지 특정 인구를 지원하는 데 필요한 기본 인프라입니다.,100,
+farming,농업,15,60,,1,,,"farming, industry, rural",,graphics/icons/industry/farming.png,com.fs.starfarer.api.impl.campaign.econ.impl.Farming,"농업은 문명만큼이나 오래된 무역이자 기술입니다. 수천 번의 주기 동안 인류는 생계를 유지하기 위해 자연, 변형 및 인공 생물학적 기계의 힘을 활용해 왔습니다. 항상 그랬고, 인간이 인간인 한 앞으로도 그러할 것입니다.",200,LOW
+aquaculture,양식업,50,60,,3,,,"farming, industry, rural",,graphics/icons/industry/aquaculture.png,com.fs.starfarer.api.impl.campaign.econ.impl.Farming,수중 세계에서 양식을 하려면 생명공학에 적합한 종에 대한 상당한 초기 투자가 필요하지만 일단 프로세스가 시작되면 전문 교육이나 장비를 많이 요구하지 않고도 조류 양식장과 어업을 인구가 운영할 수 있습니다.,210,MEDIUM
+mining,광업,20,60,,2,,,"mining, industry, industrial",,graphics/icons/industry/mining.png,com.fs.starfarer.api.impl.campaign.econ.impl.Mining,"금속 및 준금속 광석, 유기물, 휘발성 화합물을 모두 추출하려면 중장비, 특수 인프라, 숙련된 인력이 필요합니다. 가혹한 업무는 특정 유형의 사람들을 끌어들이고, 때때로 다른 길을 보려고 하지 않는 행정부는 기꺼이 인력이 부족하다는 것을 알게 될 수도 있습니다.",300,MEDIUM
+techmining,기술광업,30,45,,2,,,"techmining, industry, industrial",,graphics/icons/industry/techmining.png,com.fs.starfarer.api.impl.campaign.econ.impl.TechMining,Techmining은 도메인 폐허에서 귀중한 유물을 복구하는 잡다한 기술입니다. 고유한 위험을 처리하기 위한 특별한 도구와 좋은 값싼 물건을 찾을 수 있는 위치를 알기 위한 전문가 판단이 필요합니다. 가장 나이가 많은 기술 광부들은 행운의 부적을 움켜쥐고 의식 없이는 일하기를 거부하는 이상한 사람들입니다.,400,MEDIUM
+refining,정련업,45,90,,3,,,"refining, industry, industrial",,graphics/icons/industry/refining.png,com.fs.starfarer.api.impl.campaign.econ.impl.Refining,이곳의 제련소는 광석과 초플루토닉 광석을 각각 금속과 초플루토닉으로 변환합니다. 일반적으로 원격 조종 로봇은 가장 위험한 작업을 처리하는 데 사용됩니다.,500,MEDIUM
+spaceport,우주항구,10,15,,3,,megaport,"spaceport, important, structure",,graphics/icons/industry/spaceport.png,com.fs.starfarer.api.impl.campaign.econ.impl.Spaceport,화물을 싣고 내리며 기본적인 우주선 수리를 수행하는 시설입니다. 우주항이 없는 식민지는 사실상 성간 무역에 접근할 수 없습니다.,150,HIGH
+megaport,거대항구,60,150,,4,spaceport,,"spaceport, structure",,graphics/icons/industry/megaport.png,com.fs.starfarer.api.impl.campaign.econ.impl.Spaceport,별들이 흙과 닿을 수 있는 광대한 우주항입니다. 연대형 착륙선 갠트리와 장갑 연료 탱크가 진입로와 단거리 화물 트램으로 연결되어 있어 광범위한 창고 구역과 물류 터미널에 공급되어 식민지에 대한 접근이 훨씬 더 쉬워졌습니다.,151,EXTREME
+lightindustry,경공업,45,90,,8,,,"lightindustry, industry, rural",,graphics/icons/industry/light_industry.png,com.fs.starfarer.api.impl.campaign.econ.impl.LightIndustry,국산품과 명품을 생산합니다. 기술 수준이 낮기 때문에 붕괴의 영향을 상대적으로 받지 않는 몇 안 되는 산업 중 하나입니다.,1400,MEDIUM
+heavyindustry,중공업,100,120,,12,,orbitalworks,"heavyindustry, uses_blueprints, industry, industrial",,graphics/icons/industry/heavy_industry.png,com.fs.starfarer.api.impl.campaign.econ.impl.HeavyIndustry,"중공업 장비, 보급품, 무기 생산을 위한 중앙 집중식 제조 인프라입니다. 또한 거의 우주에 사용할 수 없는 우주선을 생산할 수도 있습니다. 생산 품질을 향상시키기 위해 nanoforge를 설치할 수 있습니다.",1600,HIGH
+orbitalworks,궤도작업장,60,150,,12,heavyindustry,,"heavyindustry, uses_blueprints, industry, industrial",,graphics/icons/industry/orbital_works.png,com.fs.starfarer.api.impl.campaign.econ.impl.HeavyIndustry,"중공업 장비, 보급품, 무기 생산을 위한 중앙 집중식 제조 인프라입니다. 또한 거의 우주에 사용할 수 없는 우주선을 생산할 수도 있습니다. 생산 품질을 향상시키기 위해 나노포지를 설치할 수 있습니다.
+ 
+ 선박 건조를 더욱 용이하게 하는 궤도 구성 요소로 업그레이드되어 제조 결함이 줄어듭니다.",1700,HIGH
+fuelprod,연료생산업,90,120,,10,,,"fuelprod, industry, industrial",,graphics/icons/industry/fuel_production.png,com.fs.starfarer.api.impl.campaign.econ.impl.FuelProduction,이 시설은 성간 문명의 생명선인 우주선 연료를 생산합니다. 도메인 기술 구성 요소가 부족하여 연료 생산은 힘들고 느린 과정입니다.,1800,HIGH
+#advfuelprod,Advanced Fuel Production,120,60,,5,fuelprod,,fuelprod,,graphics/icons/industry/advanced_fuel_production.png,com.fs.starfarer.api.impl.campaign.econ.impl.FuelProduction,"A massive Domain-tech facility produces starship fuel, the life-blood of interstellar civilization.",1900,
+commerce,상업,90,90,,3,,,"industry, urban",,graphics/icons/industry/commerce.png,com.fs.starfarer.api.impl.campaign.econ.impl.TradeCenter,"번성하는 독립 무역을 장려하기 위한 규정, 보조금 및 인프라. 식민지에 대한 행정부의 직접적인 통제 정도가 크게 감소합니다.",1950,MEDIUM
+station_base,궤도 정거장,,,,,,,"station, parent_item, important, structure",station,graphics/icons/industry/station_category.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"$marketName 근처의 아군 함대를 지원할 수 있고 포격을 시도하기 전에 규모를 줄여야 하는 우주 정거장입니다.
+ 
+ 여러 가지 변형이 가능하며 차이점은 일반적으로 전반적인 강도보다는 전술적 접근 방식에 있습니다.",2000,
+orbitalstation,궤도 정거장 - 낮은 기술,50,90,,3,,battlestation,"station, sub_item, unraidable, structure","{
+radius:55,
+variant:station1_Standard,
+fleetName:Orbital Station,
+}",graphics/icons/industry/orbital_station.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"중장갑과 중간 화력을 갖춘 저기술 우주 정거장입니다.
+ 
+ 포격을 시도하려면 먼저 감소해야 합니다.",2010,
+battlestation,전투 정거장 - 낮은 기술,100,120,,4,orbitalstation,starfortress,"station, battlestation, unraidable, structure","{
+radius:65,
+variant:station2_Standard,
+fleetName:Battlestation,
+}",graphics/icons/industry/battlestation.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"무거운 요새와 지점 방어 성채로 보강된 우주 정거장입니다.
+ 
+ 포격을 시도하려면 먼저 축소해야 합니다.",2020,
+starfortress,항성 성채 - 낮은 기술,200,180,,5,battlestation,,"station, starfortress, unraidable, structure","{
+radius:70,
+variant:station3_Standard,
+fleetName:Star Fortress
+}",graphics/icons/industry/star_fortress.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"멀론급 방어 드론과 광범위한 지뢰밭을 갖춘 중장갑 전투 기지입니다.
+ 
+ 포격을 시도하려면 먼저 감소해야 합니다.",2030,
+orbitalstation_mid,궤도 정거장 - 중간 기술,50,90,,3,,battlestation_mid,"station, sub_item, unraidable, structure","{
+radius:55,
+variant:station1_midline_Standard,
+fleetName:Orbital Station,
+}",graphics/icons/industry/orbital_station.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"한쪽에 강력한 화력과 빠른 축 회전이 특징인 중앙선 우주 정거장입니다.
+ 
+ 포격을 시도하려면 먼저 감소해야 합니다.",2040,
+battlestation_mid,전투 정거장 - 중간 기술,100,120,,4,orbitalstation_mid,starfortress_mid,"station, battlestation, unraidable, structure","{
+radius:65,
+variant:station2_midline_Standard,
+fleetName:Battlestation,
+}",graphics/icons/industry/battlestation.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"미사일 지원 모듈로 강화된 우주 정거장.
+ 
+ 폭격을 시도하려면 먼저 감소해야 합니다.",2050,
+starfortress_mid,항성 성채 - 중간 기술,200,180,,5,battlestation_mid,,"station, starfortress, unraidable, structure","{
+radius:70,
+variant:station3_midline_Standard,
+fleetName:Star Fortress
+}",graphics/icons/industry/star_fortress.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"라벨린급 방어 드론과 광범위한 지뢰밭을 갖춘 중장갑 전투 기지입니다.
+ 
+ 포격을 시도하려면 먼저 감소해야 합니다.",2060,
+orbitalstation_high,궤도 정거장 - 높은 기술,50,90,,3,,battlestation_high,"station, sub_item, unraidable, structure","{
+radius:55,
+variant:station1_hightech_Standard,
+fleetName:Orbital Station,
+}",graphics/icons/industry/orbital_station.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"무거운 회전 방패, 전투기 보완 장치, 중간 화력을 갖춘 하이테크 우주 정거장입니다.
+ 
+ 포격을 시도하려면 먼저 감소해야 합니다.",2070,
+battlestation_high,전투 정거장 - 높은 기술,100,120,,4,orbitalstation_high,starfortress_high,"station, battlestation, unraidable, structure","{
+radius:65,
+variant:station2_hightech_Standard,
+fleetName:Battlestation,
+}",graphics/icons/industry/battlestation.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"강력한 화력을 갖춘 방어 요새로 강화된 우주 정거장입니다.
+ 
+ 포격을 시도하려면 먼저 감소해야 합니다.",2080,
+starfortress_high,항성 성채 - 높은 기술,200,180,,5,battlestation_high,,"station, starfortress, unraidable, structure","{
+radius:70,
+variant:station3_hightech_Standard,
+fleetName:Star Fortress
+}",graphics/icons/industry/star_fortress.png,com.fs.starfarer.api.impl.campaign.econ.impl.OrbitalStation,"가고일급 방어 드론과 장거리 표적 지뢰 텔레포터를 갖춘 장갑이 강화된 전투 기지입니다.
+ 
+ 포격을 시도하려면 먼저 감소해야 합니다.",2090,
+grounddefenses,지상 방어,30,60,,2,,heavybatteries,"grounddefenses, unraidable, tactical_bombardment, structure",,graphics/icons/industry/ground_defenses.png,com.fs.starfarer.api.impl.campaign.econ.impl.GroundDefenses,소규모의 숨겨진 무기 설치로 구성된 분산된 반자율 네트워크로 인해 직접적인 지상 공격은 물론 단순한 습격조차도 공격자에게 극도로 큰 비용을 초래하게 됩니다. 압도적인 궤도 폭격이나 엄청난 불균형의 능동 차단만이 이러한 방어를 억제할 수 있습니다.,2200,
+heavybatteries,중형 포대,60,90,,3,grounddefenses,,"grounddefenses, unraidable, tactical_bombardment, structure",,graphics/icons/industry/heavy_batteries.png,com.fs.starfarer.api.impl.campaign.econ.impl.GroundDefenses,"장갑형 지하 포대는 분산된 소규모 숨겨진 무기 설치 네트워크를 보완합니다. 지상 기반 포대는 정말 놀라운 화력을 발휘할 수 있지만, 이는 지상 작전을 더욱 어렵게 만드는 것으로만 드러납니다. 우주선 선장은 포격 범위 내에 들어갈 만큼 어리석지 않기 때문입니다.",2300,
+patrolhq,순찰 본부,60,60,,8,,militarybase,"patrol, unraidable, tactical_bombardment, structure",,graphics/icons/industry/patrol_hq.png,com.fs.starfarer.api.impl.campaign.econ.impl.MilitaryBase,"항성계 전체에 전력을 투사하는 데 필요한 필수 격납고, 정비 구역, 지휘/통제 센터, 막사 및 병참 작전. 일단 설립되면 군사 순찰대가 해적을 사냥하고 아군 호송대를 보호합니다.",2400,
+militarybase,군사기지,90,120,,10,patrolhq,highcommand,"military, unraidable, tactical_bombardment, industry",,graphics/icons/industry/military_base.png,com.fs.starfarer.api.impl.campaign.econ.impl.MilitaryBase,"이러한 시설을 통해 항성계 간의 힘 투영이 가능해졌습니다. 그러한 군사 사업은 수십, 아마도 수백 척의 우주선과 수천 명의 장교, 승무원 및 군인의 조정이 필요한 대규모 병참 작전입니다.",2500,
+highcommand,고위 사령부,30,120,,14,militarybase,,"command, unraidable, tactical_bombardment, industry",,graphics/icons/industry/high_command.png,com.fs.starfarer.api.impl.campaign.econ.impl.MilitaryBase,트랜스텔라 제국은 전체 항성계의 자원에 대한 권한을 부여받은 뛰어난 장교와 관료 군단을 통해서만 가능합니다. 확립된 최고 사령부는 섹터 전반에 걸쳐 군사 작전을 조직하고 실행하는 것을 허용합니다.,2600,
+lionsguard,Lion경호대 본부,90,60,,6,,,"military, unraidable, tactical_bombardment, structure, codex_unlockable",,graphics/icons/industry/lions_guard.png,com.fs.starfarer.api.impl.campaign.econ.impl.LionsGuardHQ,"필립 ""신드리아의 사자"" 안드라다의 두려운 개인 경호원의 본부. 최고의 훈련과 구매할 수 있는 최고의 장비 크레딧에 대한 접근을 자랑하는 Guard의 열광적인 충성심은 Diktat의 정규 군대로부터 Guard를 승격시키고 격리시키는 특전과 인센티브 시스템을 통해 유지됩니다.",2650,
+planetaryshield,행성 보호막,150,90,,3,,,"grounddefenses, structure, codex_unlockable",,graphics/icons/industry/planetary_shield.png,com.fs.starfarer.api.impl.campaign.econ.impl.PlanetaryShield,장거리 포격과 소형 함선의 침입까지 전투 효과를 방해하는 효과를 생성하는 이국적인 가상 입자가 주입된 충전 플라즈마 봉투입니다. 행성 방어막은 중앙 소스에 의해 지속적으로 충전 및 제어될 수 있으며 모든 형태의 지상 공격에 엄청난 장애물을 제공합니다.,2700,EXTREME
+waystation,중간기착지,20,60,,2,,,"waystation, structure",,graphics/icons/industry/waystation.png,com.fs.starfarer.api.impl.campaign.econ.impl.Waystation,성간 함대를 위한 보급 및 유지 관리 기지입니다. 식민지의 접근성을 높입니다.,155,MEDIUM
+cryosanctum,저온성소,150,90,,5,,,"cryosanctum, structure, codex_unlockable",,graphics/icons/industry/cryosanctum.png,com.fs.starfarer.api.impl.campaign.econ.impl.Cryosanctum,"아마도 보다 문명화된 시대가 될 이 고난의 시기를 통과하기 위해 냉동잠을 자려는 사람들을 저장하기 위해 지어진 거대한 무덤 같은 금고입니다. 크라이오포드 자체는 여러 번 중복된 지원 인프라, 대규모 자동화 보안 시스템 및 대함 배터리에 비해 크기가 미미하며 모두 분기된 지하 요새 미궁에 보관되어 있습니다.",3000,EXTREME
+,,,,,,,,,,,,,,
+cryorevival,저온소생 시설,60,60,,5,,,"cryorevival, structure, codex_unlockable",,graphics/icons/industry/cryorevival.png,com.fs.starfarer.api.impl.campaign.econ.impl.Cryorevival,도메인 시대의 냉동잠수함 승객들의 집단 부활과 동화를 위해 필요한 시설. 인구 증가가 크게 증가합니다.,3200,MEDIUM

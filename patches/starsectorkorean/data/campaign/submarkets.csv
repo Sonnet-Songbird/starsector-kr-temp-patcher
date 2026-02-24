@@ -1,0 +1,23 @@
+id,name,faction,desc,script,icon,order
+open_market,"합법
+거래소",,"오픈마켓. 이곳에서는 합법적인 상품만 거래할 수 있으며 거래에는 관세가 부과됩니다. 안정성이 높을수록 더 많은 상품을 구입할 수 있습니다.
+ 
+상품을 충분히 판매하면 일시적으로 부족 현상이 해결됩니다.",com.fs.starfarer.api.impl.campaign.submarkets.OpenMarketPlugin,,0
+black_market,"암
+시장",pirates,"암시장. 무엇이든 사고팔 수 있으며 관세도 없습니다. 안정성이 낮으면 더 많은 상품을 사용할 수 있습니다.
+ 
+상품을 충분히 판매하면 일시적으로 부족 현상이 해결됩니다.
+ 
+암시장 거래는 당국의 눈에 띄어 화물 스캔이 발생하고 세력 지위가 감소할 수 있습니다. 응답기가 꺼졌습니다.
+ 
+""은폐""로서 합법적인 거래에 참여하는 것도 당국의 관심을 끌 확률이 줄어듭니다.",com.fs.starfarer.api.impl.campaign.submarkets.BlackMarketPlugin,graphics/factions/black_market.png,999
+storage,보관소,player,선박 및 화물을 보관하는 공간입니다.,com.fs.starfarer.api.impl.campaign.submarkets.StoragePlugin,graphics/factions/storage.png,1000
+generic_military,,,"$theFaction 군사 기지와 거래하세요.
+ 
+무기 및 기타 군사 장비는 공개 시장에서 불법이더라도 이곳에서 사고 팔 수 있습니다. $theFaction에 대한 커미션과 더 나은 지위로 인해 더 높은 등급의 하드웨어를 사용할 수 있게 됩니다.
+ 
+묻지 않는 환매 프로그램의 일환으로 현지 불법 물품을 구매할 예정입니다.
+ 
+상품을 충분히 판매하면 일시적으로 부족 현상이 해결됩니다.",com.fs.starfarer.api.impl.campaign.submarkets.MilitarySubmarketPlugin,,100
+local_resources,"자원
+비축량",,,com.fs.starfarer.api.impl.campaign.submarkets.LocalResourcesSubmarketPlugin,,200
