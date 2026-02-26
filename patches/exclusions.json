@@ -31,7 +31,9 @@
     "com/fs/starfarer/combat/CombatMain.class"
   ],
 
-  "blocked_jar_strings": [],
+  "blocked_jar_strings": [
+    "run combat simulator"
+  ],
 
   "blocked_strings": []
 }
