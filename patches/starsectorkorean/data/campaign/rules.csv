@@ -8774,9 +8774,9 @@ $usable
 cTap_infoTextBeingRepaired,BeginSalvage,"$customType == coronal_tap score:1000
 $usable
 $beingRepaired",FireBest CTapPrintEffect,이 구조물은 현재 자동화된 자체 수리가 진행 중이며 빠른 시일 내에 완료되어야 합니다.,100:defaultLeave:떠난다,
-cTap_printEffect,DialogOptionSelected,$option == cTap_continue,"SetTextHighlights 10 1 ""hypershunt tap""
+cTap_printEffect,DialogOptionSelected,$option == cTap_continue,"SetTextHighlights 10 1 ""하이퍼션트 탭""
 FireBest CTapCheckCanAfford
-FireBest CTapDisableRepairOptionIfNeeded","TriPad가 유용한 분석을 제공합니다: 이 구조물이 활성화된다면 10 광년 이내의 식민지가 추가로 1개의 산업을 설립할 수 있게 됩니다. 단 Hypershunt Tap 설치와 희귀금속의 안정적인 공급이 유지되어야 합니다.
+FireBest CTapDisableRepairOptionIfNeeded","TriPad가 유용한 분석을 제공합니다: 이 구조물이 활성화된다면 10 광년 이내의 식민지가 추가로 1개의 산업을 설립할 수 있게 됩니다. 단 하이퍼션트 탭 설치와 희귀금속의 안정적인 공급이 유지되어야 합니다.
  
 TriPad의 메모리는 이러한 ""탭""을 저장하는 데 전념하는 특정 화물 구역을 나타내지만 회수 승무원은 그것이 비어 있다고 보고합니다. 
 
