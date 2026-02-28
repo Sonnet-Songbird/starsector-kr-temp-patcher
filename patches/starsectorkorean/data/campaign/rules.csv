@@ -10655,7 +10655,7 @@ gaFCZalLeonisWho,DialogOptionSelected,$option == gaFC_zalLeonisWho,,"""군주 �
  
 그녀의 이미지가 당신을 쳐다보고 있습니다. ""보세요, 스킬라가 묻는다면 내가 당신에게 말한 것처럼 최선을 다했다고 말해주세요. 그녀를 찾을 수 있는 곳을 큰 소리로 알려주는 것이 아니라 신비한 수수께끼입니다.""",gaFC_zalAlamang:계속,
 gaFCZalLeonisIsirah,DialogOptionSelected,$option == gaFC_zalLeonisIsirah,,"그녀의 모습은 ""말한 적 없다""며 신비롭게 웃는 모습이다.",gaFC_zalAlamang:계속,
-gaFCZalAlamang,DialogOptionSelected,$option == gaFC_zalAlamang,$global.gaFC_gotAlamangForScylla = true,"""아, 한 가지 더- 그녀를 찾으면 반드시 Sub-Kay 브랜드 알라망 한 블록을 가져오십시오. 그것이 블루바인지 확인하십시오. 좋은 것입니다. 실제로는 Fikenhild에서만 구입할 수 있습니다. 그녀는 다른 모든 것을 말합니다. 재활용 탱크에 속해 있어요.""","gaFC_zalAllYouGet:""'Isirah system' and a block of krill paste, that's all I get?""",
+gaFCZalAlamang,DialogOptionSelected,$option == gaFC_zalAlamang,$global.gaFC_gotAlamangForScylla = true,"""아, 한 가지 더- 그녀를 찾으면 반드시 Sub-Kay 브랜드 알라망 한 블록을 가져오십시오. 그것이 블루바인지 확인하십시오. 좋은 것입니다. 실제로는 Fikenhild에서만 구입할 수 있습니다. 그녀는 다른 모든 것을 말합니다. 재활용 탱크에 속해 있어요.""","gaFC_zalAllYouGet:""이시라 시스템'과 크릴 페이스트 한 덩어리요, 그게 전부인가요?""",
 gaFCZalAllYouGet,DialogOptionSelected,$option == gaFC_zalAllYouGet,,"""예."" 그녀의 이미지는 웃으며 당신에게 그렇게 형편없는 대답을 하게 되어 기뻐요.
  
 ""보세요, 그녀는 나에게 자신의 정확한 위치를 말하지 않습니다. 게다가, 그것은 변합니다. 나는 단지 그녀가 시스템에서 신호를 받을 수 있는지 확인합니다.. . 글쎄요, Sy가 당신에게 말해줄 몫입니다. 그녀가 원하면.""
@@ -11138,7 +11138,7 @@ gaFCGroombridgeSearch1,DialogOptionSelected,$option == gaFC_groombridgeSearch1,,
 ""이론적으로는 초공간 상호작용 필드가 주기적으로만 펄스될 수 있습니다. 적절한 순간에 포착하지 않으면 탐지가 불가능합니다. 그리고 일정도 알 수 없습니다.""",gaFC_groombridgeSearch2:계속,
 gaFCGroombridgeSearch2,DialogOptionSelected,$option == gaFC_groombridgeSearch2,,"Comms는 다음과 같이 말합니다. ""동일한 원리가 시스템 내부 릴레이에도 적용될 수 있습니다. 데이터를 캐시한 다음 서식지, 선박, 다른 릴레이로 펄스를 보낼 수 있습니다..."" 
  
-작전 책임자가 말합니다. ""-그리고 그 원자로 총격 사건 ' rads와 같으면 아무도 너무 가까이서 볼 수 없습니다. 아니면 오래 머물 수 있습니다. 검색할 수 있는 유일한 방법은 ""사려깊은 멈춤""입니다. ""Rad 장갑 드론. 편도 여행. 거기에 릴레이가 있으면 아주 강력한 방사능 방어막을 갖고 있어.""","gaFC_groombridgeSearch3:""Then you know what to look for. Make it happen.""",
+작전 책임자가 말합니다. ""-그리고 그 원자로 총격 사건 ' rads와 같으면 아무도 너무 가까이서 볼 수 없습니다. 아니면 오래 머물 수 있습니다. 검색할 수 있는 유일한 방법은 ""사려깊은 멈춤""입니다. ""Rad 장갑 드론. 편도 여행. 거기에 릴레이가 있으면 아주 강력한 방사능 방어막을 갖고 있어.""","gaFC_groombridgeSearch3:""그럼 뭘 찾아야 할지 알겠군요. 실행하세요.""",
 gaFCGroombridgeSearch3,DialogOptionSelected,$option == gaFC_groombridgeSearch3,,함교 승무원은 서로 시선을 교환합니다. 함장님은 이러한 명령 중 하나를 더 내립니다. 반면 작전 책임자는 깊은 생각에 잠겨 뒤로 몸을 기울입니다.,gaFC_groombridgeSearch4:계속,
 gaFCGroombridgeSearch4,DialogOptionSelected,$option == gaFC_groombridgeSearch4,,"다음 교대 근무가 시작되면 장갑 드론이 준비되고, 작전 책임자가 드론 배치를 감독합니다. 당신은 Groombridge Habitat의 투영을 통해 그들의 진행 상황을 따라가며 퍼지 볼륨(스캔으로부터 보호되거나 너무 방사성이어서 잘 읽을 수 없음)을 선명한 세부 사항으로 채웁니다. 변칙적인 차폐 덩어리가 정거장의 치명적인 중심부에 근접한 손상된 작업 공간에서 곧 발견됩니다. 
  
@@ -11218,7 +11218,7 @@ gaFCKapteynBossAppealFail,GAFCKapteynBossAppealResult,$faction.relValue < 0,,,ga
 gaFCKapteynBossAppealSuccess,GAFCKapteynBossAppealResult,$faction.relValue > 0,,,gaFC_kapteynBossAppealSuccess:기다린다,
 gaFCKapteynBossAppealSuccess2,DialogOptionSelected,$option == gaFC_kapteynBossAppealSuccess,AdjustRepActivePerson COOPERATIVE 15,"피드가 다시 켜집니다. $personName 은(는) $hisOrHer의 손에 있는 데이터패드를 검사하고 있으며 훨씬 더 편안해 보입니다.
  
-""아, $playername. 그 이름을 어디선가 들어본 적이 있을 것 같아요. 예, 알겠습니다. 당신이 우리를 위해 몇 가지 일을 해주셨네요. 그래서 제가 할 수 있었던 건 당신을 위해 뭔가를 해주세요. 상황이 어려워지면 그것을 잊지 말고 같은 생각을 가진 사람들에게 $personName 은(는) 자유를 사랑하는 모든 사람들이 잘못된 편에 섰다는 사실을 알려주세요. 법의.""","gaFC_kapteynBossInfoDump1:""You can count on it, friend.""",
+""아, $playername. 그 이름을 어디선가 들어본 적이 있을 것 같아요. 예, 알겠습니다. 당신이 우리를 위해 몇 가지 일을 해주셨네요. 그래서 제가 할 수 있었던 건 당신을 위해 뭔가를 해주세요. 상황이 어려워지면 그것을 잊지 말고 같은 생각을 가진 사람들에게 $personName 은(는) 자유를 사랑하는 모든 사람들이 잘못된 편에 섰다는 사실을 알려주세요. 법의.""","gaFC_kapteynBossInfoDump1:""믿어도 됩니다, 친구.""",
 gaFCKapteynBossAppealFailure,DialogOptionSelected,$option == gaFC_kapteynBossAppealFailure,,"피드가 다시 켜집니다. $personName 이 $hisOrHer 손에 있는 데이터패드를 검사하고 있습니다. 
  
 ""정말 재밌네요, 함장님... $playerName. 제가 보기에는 당신에게 기회가 있다면 가장 가까운 리그 함대에 나를 보내서 몇 가지 크레딧과 칭찬을 받을 것입니다. 머리."" $HeOrShe는 달그락거리는 소리와 함께 데이터패드를 떨어뜨립니다.
@@ -11507,7 +11507,7 @@ gaFC_relayInstallHack0,DialogOptionSelected,$option == gaFC_installHack,,"두 �
 이제 작업이 완료될 때까지 기다립니다.",gaFC_installHack1:계속,
 gaFC_relayInstallHack1,DialogOptionSelected,$option == gaFC_installHack1,,"긴장된 한 시간 정도 지나면 통신 담당자가 스누핑이 완료되었음을 알려줍니다. Techops, InfoSec 및 통신에 능숙한 장교 및 전문가 팀은 스누프의 데이터가 들어오는 대로 분석해 왔으며 이미 예비 보고서를 준비했습니다.
  
-""팀은 아직 세부적인 분석을 마무리하고 우리가 할 수 있는 데이터를 해독하는 중입니다. ,"" 당신의 통신 담당자는 ""하지만 우리는 큰 그림에 대해 꽤 좋은 아이디어를 얻었습니다.""라고 보고합니다.","gaFC_installHack2:""Which is?""",
+""팀은 아직 세부적인 분석을 마무리하고 우리가 할 수 있는 데이터를 해독하는 중입니다. ,"" 당신의 통신 담당자는 ""하지만 우리는 큰 그림에 대해 꽤 좋은 아이디어를 얻었습니다.""라고 보고합니다.","gaFC_installHack2:""그게 무엇인가요?""",
 gaFC_relayInstallHack2,DialogOptionSelected,$option == gaFC_installHack2,,"""대부분의 주요 세력과 소수의 프리랜서 및 지하 요원이 이시라 성계에서 변칙적인 수준의 활동을 보이고 있는 것 같습니다. 물론 이에 대한 그럴듯한 설명이 있지만, 우리에게 정보를 제공한 것은 Pather 침입자의 엉성한 정보 보안이었습니다. ""
  
 여기에서 통신 담당자가 통신 ID와 리그 ID 요약을 가져옵니다.","gaFC_installHack3:""제가 누구를 보고 있나요?""",
@@ -11549,15 +11549,15 @@ gaFCLaicailleVisit3,DialogOptionSelected,$option == gaFC_laicailleVisit3,,"기�
 ""아니, 당신은 이것을 얻지 못했습니다. 이 작전은 누출로 가득 차 있습니다. "" 집정관이 당신을 잠깐 쳐다보며 말합니다. ""그리고 당신의 작전 붕괴는 우리 안보에 직접적인 위협이 됩니다. 라이카유 해비타트는 현재 집행위원회의 전폭적인 지원을 받아 이 문제에 대해 주권을 행사하고 있습니다.""",gaFC_laicailleVisit4:계속,
 gaFCLaicailleVisit4,DialogOptionSelected,$option == gaFC_laicailleVisit4,,"리그 요원이 흔들리는 권총을 내리자, 측면 요원들은 평정심을 잃습니다. 
  
-집정관은 요원의 권총을 빼앗아 안전을 확인한 다음 요원을 밀어내고 당신을 에어록으로 안내합니다. 제어판은 실행 무시 코드와 장갑 출입구를 통과할 수 있는 집정원 동작을 제공합니다.",gaFC_laicailleVisit4b:Enter the airlock,
+집정관은 요원의 권총을 빼앗아 안전을 확인한 다음 요원을 밀어내고 당신을 에어록으로 안내합니다. 제어판은 실행 무시 코드와 장갑 출입구를 통과할 수 있는 집정원 동작을 제공합니다.",gaFC_laicailleVisit4b:에어록으로 들어간다,
 gaFCLaicailleVisit4b,DialogOptionSelected,$option == gaFC_laicailleVisit4b,ShowSecondPerson coureuse,"한 여성이 당신 앞에 서서 데이터패드를 들고 새로 온 사람들을 어리둥절한 표정으로 바라보고 있습니다.
  
-당신은 어두운 공간을 둘러보며 그늘진 장비 선반, 허밍 머신, 화물 상자를 살펴봅니다. 구석에 있는 작은 무중력 스타일의 거주용 포드는 그녀의 집 공간임에 틀림없습니다.","gaFC_laicailleVisit5:""Scylla Coureuse, I presume.""",
+당신은 어두운 공간을 둘러보며 그늘진 장비 선반, 허밍 머신, 화물 상자를 살펴봅니다. 구석에 있는 작은 무중력 스타일의 거주용 포드는 그녀의 집 공간임에 틀림없습니다.","gaFC_laicailleVisit5:""Scylla Coureuse 맞죠?""",
 gaFCLaicailleVisit5,DialogOptionSelected,$option == gaFC_laicailleVisit5,FireBest GAFCAlamangCheck2,"""예. 저예요."" 그녀가 조심스럽게 말했다. ""그리고... $personLastName 집정관. 이건 예상치 못한 일이군요. 내가 무엇 때문에 명예를 얻었습니까?""
  
 집정관이 당신을 향해 고개를 끄덕였습니다. ""$playerName 함장님. 다른 사람의 일을 엿볼 수 있는 사람이 누구입니까. 이제 그것은 당신의 것입니다. 회전하다.""",,
-gaFCLaicailleVisit5Alamang,GAFCAlamangCheck2,$global.gaFC_gotAlamangForScylla,,"Coureuse는 팔 아래에서 크릴 페이스트 패키지를 발견했습니다. ""그게... 서브 케이 블루바요? 어디서- 어떻게-""","gaFC_laicailleVisit5Alamang2:""A gift from Elissa.""",
-gaFCLaicailleVisit5Alamang2,DialogOptionSelected,$option == gaFC_laicailleVisit5Alamang2,AdjustRepPerson coureuse COOPERATIVE 3,"Coureuse는 진정한 기쁨의 미소를 지었습니다. ""물론이지! 우리는 항상 냄새가 너무 나쁘다고 이야기했지만 그만큼 좋은 것은 없었습니다."" 그녀는 그것을 받아들고 기억에 잠긴 채 플라스틱을 어루만질 뻔했습니다. 그녀는 ""아, 미안해요, 그냥. 옛날이죠.""라고 시작하며 자신으로 돌아갑니다. 그녀는 작업대 위에 꾸러미를 올려놓았다. ""설명해주세요. 당신은 왜 여기에 있나요?""","gaFC_laicailleVisit6:""I have a message for you.""",
+gaFCLaicailleVisit5Alamang,GAFCAlamangCheck2,$global.gaFC_gotAlamangForScylla,,"Coureuse는 팔 아래에서 크릴 페이스트 패키지를 발견했습니다. ""그게... 서브 케이 블루바요? 어디서- 어떻게-""","gaFC_laicailleVisit5Alamang2:""Elissa의 선물이에요.""",
+gaFCLaicailleVisit5Alamang2,DialogOptionSelected,$option == gaFC_laicailleVisit5Alamang2,AdjustRepPerson coureuse COOPERATIVE 3,"Coureuse는 진정한 기쁨의 미소를 지었습니다. ""물론이지! 우리는 항상 냄새가 너무 나쁘다고 이야기했지만 그만큼 좋은 것은 없었습니다."" 그녀는 그것을 받아들고 기억에 잠긴 채 플라스틱을 어루만질 뻔했습니다. 그녀는 ""아, 미안해요, 그냥. 옛날이죠.""라고 시작하며 자신으로 돌아갑니다. 그녀는 작업대 위에 꾸러미를 올려놓았다. ""설명해주세요. 당신은 왜 여기에 있나요?""","gaFC_laicailleVisit6:""전할 메시지가 있어요.""",
 gaFCLaicailleVisit5AlamangNo,GAFCAlamangCheck2,!$global.gaFC_gotAlamangForScylla,,,"gaFC_laicailleVisit6:""당신에게 전달할 메시지가 있습니다.""",
 gaFCLaicailleVisit6,DialogOptionSelected,$option == gaFC_laicailleVisit6,,"$personLastName 집정관은 $heOrShe가 침입하고 있는지 비언어적으로 질문하며 $heOrShe가 침입하고 있다고 결론을 내립니다. ""두 분의 비공개 발언을 허용하겠습니다. 시민 여러분, 이제 귀하는 라이카유 집행위원회의 직접적인 보호를 받고 있음을 알려드립니다. 우리는 이 역에서 귀하의 안전을 보장할 것입니다."" 리그 요원, ""그리고 페르세우스 리그 헌장에 따라 이동의 자유에 대한 권리를 보장하십시오."" 
  
@@ -11565,8 +11565,8 @@ gaFCLaicailleVisit6,DialogOptionSelected,$option == gaFC_laicailleVisit6,,"$pers
  
 ""베어드는 내가 다시 돌아오길 원해요. 그렇지 않나요."" Coureuse는 팔짱을 끼고 있습니다.",gaFC_laicailleVisit7:데이터패드에 Baird의 메시지를 전달합니다,
 gaFCLaicailleVisit7,DialogOptionSelected,$option == gaFC_laicailleVisit7,"#ShowDefaultVisual
-#ShowSecondPerson coureuse",당신은 데이터패드를 Coureuse에게 전달하고 그녀는 그것을 몇 미터 떨어진 워크스테이션에 있는 의자로 가져가서 소리를 둔하게 하고 이미지를 흐리게 하는 프라이버시 필드를 활성화합니다.,"gaFC_laicailleVisit8:Wait
-gaFC_laicailleVisit8b:Look around",
+#ShowSecondPerson coureuse",당신은 데이터패드를 Coureuse에게 전달하고 그녀는 그것을 몇 미터 떨어진 워크스테이션에 있는 의자로 가져가서 소리를 둔하게 하고 이미지를 흐리게 하는 프라이버시 필드를 활성화합니다.,"gaFC_laicailleVisit8:기다린다
+gaFC_laicailleVisit8b:주변을 둘러본다",
 gaFCLaicailleVisit8,DialogOptionSelected,$option == gaFC_laicailleVisit8,"$option = gaFC_laicailleVisit9 0
 FireBest DialogOptionSelected","숨막히는 말소리가 들리는데, 베어드의 어조는 틀림이 없습니다. 쿠레우스의 흐릿한 윤곽은 가만히 듣고 있다. 그러다가 베어드의 연설이 끝나자 모든 의지가 소진된 듯 의자에 털썩 주저앉는다.",,
 gaFCLaicailleVisit8b,DialogOptionSelected,$option == gaFC_laicailleVisit8b,"$option = gaFC_laicailleVisit9 0
@@ -11576,7 +11576,7 @@ gaFCLaicailleVisit9,DialogOptionSelected,$option == gaFC_laicailleVisit9,,"몇 �
 그녀는 데이터패드를 당신에게 돌려주며 ""내가 함께 가겠습니다""라고 말합니다.","gaFC_laicailleVisitEnd1:""좋아요. 갑시다.""
 gaFC_laicailleVisit10:""Baird가 뭐라고 했습니까?""
 ",
-gaFCLaicailleVisit10,DialogOptionSelected,$option == gaFC_laicailleVisit10,,"쿠레즈는 굳어진 눈으로 당신을 바라보며 아이러니한 반 미소를 짓습니다. ""베어드는 항상 자신의 뜻대로 행동합니다. 모르셨나요?""","gaFC_laicailleVisitEnd1:""Well. Let's go, then.""
+gaFCLaicailleVisit10,DialogOptionSelected,$option == gaFC_laicailleVisit10,,"쿠레즈는 굳어진 눈으로 당신을 바라보며 아이러니한 반 미소를 짓습니다. ""베어드는 항상 자신의 뜻대로 행동합니다. 모르셨나요?""","gaFC_laicailleVisitEnd1:""자, 그럼 가죠.""
 ",
 gaFCLaicailleEnd1,DialogOptionSelected,$option == gaFC_laicailleVisitEnd1,,"""알겠습니다. 하지만 저는-"" Coureuse는 자신의 작업대, 컴퓨팅 어레이 및 다양한 완료 상태의 프로젝트를 살펴봅니다. ""내, 음, 것들."" 과학 장비. 사실, 지금 바로 준비할 수 있도록 그녀를 작전 책임자에게 소개하게 될 것입니다...",gaFC_laicailleEnd2:계속,
 gaFCLaicailleEnd2,DialogOptionSelected,$option == gaFC_laicailleEnd2,"$global.gaFC_returnToAcademy = true
