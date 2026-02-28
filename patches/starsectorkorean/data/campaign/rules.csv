@@ -1767,8 +1767,8 @@ FireAll NGCDifficultyOptions",,,
 ngcDifficulty,NGCDifficultyOptions,,"SetTooltip ngcEasy ""- 당신의 배는 25%의 피해를 덜 받습니다\n- 센서 범위 500 유닛 증가\n- 인양 50% 증가""
 SetTooltipHighlightColors ngcEasy hColor hColor hColor
 SetTooltipHighlights ngcEasy ""25%"" ""500"" ""50%""
-SetTooltip ngcNormal ""도전적인 경험을 위해 균형 잡힌 기본 설정입니다.""","캠페인 난이도를 선택하세요. 처음 플레이하는 사람에게는 ""Easy""를 권장합니다.","0:ngcNormal:Normal
-1:ngcEasy:Easy",
+SetTooltip ngcNormal ""도전적인 경험을 위해 균형 잡힌 기본 설정입니다.""","캠페인 난이도를 선택하세요. 처음 플레이하는 사람에게는 ""Easy""를 권장합니다.","0:ngcNormal:보통
+1:ngcEasy:쉬움",
 ngcEasyPicked,NewGameOptionSelected,$option == ngcEasy,"NGCSetDifficulty easy
 FireAll NGCTutorialOptions",,,
 ngcNormalPicked,NewGameOptionSelected,$option == ngcNormal,"NGCSetDifficulty normal
@@ -2082,7 +2082,7 @@ $entity.mpm_isSpawnedByMPM score:100",FireAll MPMHandOverOptions,"해적 $person
 mpm_handOverPirateOption,MPMHandOverOptions,CallEvent $mpm_eventRef hasEnough,,,0:mpm_handOver:$mpm_commodityName을(를) 넘겨줍니다,
 mpm_notEnoughPirateOption,MPMHandOverOptions,!CallEvent $mpm_eventRef hasEnough,,,0:mpm_notEnoughPirate:$mpm_commodityName이 없다고 설명합니다,
 mpm_refusePirateOption,MPMHandOverOptions,,,,"
-1:mpm_refuse:Refuse",
+1:mpm_refuse:거절한다",
 mpm_handOverOptionSel,DialogOptionSelected,$option == mpm_handOver,"CallEvent $mpm_eventRef handOver
 AddText ""Lost $mpm_quantity $mpm_commodityName"" textEnemyColor
 AddText ""\""네가 이성을 발견할 수 있어서 기뻐. 이제 내 마음이 바뀌기 전에 여기서 나가.\""""
@@ -8218,7 +8218,7 @@ tut_mainGetDataGoDark,DialogOptionSelected,$option == tutContGoDark,"Highlight "
 SetTextHighlights ""\""Go Dark\""""
 AddAbility go_dark 1","""먼저 도킹을 해제한 후에는 응답기를 꺼야 합니다. 보안대에 그런 일로 문제를 일으키지 않도록 지시했습니다.
  
-운이 좋으면 해적들이 당신을 자신들의 해적 중 한 명으로 생각할 수도 있습니다. 소유하고 아무런 문제 없이 Derinkuyu에 접근할 수 있도록 하십시오. 그럼에도 불구하고, 그들이 당신의 함대를 너무 잘 읽을 수 없도록 가까이 다가가면서 ""Go Dark""하는 것이 합리적입니다. 또한 소행성 벨트를 따라 접근할 수도 있습니다. 천천히 움직이는 한, 그러면 거의 완벽한 엄폐물이 될 것입니다.""","2:tutContEBurn:""And if they do notice me?""",
+운이 좋으면 해적들이 당신을 자신들의 해적 중 한 명으로 생각할 수도 있습니다. 소유하고 아무런 문제 없이 Derinkuyu에 접근할 수 있도록 하십시오. 그럼에도 불구하고, 그들이 당신의 함대를 너무 잘 읽을 수 없도록 가까이 다가가면서 ""Go Dark""하는 것이 합리적입니다. 또한 소행성 벨트를 따라 접근할 수도 있습니다. 천천히 움직이는 한, 그러면 거의 완벽한 엄폐물이 될 것입니다.""","2:tutContEBurn:""그래도 들키면요?""",
 tut_mainGetDataEBurn,DialogOptionSelected,$option == tutContEBurn,"SetTextHighlights ""\""Emergency Burn\""""
 AddAbility emergency_burn 3","""그러면 문제가 발생합니다. ""긴급 화상""을 활성화하여 그곳에서 나가서 잃어버리고 다시 돌아와서 다시 시도하세요.
  
@@ -8743,8 +8743,8 @@ saic_initialText,SAICPrintInitialText,,,"귀하의 $shipOrFleet은 과학자 $sa
  
 이전에 아무도 이 캐시를 발견하지 못했다는 것이 놀랍지만, 처음에는 장거리 센서가 그것을 쓸모없는 잔해 구름으로 판독했습니다. 이제 문제는 AI 코어를 보호된 상자에 넣고 다음 항구 정류장에서 보낼 것인지, 아니면 직접 보관할 것인지입니다. 그 과학자는 확실히 중요한 사람이 아니었습니다.",,
 saic_leaveSel,DialogOptionSelected,$option == saic_leave,DismissDialog,,,
-saic_giveCoreSel,DialogOptionSelected,$option == saic_giveCore,,보호된 상자는 전동 볼트가 집으로 미끄러지는 소리와 함께 닫힙니다. 일회성 코딩된 초파 버스트를 보냅니다. 확인이라고 생각합니다. 그 과학자가 이 작은 속임수에 대해 여러분에게 경고했다면 좋았을 것입니다. 근처에 해적이나 다른 어떤 것도 듣고 있지 않기를 바랍니다.,saic_continueGiveCore:Loot the rest of the cache,
-saic_takeCoreSel,DialogOptionSelected,$option == saic_takeCore,,"Tri-Tachyon 케이스를 열고 단일 알파 코어를 회수합니다. 그것은 활동으로 고동치고, 당신의 미소는 핵심의 차갑고 이질적인 생각에 의해 희미해집니다. 당신은 과학자의 보호된 상자를 에어록 밖으로 던져버리라고 명령합니다. 이 세상에서 뭔가를 이루고 싶다면 스스로 하는 것이 가장 좋습니다.",saic_continueTakeCore:Loot the rest of the cache,
+saic_giveCoreSel,DialogOptionSelected,$option == saic_giveCore,,보호된 상자는 전동 볼트가 집으로 미끄러지는 소리와 함께 닫힙니다. 일회성 코딩된 초파 버스트를 보냅니다. 확인이라고 생각합니다. 그 과학자가 이 작은 속임수에 대해 여러분에게 경고했다면 좋았을 것입니다. 근처에 해적이나 다른 어떤 것도 듣고 있지 않기를 바랍니다.,saic_continueGiveCore:나머지 캐시를 약탈한다,
+saic_takeCoreSel,DialogOptionSelected,$option == saic_takeCore,,"Tri-Tachyon 케이스를 열고 단일 알파 코어를 회수합니다. 그것은 활동으로 고동치고, 당신의 미소는 핵심의 차갑고 이질적인 생각에 의해 희미해집니다. 당신은 과학자의 보호된 상자를 에어록 밖으로 던져버리라고 명령합니다. 이 세상에서 뭔가를 이루고 싶다면 스스로 하는 것이 가장 좋습니다.",saic_continueTakeCore:나머지 캐시를 약탈한다,
 saic_continueLootGiveCore,DialogOptionSelected,$option == saic_continueGiveCore,CallEvent $saic_eventRef genLootNoCore,,,
 saic_continueLootTakeCore,DialogOptionSelected,$option == saic_continueTakeCore,CallEvent $saic_eventRef genLootWithCore,,,
 ,,,,,,
@@ -8822,9 +8822,9 @@ FireBest MercLeavingOptions","""아, 지휘관."" $HeOrShe는 약간 괴로운 �
 ""현재의 재정 부실 상태에 대해 애도를 표합니다.
  
 계약서에 명시된 조건에 따라 저는 이제 계약을 종료할 수 있는 옵션이 있습니다. 이 옵션을 행사하기로 선택한 것입니다.""",,
-mercs_leavingOptions,MercLeavingOptions,,"SetStoryOption mercs_convince 1 convinceMerc ui_char_spent_story_point_leadership ""Extended mercenary officer's contract""",,"mercs_convince:Convince $himOrHer to extend the contract
-mercs_letGo:Wish $himOrHer well in $hisOrHer future endeavors
-mercs_letGoJerk:Tell $himOrHer off for $hisOrHer disloyalty",
+mercs_leavingOptions,MercLeavingOptions,,"SetStoryOption mercs_convince 1 convinceMerc ui_char_spent_story_point_leadership ""Extended mercenary officer's contract""",,"mercs_convince:$himOrHer를 설득하여 계약을 연장한다
+mercs_letGo:$hisOrHer의 앞날을 응원한다
+mercs_letGoJerk:$hisOrHer의 불성실함을 꾸짖는다",
 mercs_convincedOpt,DialogOptionSelected,$option == mercs_convince,"MarketCMD convinceMercToStay
 ShowDefaultVisual
 EndConversation DO_NOT_FIRE",$hisOrHer의 야망과 자존심에 호소하는 카리스마 넘치는 표현과 함께 약속이 아닌 행운이 곧 찾아올 것이라는 암시를 통해 $himOrHer가 계약 연장에 서명하도록 설득할 수 있습니다.,mercs_leaveContinue:계속,
@@ -19885,7 +19885,7 @@ LOCRPoffloadPiratesLuddic,MarketPostDock,"$player.locr_piratesOnBoard
 $marketSize > 3
 $faction.id == pirates
 $player.crew > 54
-$player.makingLostPiratesActLuddic","Highlight ""이전에 유랑하던 해적들을 내려준다.""",당신은 당신이 구출한 이전에 고립된 해적들을 내리기 위해 적절하게 무법적인 우주항에 도착했습니다. 그들은 Luddic 규율이 그들의 모험적인 생활 방식에 적합하지 않다는 것을 알았기 때문에 가고 싶어합니다.,locrp_offloadPiratesLuddic2:Shuttle the pirates to $name,
+$player.makingLostPiratesActLuddic","Highlight ""이전에 유랑하던 해적들을 내려준다.""",당신은 당신이 구출한 이전에 고립된 해적들을 내리기 위해 적절하게 무법적인 우주항에 도착했습니다. 그들은 Luddic 규율이 그들의 모험적인 생활 방식에 적합하지 않다는 것을 알았기 때문에 가고 싶어합니다.,locrp_offloadPiratesLuddic2:해적들을 셔틀로 $name에 이송한다,
 LOCRPoffloadPiratesLuddic2,DialogOptionSelected,$option == locrp_offloadPiratesLuddic2,"AddCommodity crew -53
 AddXP 5000
 unset $player.locr_piratesOnBoard
@@ -22009,13 +22009,13 @@ devKDlandingVisitOverride,KDStationKingOptions,$global.isDevMode,SetOptionColor 
 devKDlandingFirstTime,DialogOptionSelected,$option == devkd_landing1first,"EndConversation DO_NOT_FIRE
 ShowDefaultVisual","당신은 네 명의 경비원과 조종사를 셔틀에 남겨 둡니다. 두 명의 경비병이 더 따라오고, 당신을 만나기 위해 파견된 호리호리한 해적 중위는 이것이 맞다고 고개를 끄덕입니다.
  
-당신은 역 중앙으로 향하는 1차 접근 복도를 통과하게 됩니다. 당신은 단절된 아그라브 필드에 빠르게 적응합니다. 모든 형태와 연령대의 해적 대열이 당신의 약점을 감시하고 투박한 말을 중얼거리며 명성을 위해 다투기 때문에 의도적인 효과라고 의심됩니다.",kd_kantaFirstIntro1:Keep on walking,
+당신은 역 중앙으로 향하는 1차 접근 복도를 통과하게 됩니다. 당신은 단절된 아그라브 필드에 빠르게 적응합니다. 모든 형태와 연령대의 해적 대열이 당신의 약점을 감시하고 투박한 말을 중얼거리며 명성을 위해 다투기 때문에 의도적인 효과라고 의심됩니다.",kd_kantaFirstIntro1:계속 걷는다,
 "# meet Kanta, first time",,,,,,
 kdLandingFirstTime,DialogOptionSelected,"$option == kd_landing1
 !$global.didKantasDenIntro","EndConversation DO_NOT_FIRE
 ShowDefaultVisual","당신은 네 명의 경비원과 조종사를 셔틀에 남겨 둡니다. 두 명의 경비병이 더 따라오고, 당신을 만나기 위해 파견된 해적 중위는 이것이 맞다고 고개를 끄덕입니다.
  
-당신은 역 중앙을 향해 1차 접근 복도를 통과하게 됩니다. 당신은 단절된 아그라브 필드에 빠르게 적응합니다. 모든 형태와 연령대의 해적 대열이 당신의 약점을 감시하고 투박한 말을 중얼거리며 명성을 위해 다투기 때문에 의도적인 효과라고 의심됩니다.",kd_kantaFirstIntro1:Keep on walking,
+당신은 역 중앙을 향해 1차 접근 복도를 통과하게 됩니다. 당신은 단절된 아그라브 필드에 빠르게 적응합니다. 모든 형태와 연령대의 해적 대열이 당신의 약점을 감시하고 투박한 말을 중얼거리며 명성을 위해 다투기 때문에 의도적인 효과라고 의심됩니다.",kd_kantaFirstIntro1:계속 걷는다,
 kdKantaFirstIntro1,DialogOptionSelected,$option == kd_kantaFirstIntro1,,"그들의 얼굴(이것은 가족 사업이다)과 그들의 무질서한 유니폼에서 관계의 패턴을 거의 알아낼 수 있습니다. 그들은 상금, 금과 보석으로 도금된 개조된 전투 갑옷, 브랜드 색상이 아닌 색상으로 다시 칠해진 훔친 고급 진공 슈트, 투박하게 매듭이 묶인 트라이-타키온 목 스카프로 장식되어 있습니다. 과시적인 럭셔리 의류. 그들은 자신의 부를 겉으로 드러내며, 화려할수록 더 좋습니다.",kd_kantaFirstIntro2:계속,
 kdKantaFirstIntro2,DialogOptionSelected,$option == kd_kantaFirstIntro2,,"진홍색 해골 깃발이 달린 움푹 패인 방폭문을 지나면 커다란만이 열립니다. 에너지 무기 방출의 지독한 냄새가 공기 중에 떠돌고 있는데, 썩은 고기 냄새를 거의 감출 수는 없습니다.
  
@@ -25670,7 +25670,7 @@ $HeOrShe가 몸을 기울입니다. ""Kazeron으로 오십시오. Hannan 장군�
 PLArmadaHubOptionA,PLArmadaHubOptions,!$player.didPLApiracyTalk,,,"PLArmada_thisIsPiracy:""이건 해적 행위야! 너희는 마음대로 어떤 시스템이든 봉쇄할 수 없어!""",
 #PLArmadaHubOptionB,PLArmadaHubOptions,!$saidLiftBlockade,,,"PLArmada_liftBlockade:""생각을 정리하는 동안에 봉쇄를 해제할 수는 없을까요?""","# too many options, pulling this one 'cause it's whatever"
 PLArmadaHubOptionC,PLArmadaHubOptions,"!$player.toldPLAblockadeToStickIt
-$player.metReynardHannan",,,PLArmada_stickIt:Explain where Reynard Hannan can stick the League Armada,
+$player.metReynardHannan",,,PLArmada_stickIt:Reynard Hannan에게 리그 아마다를 집어치우라 말한다,
 PLArmadaHubOptionD,PLArmadaHubOptions,,,,"PLArmada_idealisticNo:""맞아요, 자유를 보호하기 위해서는 힘이 필요해요... Kazeron 같은 당신과 당신의 상사들같은 폭력단들로부터 말이에요.""",
 PLArmadaHubOptionE,PLArmadaHubOptions,,,,"PLArmada_idealisticYes:""자맞아요, 자유를 보호하기 위해서는 힘이 필요해요... 그리고 우리는 함께하면 더 강해요.""",
 PLArmadaHubOptionF,PLArmadaHubOptions,,,,"PLArmada_cynicalNo:""당신은 강탈 행위를 묘사하고 있습니다... 그리고 나는 그 강도집단의 일원이 될 의향이 없습니다.""",
