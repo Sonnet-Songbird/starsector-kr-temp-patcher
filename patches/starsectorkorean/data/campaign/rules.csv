@@ -3618,7 +3618,7 @@ lppVolturnOfficialLie1,DialogOptionSelected,$option == lpp_volturnOfficialLie1,,
 lppVolturnOfficialLie1b,DialogOptionSelected,$option == lpp_volturnOfficialLie1b,,"당신은 손을 내밀고 눈을 마주한 채 그의 데이터 패드를 단단히 내리십시오.
  
 ""그건 잠입한 반역자들에게 알리는 것입니다."" 당신은 그의 발에 침을 뱉습니다. ""-지역 보안을 위해서는 무엇이든지. 총에 맞아야 합니다.""",lpp_volturnOfficialLie1c:당신의 보조무기를 푼다,
-lppVolturnOfficialLie1c,DialogOptionSelected,$option == lpp_volturnOfficialLie1c,,"""나는 충성스럽다, 나는 충성스럽다!"" 그는 얼굴에 땀을 흘리며 소리친다. ""맹세한다!""","lpp_volturnOfficialLie2:""From the top. The very top. Essential mission. Need-to-know.""",
+lppVolturnOfficialLie1c,DialogOptionSelected,$option == lpp_volturnOfficialLie1c,,"""나는 충성스럽다, 나는 충성스럽다!"" 그는 얼굴에 땀을 흘리며 소리친다. ""맹세한다!""","lpp_volturnOfficialLie2:""최고위층에서요. 정말 최고위층. 필수 임무예요. 알 필요 없음 원칙입니다.""",
 lppVolturnOfficialLie2,DialogOptionSelected,$option == lpp_volturnOfficialLie2,"$market.liedShrineOfficial = true
 $global.lpp_liedToVolturnShrineOfficial = true","관리는 얼굴이 창백해지더니 ""최고-""라고 속삭인다. 
  
@@ -3947,7 +3947,7 @@ lppKillaVisitStart2Leave,DialogOptionSelected,$option == lpp_killaVisitStart2Lea
 PrintDescription 3
 FireAll PopulateKillaOptions",셔틀이 궤도에 있는 $shipOrFleet로 돌아옵니다.,,
 lppKillaVisitStart2Follow,DialogOptionSelected,$option == lpp_killaVisitStartFollow,"HideVisual
-ShrineCMD playMusic",당신은 다른 사람들이 마련한 에어록의 길을 따라갑니다. 수동 제어를 사용하면 하품 블랙홀을 드러내기 위해 당겨서 열 수 있습니다.,lpp_killaOssuary1:Step inside,
+ShrineCMD playMusic",당신은 다른 사람들이 마련한 에어록의 길을 따라갑니다. 수동 제어를 사용하면 하품 블랙홀을 드러내기 위해 당겨서 열 수 있습니다.,lpp_killaOssuary1:안으로 들어간다,
 lppKillaOssuary1,DialogOptionSelected,$option == lpp_killaOssuary1,,"내부 분위기는 전혀 없습니다. 적어도 말할 것도 없습니다. 먼지로 뒤덮인 유령의 베일이 신전의 정전기장에서 휘어지고 뒤틀려 있으며, 이 세계의 낮은 중력을 극복하여 거의 진공 상태에 걸릴 만큼 강력합니다. 당신의 활동으로 깨어났습니다:
  
 ""평안하게 오십시오. 죽은 자들을 쉬게 하십시오. 우리는 이제 러드에게 계시된 말씀으로 기도합니다...""",lpp_killaOssuary2:구경한다,
@@ -4129,7 +4129,7 @@ lppJangalaProtestRespChurch,PPJangalaProtestResponses,RepGTE luddic_church FRIEN
 lppJangalaProtestRespWait,PPJangalaProtestResponses,,,,lpp_jangalaProtestWait:당국이 시위를 해결할 때까지 기다린다,
 lppJangalaProtestRespJoin,PPJangalaProtestResponses,# require some legitimacy here?,,,"lpp_jangalaProtestJoin:시위 참가자들과 함께, 그들이 일어설 수 있도록 도와준다",
 lppJangalaProtestRespMarinesHelp,PPJangalaProtestResponses,"!$protestHelpRejected
-$player.marines > 11",,,lpp_jangalaProtestMarinesHelp:Offer your marines to help clear the protest,
+$player.marines > 11",,,lpp_jangalaProtestMarinesHelp:해병대를 시위 해산에 지원한다,
 lppJangalaProtestRespMarines,PPJangalaProtestResponses,$player.marines > 11,,,lpp_jangalaProtestMarines:해병대를 이용해 지금 당장 힘을 쓴다,
 lppJangalaProtestWait,DialogOptionSelected,$option == lpp_jangalaProtestWait,"EndConversation DO_NOT_FIRE
 ShowImageVisual protest","기다리세요. 군중은 늘어나고 인내심은 점점 약해집니다. 소수는 조롱하고 소리치고, 몇몇 스페이서는 쓰레기를 던지기 시작합니다. Luddics는 팔을 고정한 채 안와 화상의 종식을 요구하며 성가를 읊습니다. 전투가 벌어지는 것을 보면, 노골적인 시위자들 외에는 루드딕 운동에 대한 지지가 많다는 것이 분명합니다.
@@ -4309,8 +4309,8 @@ lppJangalaShrineDesc2,DialogOptionSelected,"$option == lpp_jangalaShrineDesc2
  
 승무원은 안심할 수 있는 미소를 지어야 합니다. ""어떻게 도와드릴까요?""",,
 lppJangalaAttendantRespC,LPPJangalaAttendantResponses,,,,lpp_jangalaattendantVisit:성지 참배,
-lppJangalaAttendantRespA,LPPJangalaAttendantResponses,!$entity.lppShrineSaidBadPlace,,,"lpp_jangalaShrineDifficult:""This seems like a... difficult place to maintain a shrine.""",
-lppJangalaAttendantRespB,LPPJangalaAttendantResponses,!$entity.lppShrineSaidBadPlace,,,"lpp_jangalaShrineTerrible:""This seems like a terrible place to put a shrine.""",
+lppJangalaAttendantRespA,LPPJangalaAttendantResponses,!$entity.lppShrineSaidBadPlace,,,"lpp_jangalaShrineDifficult:""이런 곳에 신사를 유지하기란... 어렵겠네요.""",
+lppJangalaAttendantRespB,LPPJangalaAttendantResponses,!$entity.lppShrineSaidBadPlace,,,"lpp_jangalaShrineTerrible:""신사를 두기엔 정말 끔찍한 장소네요.""",
 lppJangalaAttendantRespD,LPPJangalaAttendantResponses,,,,lpp_jangalaShrineLeaveNoHook:떠난다,
 lppJangalaShrineDifficult,DialogOptionSelected,$option == lpp_jangalaShrineDifficult,$entity.lppShrineSaidBadPlace = true,"""신성한 것 앞에 자신을 가져가는 것은 편리함의 문제가 아닙니다."" 수행원이 차분하게 말했다. ""우리가 여기서 예배를 드리기 위해 수고해야 한다는 사실은 그 행위에 특별한 자기 반성을 부여한다고 믿습니다.""","lpp_jangalaattendantFoolish:""바보 같아요.""
 lpp_jangalaattendantUnprotected:""몇몇 순례자들이 무방비 상태로 밖으로 나가는 걸 들었어요.""
@@ -4516,7 +4516,7 @@ lppHesperusExcubitorWait2,DialogOptionSelected,$option == lpp_hesperusExcubitorW
  
 차원이 뒤틀리고 진동하며, 당신을 지탱하거나 뒤로 끌어당기려는 거미줄이 떨어지고 달라붙습니다. 여러분의 기술은 눈에 보이지 않는 물리학의 특성을 활용하여 여러분을 따뜻하게 유지하고, 발을 땅에 닿게 하고, 공기 흐름이 리듬, 즉 미터를 따르도록 유지합니다. 사실 그것은 음악과 같습니다. 잘 들어보시면...
  
-이제는 말할 수 없을 것 같아요.",lpp_hesperusExcubitorWait3:Listen carefully... ,
+이제는 말할 수 없을 것 같아요.",lpp_hesperusExcubitorWait3:주의 깊게 듣는다... ,
 lppHesperusExcubitorWait3,DialogOptionSelected,$option == lpp_hesperusExcubitorWait3,"AdjustRepActivePerson FRIENDLY 1
 $player.waitedOutExcubitor = true","Excubitor Orbis가 말하는 동안 당신은 거의 점프할 뻔하다가 당신을 그 순간으로 끌어당깁니다.
  
@@ -4696,7 +4696,7 @@ $global.lpp_deniedHesperusShrineAccess
 !$global.lpp_didHesperusShrineBribe
 !$global.lpp_visitedShrineHesperus","AddBarEvent lpp_hesperusShrine_barEvent ""지역 교통 관제소에서 뇌물을 받을 수 있는 사람을 찾습니다"" ""분명히 한 무리의 비Luddic인들이 술을 마시며 이야기를 나누고 있다. 그들 모두가 정직한 상인일 수는 없다. 그들 중 한 명은 교통 통제를 통과하는 셔틀을 몰래 타는 법을 알고 있을지도 모른다...""",,,
 lppHesperusBarEventSel,DialogOptionSelected,$option == lpp_hesperusShrine_barEvent,"SetTextHighlights 2,000
-DoCanAffordCheck 2000 lpp_hesperusShrineSneakBribe false","당신은 스페이서를 통과하고 음료수를 사고 상점에 대해 이야기합니다. 교회가 운영하는 유머 없는 관세 체제에 대해 선량하지만 날카로운 불만을 제기하면 올바른 길로 갈 수 있으며, 머지않아 술집 뒤의 연기 자욱한 탈출 통로에서 지역 항만 관료의 기술 담당자와 대화하는 자신을 발견하게 됩니다.",lpp_hesperusShrine_barEvent2:Feel out the possibility of a bribe,
+DoCanAffordCheck 2000 lpp_hesperusShrineSneakBribe false","당신은 스페이서를 통과하고 음료수를 사고 상점에 대해 이야기합니다. 교회가 운영하는 유머 없는 관세 체제에 대해 선량하지만 날카로운 불만을 제기하면 올바른 길로 갈 수 있으며, 머지않아 술집 뒤의 연기 자욱한 탈출 통로에서 지역 항만 관료의 기술 담당자와 대화하는 자신을 발견하게 됩니다.",lpp_hesperusShrine_barEvent2:뇌물의 가능성을 타진한다,
 lppHesperusBarEventSel2,DialogOptionSelected,$option == lpp_hesperusShrine_barEvent2,"Highlight ""2,000""","""우리 같은 사람들은 머리를 숙이고 있어야 해요. 공개적으로 기도하고, 조용히 살아요. 아시죠?"" 
  
 그들은 암시장 마약 막대에서 매력을 느낍니다. ""Excubitor Orbis에 대해 어떻게 생각하시는지 말씀해 보세요. 적어도 그는 다른 모든 '기사의 미덕'을 받아들이는 것처럼 자비와 용서를 진지하게 받아들입니다.""
