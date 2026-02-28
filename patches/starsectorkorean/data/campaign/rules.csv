@@ -5096,15 +5096,15 @@ $demandedBornanew",,"""나는 Jethro Bornanew라는 이름을 가진 사람을 �
 ""하지만, 하지만. 제가 물어볼 수는 있습니다. 당신에게 문의해 보세요. 그냥... 통신을 계속 유지하시면 됩니다. 네? 제가 당신의 남자를 찾아드리겠습니다.""",lke_chalcedonThreatGo3:계속,
 lkeChalcedonThreatGo2b,DialogOptionSelected,"$option == lke_chalcedonThreatGo2
 $demandedRecruiter","unset $demandedRecruiter
-$demandedBornanew = true 0","""모집자를 원하십니까? 이해가 안 됩니다. 모집자가 있습니까? 당신이 원하는 것이 무엇인지 진실되게 말해주세요. 당신의 지옥불을 내 집에서 멀리 데려갈 수 있습니다.""","lke_chalcedonThreatGo2:""I want Jethro Bornanew.""",
+$demandedBornanew = true 0","""모집자를 원하십니까? 이해가 안 됩니다. 모집자가 있습니까? 당신이 원하는 것이 무엇인지 진실되게 말해주세요. 당신의 지옥불을 내 집에서 멀리 데려갈 수 있습니다.""","lke_chalcedonThreatGo2:""Jethro Bornanew를 원합니다.""",
 LKEchalcedonThreatGo3,DialogOptionSelected,$option == lke_chalcedonThreatGo3,"SetTextHighlights ""Wrestling Sedge""","Pather는 통신 상태를 유지하면서 당신의 무자비함을 달래려고 노력합니다. $HeOrShe는 행성 행정부를 구성하는 단편적인 종파, 종교 민병대, 군벌의 느슨한 집합체에 있는 다양한 연락처에 전화를 겁니다. 
  
 모두 꽤 지루한 일이지만 한 시간쯤 지나면 $personName 이 히트를 칩니다. 누군가 Jethro Bornanew라는 이름을 들었고 그가 모집 담당자에게 Wrestling Sedge라는 이름이 아닌 이름으로 이야기했다는 사실을 알고 있습니다.",lke_chalcedonThreatGo4:계속,
 LKEchalcedonThreatGo4,DialogOptionSelected,$option == lke_chalcedonThreatGo4,,"$PersonName 은 이번 발견의 문제점을 설명하면서 당황한 표정을 짓습니다.
  
-""Sedge. 그는 당신과 말을 하지 않을 것입니다. 그는... 통신을 사용하지 않습니다.""","lke_chalcedonThreatSedgeA:""Make him use comms. An exception. For me.""
-lke_chalcedonThreatSedgeB:""Gee, that's too bad..."" (reach for controls)
-lke_chalcedonThreatSedgeC:""A meeting, then.""",
+""Sedge. 그는 당신과 말을 하지 않을 것입니다. 그는... 통신을 사용하지 않습니다.""","lke_chalcedonThreatSedgeA:""그가 통신을 쓰게 만드세요. 예외적으로. 저를 위해서.""
+lke_chalcedonThreatSedgeB:""이런, 안됐네요..."" (제어판으로 손을 뻗는다)
+lke_chalcedonThreatSedgeC:""그럼 직접 만납시다.""",
 LKEchalcedonThreatSedgeA,DialogOptionSelected,$option == lke_chalcedonThreatSedgeA,"$option = lke_chalcedonThreatSedge2 0
 FireBest DialogOptionSelected","""난... 봐, 난 못해."" $heOrShe가 땀을 흘리며 말했습니다. ""Sedge의 무리는 무장했고, 그리고 그는... 뉴마에 사로잡혔습니다. 그는 죽음을 두려워하지 않습니다. 그는 그를 화나게 하는 자들을 죽입니다. 하지만 잠깐, 잠깐.""",,
 LKEchalcedonThreatSedgeB,DialogOptionSelected,$option == lke_chalcedonThreatSedgeB,"$option = lke_chalcedonThreatSedge2 0
@@ -5791,7 +5791,7 @@ lkePatherFleetRespH,LKEpatherFleetStartResp,!$wontAttack,,,"lke_patherFleetThrea
 lkePatherFleetRespI,LKEpatherFleetStartResp,!$wontAttack,,,"lke_patherFleetThreatC:""말이 많으시군요. 정말 그럴 준비가 되셨나요?""",
 lkePatherFleetRespK,LKEpatherFleetStartResp,"$player.metBrotherCotton
 !$wontAttack ","SetStoryOption lke_patherFleetSP 1 lke_patherFleetSP general ""당신이 Bornnew를 찾는 것을 막기 위해 파견된 Pather 함대를 피하기 위해 Brother Cotton에서 일하고 있다고 주장합니다""",,"lke_patherFleetSP:""물러나라, $brotherOrSister, 나는 Livewell Cotton의 명령을 따르고 있다.""",
-lkePatherFleetRespJ,LKEpatherFleetStartResp,,,,lke_patherFleetEndFight:Cut the comms,
+lkePatherFleetRespJ,LKEpatherFleetStartResp,,,,lke_patherFleetEndFight:통신을 끊는다,
 LKEpatherFleetNotStopping,DialogOptionSelected,$option == lke_patherFleetNotStopping,RemoveOption lke_patherFleetNotStopping,"""하지만 꼭 해야 해요."" $heOrShe가 거의 당황한 듯 말했습니다. ""당신이 단념하지 않으면 공격하겠습니다.""",,
 LKEpatherFleetNotStoppingB,DialogOptionSelected,"$option == lke_patherFleetNotStopping
 $wontAttack",RemoveOption lke_patherFleetNotStopping,"""하지만 그래야 해요."" $heOrShe가 불행하게 말했습니다.",,
@@ -6446,7 +6446,7 @@ lkeMazBarAgentRespPunch2,DialogOptionSelected,$option == lke_mazBarAgentOptPunch
  
 하지만 실제 당국이 너무 소란을 피울 가치도 없을 것입니다. 당신은 마잘롯이나 어느 곳에서도 난투에서 도망친 첫 번째 스페이서가 아닐 것이며, 당신의 유형이 이 세계에 가져오는 상업에 대한 배려가 이루어져야 합니다.
  
-그러나 누군가는 기억할 것입니다.",lke_barEndGetOut:Get back to your $shipOrFleet,
+그러나 누군가는 기억할 것입니다.",lke_barEndGetOut:$shipOrFleet로 돌아간다,
 lkeMazBarAgentRespPunch2out,DialogOptionSelected,$option == lke_barEndGetOut,BarCMD leaveBar,,,
 lkeMazBarAgentRespSiyavong,DialogOptionSelected,$option == lke_mazBarAgentRespSiyavong,"$player.ethosLiar++
 $player.ethosCocky++
@@ -6517,7 +6517,7 @@ $global.lke_contactVirens
  
 Nile Virens가 응답하지 않습니다.","lke_virensCommsFirstWait:당신의 통신 장교에게 링크 요청을 감시하도록 하세요.
 cutCommLink:통신 링크 종료",
-lkeVirensCommsFirstWait,DialogOptionSelected,$option == lke_virensCommsFirstWait,,귀하의 통신 담당자는 지루한 작업에 대해 적절하게 전문적인 수준의 열정으로 응답합니다. 그 동안 $shipOrFleet를 운영하는 특정 일상적인 의무를 수행합니다.,lke_virensComms2:Close the comms interface,
+lkeVirensCommsFirstWait,DialogOptionSelected,$option == lke_virensCommsFirstWait,,귀하의 통신 담당자는 지루한 작업에 대해 적절하게 전문적인 수준의 열정으로 응답합니다. 그 동안 $shipOrFleet를 운영하는 특정 일상적인 의무를 수행합니다.,lke_virensComms2:통신 인터페이스를 닫는다,
 lkeVirensComms2,DialogOptionSelected,$option == lke_virensComms2,,"불과 몇 분 후 통신 담당자가 업데이트 내용을 알려줍니다.
  
 Nile Virens는 통신을 활성화하지 않았습니다. 그는 ""통신을 사용하지 않는"" 것 같습니다. 그런데 동료라고 주장하는 사람이 드디어 응답을 해서 초대장을 보내왔는데…","lke_virensComms3:""그는 나를 차 마시자고 초대했지, 그렇지.""",
@@ -6595,8 +6595,8 @@ FireBest DialogOptionSelected","""당신에게 평화가 있기를 바랍니다.
 LKEvirensStart0a,DialogOptionSelected,"$option == lke_virensStart0
 $player.luddicAttitudeFaithfulOrPather",,"갓 끓인 물을 부으면 공기 중에 맴도는 향으로 차의 품격을 느끼게 됩니다.
  
-잘 섞인 차입니다.","lke_virensStartSit:Sit and drink
-lke_virensStartStand:Remain standing",
+잘 섞인 차입니다.","lke_virensStartSit:앉아서 마신다
+lke_virensStartStand:서 있는다",
 LKEvirensStart0b,DialogOptionSelected,$option == lke_virensStart0,,"루딕스를 다루면서, 끓는 물을 갓 부은 후 공기 중에 퍼지는 향기를 통해 차의 품질에 대한 감각이 발달하기 시작했다는 것을 깨닫게 됩니다.
  
 이것은 좋은 것입니다.","lke_virensStartSit:앉는다. 그리고 차를 마신다
@@ -7173,7 +7173,7 @@ $wasNice > 1",,"""죄송합니다, 함장님. 당신의 자비를 가볍게 여�
  
 ""하지만 거기서 끝나지 않아요.""","lke_virensRaidJethroLie2b2:그가 이야기 하게 놔둔다
 lke_virensRaidJethroLieMUA:떠난다",
-LKEvirensRaidJethroLie2b2,DialogOptionSelected,$option == lke_virensRaidJethroLie2b2,$global.lkeMaybeTriggeredMUAReconcilliation = true,"""나는 그들의 자비에 감사할 것입니다. 그들은 타협의 손을 내밀 것입니다. 당신은 큰 적이 될 것입니다. 그들은 평화를 이루는 사람들이 될 것입니다."" 진심으로 하나님을 사랑하는 사람은 그것을 잡으려고 뛰어오릅니다. 이 일이 끝나면 당신께 감사할 사람은 바로 나입니다.""","lke_virensRaidJethroLieMUA:""I shall await the day.""",
+LKEvirensRaidJethroLie2b2,DialogOptionSelected,$option == lke_virensRaidJethroLie2b2,$global.lkeMaybeTriggeredMUAReconcilliation = true,"""나는 그들의 자비에 감사할 것입니다. 그들은 타협의 손을 내밀 것입니다. 당신은 큰 적이 될 것입니다. 그들은 평화를 이루는 사람들이 될 것입니다."" 진심으로 하나님을 사랑하는 사람은 그것을 잡으려고 뛰어오릅니다. 이 일이 끝나면 당신께 감사할 사람은 바로 나입니다.""","lke_virensRaidJethroLieMUA:""그날을 기다리겠습니다.""",
 LKEvirensRaidJethroLieMUA,DialogOptionSelected,$option == lke_virensRaidJethroLieMUA,"EndConversation DO_NOT_FIRE
 ShowLargePlanet
 FireAll PopulateOptions","Virens는 찾을 수 있는 MUA의 최고위 장교에게 명령을 전달한 셔틀로 안내됩니다. 이제 그는 그들의 문제가 될 것입니다.
