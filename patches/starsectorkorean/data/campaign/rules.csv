@@ -27646,9 +27646,9 @@ PKHackStoryAreYouOmega,DialogOptionSelected,$option == pk_hackStoryAreYouOmega,$
 에 신
 에
 인상을 남기도록 요청하여
-요청하는 내용을 조심하세요.","pk_hackStoryAreYouOmega2a:""We're being honest, remember?""
-pk_hackStoryAreYouOmega2b:""That's not an answer.""
-pk_hackStoryAreYouOmega2c:""Answer me. Are you Omega?""",
+요청하는 내용을 조심하세요.","pk_hackStoryAreYouOmega2a:""솔직하게 얘기하기로 했잖아요?""
+pk_hackStoryAreYouOmega2b:""그건 대답이 아니에요.""
+pk_hackStoryAreYouOmega2c:""대답해요. 당신이 오메가인가요?""",
 PKHackStoryAreYouOmega2a,DialogOptionSelected,$option == pk_hackStoryAreYouOmega2a,FireAll PKHackStoryOptions," 
 그리고 나는 당신을 오해하지 않을 것입니다
 (그럴 필요는 없습니다. 당신이 그럴 것이기 때문입니다)
@@ -27945,8 +27945,8 @@ pk_turnInArroyoSel1again,DialogOptionSelected,"$option == pk_turnInArroyo1
 $madePKofferOnce
 !$cameToYouSecondWithPK",,"""이거 또."" ""당신이 수십억 명의 목숨을 앗아간 이 금지된 도메인 시대의 대량 살상 무기를 다른 사람에게 팔고 나에게 돌아오지 않았으면 좋겠군요.""
  
-그는 얼음처럼 차갑습니다. ""오른쪽?""","pk_turnInArroyo3a:""Absolutely.""
-pk_turnInArroyo3b:""Well...""",
+그는 얼음처럼 차갑습니다. ""오른쪽?""","pk_turnInArroyo3a:""물론이죠.""
+pk_turnInArroyo3b:""글쎄요...""",
 pk_turnInArroyoSel1againNotFirst,DialogOptionSelected,"$option == pk_turnInArroyo1
 $madePKofferOnce
 $cameToYouSecondWithPK",FireAll DialogOptions,"""아니요""라고 그는 말합니다. ""그리고 우리는 당신이 나에게 대량살상무기를 팔았다는 이야기를 하고 있는 것이 아닙니다.""",,
@@ -28357,7 +28357,7 @@ PKSentinelHubConfrontCheckD,PKSentinelHubOptionsCheck,"$global.pkCacheDefendersD
 $confrontedAboutAIFleet
 !$confrontedAboutAIUse",$canConfront = true 0,,,
 PKSentinelHubShowHegCommission,PKSentinelHubOptions,"$player.fcm_faction == hegemony
-!$showedHegCommission",,,pk_sentinelShowHegCom:Show them your Hegemony commission credentials,
+!$showedHegCommission",,,pk_sentinelShowHegCom:헤게모니 위임장을 보여준다,
 PKSentinelHubShowDataPads,PKSentinelHubOptions,!$gaveDatapads,,,pk_sentinelGiveDatapads:그녀에게 섹터의 최근 역사에 대해 설명줍니다.,
 PKSentinelHubQuestionsIn,PKSentinelHubOptions,,,,"pk_sentinelHubQuestions:""몇 가지 질문을 드리고자 합니다.""",
 PKSentinelHubConfrontIn,PKSentinelHubOptions,,,,pk_sentinelHubConfront:Skiron에게 알고 있는 어떤 사실에 대해 노골적으로 언급한다,
