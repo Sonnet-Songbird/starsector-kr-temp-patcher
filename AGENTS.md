@@ -11,6 +11,7 @@
 | **번역 사전 (공통)** | `kr_work/patches/common.json` | 주 사전 (커밋 대상) |
 | **번역 사전 (api 전용)** | `kr_work/patches/api_jar.json` | api JAR 전용 (커밋 대상) |
 | **번역 사전 (obf 전용)** | `kr_work/patches/obf_jar.json` | obf JAR 전용 (커밋 대상) |
+| **클래스별 핀포인트 번역** | `kr_work/patches/class_trans.json` | 특정 클래스에서만 적용되는 번역 (커밋 대상) |
 | **전역 패치 제외 목록** | `kr_work/patches/exclusions.json` | blocked_classes + blocked_strings (커밋 대상) |
 | **상수 풀 패칭 라이브러리** | `kr_work/scripts/patch_utils.py` | patch_api_jar/patch_obf_jar/patch_mod_jar 공통 import |
 | **모드 JAR 패처** | `kr_work/scripts/patch_mod_jar.py` | post_build 훅으로 자동 호출 |
@@ -36,7 +37,26 @@
 |------|------|------|
 | `translations.json` | 선택 | EN→KO 번역 사전. common.json보다 우선 적용. |
 | `exclusions.json` | 선택 | 모드 전용 제외 목록. 전역 exclusions.json과 합집합으로 적용. |
+| `class_trans.json` | 선택 | 모드 전용 클래스별 핀포인트 번역. 전역 class_trans.json과 병합 (클래스 단위 merge). |
 | `data/`, `graphics/` | 선택 | 파일 오버레이. build_mods.py가 output/mods/{id}/에 복사. |
+
+**번역 사전 확장 (class_trans.json):**
+
+전역 번역에 추가하기엔 런타임 키 오염 위험이 있는 짧은 연결어·비교어를 특정 클래스에서만 안전하게 번역:
+
+```json
+// patches/class_trans.json
+{
+  "com/fs/starfarer/api/impl/campaign/CoreReputationPlugin.class": {
+    " or better": " 이상",
+    " or worse": " 이하"
+  }
+}
+```
+
+- 전역 `class_trans.json` + 모드 전용 `patches/{mod_id}/class_trans.json` 병합
+- **우선순위**: class_trans > blocked_strings > 전역 사전 (가장 좁은 단위가 가장 높은 우선순위)
+- patch_api_jar.py / patch_obf_jar.py / patch_mod_jar.py 모두 자동 적용
 
 **exclusions.json 3단계 제외 원칙 (최소 적용 원칙):**
 
@@ -137,6 +157,30 @@ python build.py check
 # 2. 전체 재빌드 및 검증
 python build.py all
 ```
+
+### 클래스별 핀포인트 번역 추가
+
+전역 사전에 추가하기엔 ID 오염 위험이 있는 짧은 연결어·비교어:
+
+```bash
+# 1. api_src/에서 대상 클래스 컨텍스트 확인 (런타임 키로 사용되는지)
+#    python /d/Starsector/jre/bin/java -jar tools/cfr.jar \
+#      api_src/com/fs/.../TargetClass.java 2>/dev/null | grep " or better"
+
+# 2. patches/class_trans.json에 클래스 경로와 번역 추가
+# {
+#   "com/fs/starfarer/api/impl/campaign/TargetClass.class": {
+#     " or better": " 이상"
+#   }
+# }
+
+# 3. 재빌드 (JAR 재패치 필요)
+python build.py rebuild
+```
+
+핀포인트 번역 사용 시점:
+- 특정 클래스에서만 UI 문자열로 사용되고, 다른 클래스에서는 내부 ID로 사용될 수 있는 경우
+- `" or better"`, `" and "` 같이 전역 추가 시 오염 위험이 있는 짧은 연결어/비교어
 
 ### 전체 재현 테스트
 

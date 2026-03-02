@@ -11,7 +11,8 @@ patch_utils.py - Java .class 상수 풀 패칭 공유 라이브러리
     parse_constant_pool(data: bytes) -> tuple[list, int]
     rebuild_class(data: bytes, translations: dict) -> Optional[bytes]
     is_blocked_class(classname: str, blocked_classes: set) -> bool
-    patch_jar(src_jar, dst_jar, translations, blocked_classes, blocked_strings, label) -> dict
+    patch_jar(src_jar, dst_jar, translations, blocked_classes, blocked_strings, label,
+              class_translations) -> dict
 
 공개 API (설정/경로/제외목록):
     resolve_path(p, base=None) -> str
@@ -19,6 +20,7 @@ patch_utils.py - Java .class 상수 풀 패칭 공유 라이브러리
     load_exclusions_file(path) -> tuple[set, set, set]
     load_exclusions(paths, mod_id=None) -> tuple[set, set, set]
     load_translations(paths, *extra_keys) -> dict
+    load_class_translations(paths, mod_id=None) -> dict
 """
 
 import json
@@ -285,11 +287,16 @@ def patch_jar(
     blocked_classes: set,
     blocked_strings: set,
     label: str = "",
+    class_translations: dict = None,
 ) -> dict:
     """
     src_jar의 .class 파일에 translations를 적용해 dst_jar로 저장.
     blocked_strings는 사전에서 먼저 제거한 후 패치.
     src_jar == dst_jar인 경우(in-place) 임시 파일로 우회.
+
+    class_translations: dict[classname -> {src: tgt}] — 클래스별 핀포인트 번역.
+        해당 클래스에서만 적용되며, blocked_strings 필터링 후의 전역 사전과 병합됨.
+        class_translations 항목이 전역 사전을 덮어씀 (우선순위 최상).
 
     Returns:
         dict with keys: total, patched, errors
@@ -335,7 +342,14 @@ def patch_jar(
                 if is_blocked_class(info.filename, blocked_classes):
                     dst_zip.writestr(info, data)
                     continue
-                result = rebuild_class(data, effective_translations)
+                # 클래스별 핀포인트 번역: 전역 사전 + 해당 클래스 사전 병합
+                # class_translations 항목이 전역 사전보다 우선(덮어씀)
+                if class_translations and info.filename in class_translations:
+                    cls_trans = {**effective_translations,
+                                 **class_translations[info.filename]}
+                else:
+                    cls_trans = effective_translations
+                result = rebuild_class(data, cls_trans)
                 if result is not None:
                     dst_zip.writestr(info, result)
                     patched += 1
@@ -423,4 +437,35 @@ def load_translations(paths: dict, *extra_keys: str) -> dict:
         if p and Path(p).exists():
             with open(p, encoding='utf-8') as f:
                 result.update(json.load(f))
+    return result
+
+
+def load_class_translations(paths: dict, mod_id: str = None) -> dict:
+    """
+    patches/class_trans.json [+ patches/{mod_id}/class_trans.json] 로드.
+
+    반환: dict[classname -> {src: tgt}]
+        - 키: JAR 내 클래스 경로 (슬래시 구분, .class 포함)
+        - 값: {원문: 번역} 사전
+
+    mod_id 지정 시 전역 class_trans에 모드 전용 class_trans를 병합.
+    모드 전용 항목이 전역 항목의 동일 클래스 항목을 덮어씀 (클래스 단위 merge).
+    """
+    result = {}
+    p = resolve_path(paths.get('class_trans', ''))
+    if p and Path(p).exists():
+        with open(p, encoding='utf-8') as f:
+            data = json.load(f)
+        # _comment 등 메타 키 제외 (.class로 끝나는 키만 포함)
+        result.update({k: v for k, v in data.items() if k.endswith('.class')})
+
+    if mod_id:
+        patches = Path(resolve_path(paths.get('patches', '')))
+        mp = patches / mod_id / 'class_trans.json'
+        if mp.exists():
+            with open(mp, encoding='utf-8') as f:
+                for cls, trans in json.load(f).items():
+                    if cls.endswith('.class'):
+                        result.setdefault(cls, {}).update(trans)
+
     return result

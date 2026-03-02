@@ -1,0 +1,22 @@
+{
+  "_comment": [
+    "클래스별 핀포인트 번역 사전 (patches/class_trans.json)",
+    "전역 사전에 추가하기엔 런타임 키 오염 위험이 있는 짧은 연결어·비교어를",
+    "특정 클래스에서만 안전하게 번역하기 위해 사용.",
+    "",
+    "포맷:",
+    "  { 'com/path/to/ClassName.class': { '영어 원문': '한국어 번역', ... }, ... }",
+    "",
+    "우선순위: class_trans > blocked_strings > blocked_jar_strings > 전역 사전",
+    "즉, 전역 blocked_strings에 있더라도 이 파일에 명시된 클래스에서는 번역됨."
+  ],
+  "com/fs/starfarer/api/impl/campaign/CoreReputationPlugin.class": {
+    " or better": " 이상",
+    " or worse": " 이하",
+    " or higher": " 이상",
+    " or lower": " 이하"
+  },
+  "com/fs/starfarer/api/impl/campaign/intel/BaseIntelPlugin.class": {
+    " and ": " "
+  }
+}

@@ -359,3 +359,72 @@ class TestSomething(BaseTestCase):
 ### 8-3. CRITICAL: DRM 안전 확인
 
 `test_drm_strings_intact` — `accidents/A.class`의 anti-piracy 문자열이 번역되지 않았는지 빌드마다 자동 확인함. 이 테스트가 실패하면 즉시 조치 필요.
+
+---
+
+## 9. 클래스별 핀포인트 번역 (class_trans.json)
+
+### 9-1. 개념과 사용 시점
+
+전역 번역 사전(`common.json`, `api_jar.json`)에 추가하기엔 런타임 키 오염 위험이 있는 짧은 연결어·비교어를 **특정 클래스에서만 안전하게 번역**하는 기능.
+
+**사용 시점:**
+- `" or better"`, `" and "` 같은 짧은 UI 연결어가 특정 클래스에서는 화면 출력용이지만, 다른 클래스에서는 내부 ID 비교에 사용될 수 있는 경우
+- 전역 사전에 추가하면 ID가 번역되어 런타임 오류가 발생하나, 특정 클래스에서는 안전하다고 확인된 경우
+
+### 9-2. 포맷
+
+```json
+// patches/class_trans.json
+{
+  "com/fs/starfarer/api/impl/campaign/CoreReputationPlugin.class": {
+    " or better": " 이상",
+    " or worse": " 이하",
+    " or higher": " 이상",
+    " or lower": " 이하"
+  },
+  "com/fs/starfarer/api/impl/campaign/intel/BaseIntelPlugin.class": {
+    " and ": " "
+  }
+}
+```
+
+- **키**: JAR 내 클래스 경로 (슬래시 구분, `.class` 포함)
+- **값**: `{원문: 번역}` 사전
+- 내부 클래스는 `OuterClass$InnerClass.class` 형태
+
+모드 전용: `patches/{mod_id}/class_trans.json` — 전역 class_trans와 클래스 단위로 병합 (모드 항목이 덮어씀)
+
+### 9-3. 우선순위
+
+```
+class_trans (가장 높음)
+  > blocked_strings (제외 규칙)
+  > blocked_jar_strings (제외 규칙)
+  > 전역 번역 사전 (common + api_jar/obf_jar)
+```
+
+`blocked_strings`에 등록된 문자열이라도 `class_trans.json`에 해당 클래스로 명시되면 번역된다. class_trans는 특정 상수 풀 항목에 대한 가장 좁고 확실한 지정이기 때문.
+
+### 9-4. 안전성 확인 절차
+
+핀포인트 번역 추가 전 반드시 확인:
+
+```bash
+# CFR로 대상 클래스 디컴파일하여 컨텍스트 확인
+/d/Starsector/jre/bin/java -jar tools/cfr.jar \
+  /d/Starsector/starsector-core/starfarer.api.jar \
+  --outputdir /tmp/cfr_out/ 2>/dev/null
+
+# 출력에서 해당 문자열 사용 패턴 확인
+grep -n "or better" /tmp/cfr_out/com/fs/starfarer/api/impl/campaign/CoreReputationPlugin.java
+```
+
+번역 안전한 패턴: `addPara(... + " or better" + ...)`, `setText(...)`, UI 렌더링 호출
+번역 금지 패턴: `if (x.equals(" or better"))`, `.get(" or better")` — ID 비교/조회
+
+### 9-5. 테스트
+
+`TestClassPinpointTranslation` (tests/test_jars.py):
+- `test_class_specific_applied`: 등록 클래스에 번역이 적용됐는지 확인
+- `test_class_specific_isolated`: 비등록 클래스에 같은 원문이 번역되지 않았는지 확인 (핀포인트 격리 보장)

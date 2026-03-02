@@ -7,6 +7,7 @@
     "api_trans":    "./patches/api_jar.json",
     "obf_trans":    "./patches/obf_jar.json",
     "exclusions":   "./patches/exclusions.json",
+    "class_trans":  "./patches/class_trans.json",
     "output":       "./output",
     "output_core":  "./output/starsector-core",
     "output_mods":  "./output/mods",

@@ -1,6 +1,9 @@
 """test_jars.py - JAR 번역 적용 + 제외 규칙 + DRM 안전 검증"""
 
+import json
+import struct
 import zipfile
+from pathlib import Path
 
 from base_test import BaseTestCase
 from helpers import get_string_literals, has_korean, jar_has_korean
@@ -95,6 +98,151 @@ class TestExclusionRules(BaseTestCase):
         self.assertFalse(
             failures,
             "blocked_class에 한국어 번역 발견:\n" + "\n".join(failures)
+        )
+
+
+class TestClassPinpointTranslation(BaseTestCase):
+    """class_trans.json 핀포인트 번역 기능 검증."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent / 'scripts'))
+        from patch_utils import resolve_path
+        cls._resolve_path = staticmethod(resolve_path)
+
+        class_trans_path = resolve_path(cls.paths.get('class_trans', ''))
+        cls.class_trans = {}
+        if class_trans_path:
+            p = Path(class_trans_path)
+            if p.exists():
+                with open(p, encoding='utf-8') as f:
+                    data = json.load(f)
+                    # _comment 키 제외
+                    cls.class_trans = {k: v for k, v in data.items()
+                                       if not k.startswith('_')}
+
+    def _find_jar_for_class(self, classname):
+        """주어진 클래스가 있는 출력 JAR 경로를 반환 (없으면 None)."""
+        for jar_path in [
+            self.output_core / 'starfarer.api.jar',
+            self.output_core / 'starfarer_obf.jar',
+        ]:
+            if not jar_path.exists():
+                continue
+            with zipfile.ZipFile(jar_path) as z:
+                if classname in z.namelist():
+                    return jar_path
+        return None
+
+    def _load_global_keys(self):
+        """공통 + api + obf 전역 번역 사전의 원문 키 집합."""
+        keys = set(self.common_translations)
+        for trans_key in ('api_trans', 'obf_trans'):
+            p_str = self._resolve_path(self.paths.get(trans_key, ''))
+            if p_str:
+                p = Path(p_str)
+                if p.exists():
+                    with open(p, encoding='utf-8') as f:
+                        keys.update(json.load(f).keys())
+        return keys
+
+    def test_class_specific_applied(self):
+        """class_trans.json 등록 클래스에 번역이 적용됐는지 확인."""
+        if not self.class_trans:
+            self.skipTest("class_trans.json 비어있거나 없음")
+
+        failures = []
+        skipped = []
+        for classname, trans in self.class_trans.items():
+            jar_path = self._find_jar_for_class(classname)
+            if jar_path is None:
+                skipped.append(classname)
+                continue
+            try:
+                strings = get_string_literals(jar_path, classname)
+            except Exception as e:
+                failures.append(f"{classname}: 파싱 오류 ({e})")
+                continue
+            for src, tgt in trans.items():
+                if tgt not in strings:
+                    failures.append(
+                        f"{classname}: '{src}' → '{tgt}' 번역 미적용"
+                        f" (현재 strings: {sorted(s for s in strings if has_korean(s))[:3]})"
+                    )
+
+        if skipped:
+            print(f"  [skip] 출력 JAR에 없는 클래스 {len(skipped)}개: {skipped}")
+        self.assertFalse(
+            failures,
+            "class_trans 번역이 적용되지 않음:\n" + "\n".join(failures)
+        )
+
+    def test_class_specific_isolated(self):
+        """class_trans 전용 원문이 비등록 클래스에서 번역되지 않았는지 확인."""
+        if not self.class_trans:
+            self.skipTest("class_trans.json 비어있거나 없음")
+
+        global_keys = self._load_global_keys()
+        registered_classes = set(self.class_trans.keys())
+
+        # 전역 사전에 없는 class_trans 원문만 → 이것들만 핀포인트 의미 있음
+        # {src: tgt} (첫 번째 등록 클래스 기준)
+        pinpoint_trans = {}
+        for trans in self.class_trans.values():
+            for src, tgt in trans.items():
+                if src not in global_keys and src not in pinpoint_trans:
+                    pinpoint_trans[src] = tgt
+
+        if not pinpoint_trans:
+            self.skipTest(
+                "class_trans의 모든 원문이 이미 전역 사전에 있음 — 격리 테스트 해당 없음"
+            )
+
+        failures = []
+        for jar_path in [
+            self.output_core / 'starfarer.api.jar',
+            self.output_core / 'starfarer_obf.jar',
+        ]:
+            if not jar_path.exists():
+                continue
+
+            with zipfile.ZipFile(jar_path) as z:
+                all_classes = [n for n in z.namelist()
+                               if n.endswith('.class') and n not in registered_classes]
+                data_map = {}
+                for name in all_classes:
+                    try:
+                        data_map[name] = z.read(name)
+                    except Exception:
+                        pass
+
+            # 비등록 클래스에서 src가 있고 tgt도 있으면 격리 실패
+            from patch_utils import decode_java_utf8, parse_constant_pool
+            for name, data in data_map.items():
+                try:
+                    entries, _ = parse_constant_pool(data)
+                except Exception:
+                    continue
+                str_indices = {struct.unpack_from('>H', v)[0]
+                               for tag, v in (e for e in entries if e) if tag == 8}
+                strings = set()
+                for i, entry in enumerate(entries):
+                    if entry and entry[0] == 1 and i in str_indices:
+                        try:
+                            strings.add(decode_java_utf8(entry[1]))
+                        except Exception:
+                            pass
+                for src, tgt in pinpoint_trans.items():
+                    if src in strings and tgt in strings:
+                        failures.append(
+                            f"[격리 실패] {name}: '{src}' → '{tgt}' 적용됨 (비등록 클래스)"
+                        )
+
+        self.assertFalse(
+            failures,
+            "class_trans 번역이 비등록 클래스에 누출됨:\n" + "\n".join(failures)
         )
 
 
