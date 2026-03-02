@@ -1,0 +1,22 @@
+{
+	"id":"carrier_group",
+	"governingAptitude":"leadership",
+	"compressHullmods":false,
+	#"scope":ALL_CARRIERS,
+	"scope":CUSTOM,
+	"scopeStr":"파이터베이가 있는 모든 함선",
+	"scope2":CUSTOM,
+	"scopeStr2":"기함을 포함한 장교가 있는 모든 함선에 효과 부여",
+	#"scopeStr":"all ships with non-built-in fighter bays",
+#	"effectGroups":[
+#		{
+#			"requiredSkillLevel":1,
+#			"effectBasedOnLevel":false,
+#			"effects":[
+#				{"type":"ALL_SHIPS_IN_FLEET", "script":"com.fs.starfarer.api.impl.campaign.skills.CarrierGroup$Level1"},
+#				{"type":"HULLMOD_UNLOCK", "hullmods":{"converted_hangar":1,"expanded_deck_crew":1, "converted_fighterbay":1}},
+#				
+#			]
+#		},
+#	],
+}
