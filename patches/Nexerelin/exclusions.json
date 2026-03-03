@@ -30,7 +30,11 @@
 
   "blocked_jar_strings": [
     "invasions",
-    "neutral"
+    "neutral",
+    "marine",
+    "heavy",
+    "militia",
+    "rebel"
   ],
 
   "blocked_json_keys": [
