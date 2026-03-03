@@ -23,7 +23,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from patch_utils import load_config, load_exclusions, load_translations, patch_jar, resolve_path
+from patch_utils import (load_class_translations, load_config, load_exclusions,
+                         load_translations, patch_jar, resolve_path)
 
 
 def main():
@@ -55,10 +56,13 @@ def main():
     translations = load_translations(paths, 'api_trans')
     blocked_classes, blocked_strings, blocked_jar_strings = load_exclusions(paths)
     jar_blocked = blocked_strings | blocked_jar_strings
-    print(f"Loaded {len(translations)} translations (common + api)")
+    class_trans = load_class_translations(paths)
+    print(f"Loaded {len(translations)} translations (common + api)"
+          + (f", class_trans {len(class_trans)} 클래스" if class_trans else ""))
 
     os.makedirs(os.path.dirname(out_jar), exist_ok=True)
-    stats = patch_jar(bak_jar, out_jar, translations, blocked_classes, jar_blocked, "api")
+    stats = patch_jar(bak_jar, out_jar, translations, blocked_classes, jar_blocked,
+                      label="api", class_translations=class_trans)
 
     print(f"\nProcessed {stats['total']} class files")
     print(f"  Patched:   {stats['patched']}")

@@ -64,7 +64,18 @@
     "",
     "  경고: 이 목록의 문자열은 번역 사전에 있어도 완전히 무시됨.",
     "    부작용을 최소화하려면 목록을 가능한 한 짧게 유지할 것.",
-    "    단순 ID 오염은 blocked_classes로 더 정밀하게 해결 가능한 경우가 많음."
+    "    단순 ID 오염은 blocked_classes로 더 정밀하게 해결 가능한 경우가 많음.",
+    "",
+    "────────────────────────────────────────────────────────────",
+    "별도 수단: patches/class_trans.json  (제외가 아닌 추가 수단)",
+    "────────────────────────────────────────────────────────────",
+    "  이 파일(exclusions.json)과 독립적으로 동작하는 번역 추가 수단.",
+    "  특정 클래스에서만 번역할 수 있는 짧은 연결어·비교어를 지정.",
+    "  형식: { 'com/path/ClassName.class': { '원문': '번역' } }",
+    "  우선순위: class_trans > blocked_strings > 전역 사전",
+    "  즉, blocked_strings에 등록된 문자열도 class_trans에서 명시하면 번역됨.",
+    "  자세한 내용: TRANSLATION_NOTES.md 9절 참고.",
+    "  모드 전용: patches/{mod_id}/class_trans.json"
   ],
 
   "blocked_classes": [

@@ -36,8 +36,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from patch_utils import (load_config, load_exclusions, load_translations,
-                          patch_jar, resolve_path)
+from patch_utils import (load_class_translations, load_config, load_exclusions,
+                          load_translations, patch_jar, resolve_path)
 
 
 def main():
@@ -86,6 +86,9 @@ def main():
     blocked_classes, blocked_strings, blocked_jar_strings = load_exclusions(paths, mod_id)
     jar_blocked = blocked_strings | blocked_jar_strings
 
+    # 전역 + 모드 전용 class_translations 병합
+    class_trans = load_class_translations(paths, mod_id=mod_id)
+
     for jar_rel in jar_paths:
         jar_path = output_mods / mod_id / jar_rel
         if not jar_path.exists():
@@ -96,7 +99,8 @@ def main():
         stats = patch_jar(
             jar_path, jar_path,
             translations, blocked_classes, jar_blocked,
-            label=f"{mod_id}/{jar_rel}"
+            label=f"{mod_id}/{jar_rel}",
+            class_translations=class_trans if class_trans else None,
         )
         print(f"  [{mod_id}/{jar_rel}] 패치: {stats['patched']}/{stats['total']} 클래스"
               + (f", 오류: {stats['errors']}" if stats['errors'] else ""))
