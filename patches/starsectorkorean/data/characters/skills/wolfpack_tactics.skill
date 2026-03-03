@@ -1,0 +1,17 @@
+{
+	"id":"wolfpack_tactics",
+	"governingAptitude":"leadership",
+	"compressHullmods":false,
+	"scope":CUSTOM,
+	"scopeStr":"기함을 포함하여 장교가 있는 모든 호위함과 구축함",
+#	"effectGroups":[
+#		{
+#			"requiredSkillLevel":1,
+#			"effectBasedOnLevel":false,
+#			"effects":[
+#				{"type":"ALL_SHIPS_IN_FLEET", "script":"com.fs.starfarer.api.impl.campaign.skills.WolfpackTactics$Level1A"},
+#				#{"type":"SHIP", "script":"com.fs.starfarer.api.impl.campaign.skills.WolfpackTactics$Level1B"},
+#			]
+#		},
+#	],
+}
