@@ -24,11 +24,17 @@ patch_utils.py - Java .class 상수 풀 패칭 공유 라이브러리
 """
 
 import json
+import re
 import struct
 import sys
 import zipfile
 from pathlib import Path
 from typing import Optional
+
+# Java 클래스 경로 패턴: com/fs/starfarer/Foo$Bar (공백 없음, 세그먼트 2개 이상)
+_CLASSPATH_RE = re.compile(
+    r'^[a-zA-Z$_][a-zA-Z0-9$_]*(/[a-zA-Z$_][a-zA-Z0-9$_]*){2,}$'
+)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -150,7 +156,34 @@ def parse_constant_pool(data: bytes):
     return entries, pos
 
 
-def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
+def _extract_class_refs(entries: list) -> list:
+    """상수 풀 entries에서 CONSTANT_Class(tag 7)가 가리키는 Utf8 문자열 목록 반환."""
+    refs = []
+    for entry in entries:
+        if entry and entry[0] == 7:
+            idx = struct.unpack_from('>H', entry[1])[0]
+            if idx < len(entries) and entries[idx] and entries[idx][0] == 1:
+                try:
+                    refs.append(decode_java_utf8(entries[idx][1]))
+                except Exception:
+                    pass
+    return refs
+
+
+def _is_suspicious_ref(classname: str) -> bool:
+    """로드 오류를 유발할 수 있는 클래스 참조인지 확인.
+
+    - Java 키워드를 클래스명으로 사용하는 난독화 패턴 (예: super, class, new)
+    - 1~3자 이하 극단적 단축 난독화 이름
+    """
+    basename = classname.split('/')[-1]
+    JAVA_KEYWORDS = {'super', 'class', 'new', 'this', 'extends', 'implements',
+                     'interface', 'enum', 'return', 'void', 'int', 'long'}
+    return len(basename) <= 3 or basename.lower() in JAVA_KEYWORDS
+
+
+def rebuild_class(data: bytes, translations: dict,
+                  _debug: Optional[dict] = None) -> Optional[bytes]:
     """
     Apply translations to a class file's constant pool.
     Returns new class bytes, or None if no changes were made.
@@ -162,6 +195,16 @@ def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
     형태로 초기화되어 필드명 Utf8과 string literal Utf8이 같은 인덱스를 공유
     (컴파일러 중복 제거)할 수 있음. 이 경우 string_utf8_indices 에 포함되지만
     name_utf8_indices 에도 포함되어 번역 대상에서 제외됨 → NoSuchFieldError 방지.
+
+    _debug: 비어있는 dict를 전달하면 아래 키로 채워져 반환됨 (디버그 전용).
+        cp_count          int   — 상수 풀 항목 수
+        translatable_count int  — 번역 가능 Utf8 수
+        class_refs        list  — 이 클래스가 참조하는 클래스 이름 목록
+        suspicious_refs   list  — class_refs 중 난독화/키워드 패턴 (로드 위험 후보)
+        protected_overlap list  — string literal ∩ 식별자 집합 (enum dedup 등으로 보호된 항목)
+        changes           list  — 실제 번역된 항목: [{idx, from, to}]
+        suspicious_changes list — changes 중 from/to에 '/' 포함 (classpath 오염 후보)
+        modified          bool  — 변경이 발생했는지
     """
     try:
         entries, rest_start = parse_constant_pool(data)
@@ -212,6 +255,28 @@ def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
 
     # 실제 번역 대상: string literal 이면서 식별자가 아닌 Utf8
     translatable = string_utf8_indices - name_utf8_indices
+
+    # --- 디버그 정보 수집 (Pass 1 완료 시점) ---
+    if _debug is not None:
+        class_refs = _extract_class_refs(entries)
+        overlap = []
+        for idx in (string_utf8_indices & name_utf8_indices):
+            if idx < len(entries) and entries[idx] and entries[idx][0] == 1:
+                try:
+                    overlap.append(decode_java_utf8(entries[idx][1]))
+                except Exception:
+                    pass
+        _debug.update({
+            "cp_count": len(entries),
+            "translatable_count": len(translatable),
+            "class_refs": class_refs,
+            "suspicious_refs": [r for r in class_refs if _is_suspicious_ref(r)],
+            "protected_overlap": overlap,
+            "changes": [],
+            "suspicious_changes": [],
+            "modified": False,
+        })
+
     if not translatable:
         return None  # 번역할 항목 없음 — 빠른 경로
 
@@ -239,6 +304,13 @@ def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
                 except Exception:
                     encoded = translated.encode('utf-8', errors='replace')
 
+                if _debug is not None:
+                    change = {"idx": i, "from": text, "to": translated}
+                    _debug["changes"].append(change)
+                    if _CLASSPATH_RE.match(text.strip()) or _CLASSPATH_RE.match(translated.strip()):
+                        _debug["suspicious_changes"].append(
+                            {**change, "reason": "classpath-like string replaced"})
+
                 new_pool += bytes([1]) + struct.pack('>H', len(encoded)) + encoded
                 modified = True
                 continue
@@ -248,6 +320,9 @@ def rebuild_class(data: bytes, translations: dict) -> Optional[bytes]:
             new_pool += bytes([1]) + struct.pack('>H', len(val)) + val
         else:
             new_pool += bytes([tag]) + val
+
+    if _debug is not None:
+        _debug["modified"] = modified
 
     if not modified:
         return None
@@ -288,6 +363,7 @@ def patch_jar(
     blocked_strings: set,
     label: str = "",
     class_translations: dict = None,
+    debug_out: Optional[Path] = None,
 ) -> dict:
     """
     src_jar의 .class 파일에 translations를 적용해 dst_jar로 저장.
@@ -298,9 +374,16 @@ def patch_jar(
         해당 클래스에서만 적용되며, blocked_strings 필터링 후의 전역 사전과 병합됨.
         class_translations 항목이 전역 사전을 덮어씀 (우선순위 최상).
 
+    debug_out: Path | None — 지정 시 패치 결과 상세 로그를 JSON 파일로 저장.
+        로그 내용: 패치된 각 클래스의 번역 변경 목록, 클래스 참조 목록,
+        난독화 키워드 클래스 참조 여부, classpath-like 문자열 번역 경고.
+        → NoClassDefFoundError 등 클래스 로드 오류 진단에 사용.
+
     Returns:
         dict with keys: total, patched, errors
     """
+    import os as _os
+
     # blocked_strings 필터링
     effective_translations = translations
     if blocked_strings:
@@ -325,6 +408,7 @@ def patch_jar(
     total = 0
     patched = 0
     errors = 0
+    debug_entries = []  # debug_out 지정 시만 사용
 
     with zipfile.ZipFile(src_jar, 'r') as src_zip, \
          zipfile.ZipFile(tmp_jar, 'w', zipfile.ZIP_DEFLATED, allowZip64=True) as dst_zip:
@@ -341,7 +425,22 @@ def patch_jar(
                 total += 1
                 if is_blocked_class(info.filename, blocked_classes):
                     dst_zip.writestr(info, data)
+                    # 디버그 모드: blocked 클래스의 클래스 참조도 수집
+                    if debug_out is not None:
+                        try:
+                            entries_b, _ = parse_constant_pool(data)
+                            refs = _extract_class_refs(entries_b)
+                            susp = [r for r in refs if _is_suspicious_ref(r)]
+                            if susp:
+                                debug_entries.append({
+                                    "classname": info.filename,
+                                    "status": "blocked",
+                                    "suspicious_refs": susp,
+                                })
+                        except Exception:
+                            pass
                     continue
+
                 # 클래스별 핀포인트 번역: 전역 사전 + 해당 클래스 사전 병합
                 # class_translations 항목이 전역 사전보다 우선(덮어씀)
                 if class_translations and info.filename in class_translations:
@@ -349,18 +448,69 @@ def patch_jar(
                                  **class_translations[info.filename]}
                 else:
                     cls_trans = effective_translations
-                result = rebuild_class(data, cls_trans)
+
+                _dbg = {} if debug_out is not None else None
+                result = rebuild_class(data, cls_trans, _debug=_dbg)
+
                 if result is not None:
                     dst_zip.writestr(info, result)
                     patched += 1
+                    if debug_out is not None and _dbg:
+                        _dbg["classname"] = info.filename
+                        _dbg["status"] = "patched"
+                        debug_entries.append(_dbg)
                     continue
+                else:
+                    # 변경 없음이지만 suspicious_refs가 있으면 기록
+                    if debug_out is not None and _dbg and _dbg.get("suspicious_refs"):
+                        _dbg["classname"] = info.filename
+                        _dbg["status"] = "unchanged"
+                        debug_entries.append(_dbg)
 
             # Non-class files (META-INF, resources) → copy as-is
             dst_zip.writestr(info, data)
 
     if in_place:
-        import os
-        os.replace(tmp_jar, dst_jar)
+        _os.replace(tmp_jar, dst_jar)
+
+    # 디버그 로그 작성
+    if debug_out is not None:
+        debug_out = Path(debug_out)
+        debug_out.parent.mkdir(parents=True, exist_ok=True)
+
+        # 요약: suspicious_refs를 가진 patched 클래스 목록 (핵심 진단 대상)
+        suspicious_patched = [
+            e for e in debug_entries
+            if e.get("status") == "patched" and e.get("suspicious_refs")
+        ]
+        all_suspicious_changes = [
+            {"classname": e["classname"], "change": c}
+            for e in debug_entries
+            if e.get("status") == "patched"
+            for c in e.get("suspicious_changes", [])
+        ]
+
+        report = {
+            "_label": label,
+            "_src_jar": str(src_jar),
+            "_summary": {
+                "total_classes": total,
+                "patched": patched,
+                "errors": errors,
+                "debug_entries_recorded": len(debug_entries),
+                "suspicious_patched_count": len(suspicious_patched),
+                "suspicious_string_changes_count": len(all_suspicious_changes),
+            },
+            "suspicious_patched_classes": suspicious_patched,
+            "suspicious_string_changes": all_suspicious_changes,
+            "all_entries": debug_entries,
+        }
+        with open(debug_out, 'w', encoding='utf-8') as f:
+            json.dump(report, f, ensure_ascii=False, indent=2)
+        print(f"  [debug] 패치 로그 저장: {debug_out} "
+              f"({len(debug_entries)}개 항목, "
+              f"suspicious_patched={len(suspicious_patched)}, "
+              f"suspicious_changes={len(all_suspicious_changes)})")
 
     return {"total": total, "patched": patched, "errors": errors}
 

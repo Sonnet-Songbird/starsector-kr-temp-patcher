@@ -3,7 +3,7 @@
 05_patch_classes.py - starfarer.api.jar 상수 풀 패치 (인메모리)
 
 사용법:
-    python 05_patch_classes.py [--no-restore]
+    python 05_patch_classes.py [--no-restore] [--debug]
 
 입력:
     ../starsector-core/starfarer.api.jar.bak   (영어 원본 백업)
@@ -14,6 +14,10 @@
 
 옵션:
     --no-restore    .bak → live JAR 복원 단계 건너뜀 (기본: 복원 후 패치)
+    --debug         패치 상세 로그를 output/debug_api_patch.json 에 저장.
+                    NoClassDefFoundError 등 클래스 로드 오류 진단용.
+                    난독화 키워드 클래스(super, ooOO 등) 참조 여부와
+                    classpath-like 문자열 번역 여부를 중점 기록.
 """
 
 import argparse
@@ -31,6 +35,8 @@ def main():
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument('--no-restore', action='store_true',
                         default=os.environ.get('STARSECTOR_NO_RESTORE') == '1')
+    parser.add_argument('--debug', action='store_true',
+                        help='패치 상세 로그를 output/debug_api_patch.json 에 저장')
     args, _ = parser.parse_known_args()
     restore = not args.no_restore
 
@@ -39,6 +45,8 @@ def main():
     bak_jar  = os.path.join(game_core, 'starfarer.api.jar.bak')
     live_jar = os.path.join(game_core, 'starfarer.api.jar')
     out_jar  = os.path.join(resolve_path(paths['output_core']), 'starfarer.api.jar')
+    debug_out = Path(resolve_path(paths['output'])) / 'debug_api_patch.json' \
+                if args.debug else None
 
     if not os.path.exists(bak_jar):
         print(f"ERROR: .bak not found: {bak_jar}", file=sys.stderr)
@@ -60,9 +68,12 @@ def main():
     print(f"Loaded {len(translations)} translations (common + api)"
           + (f", class_trans {len(class_trans)} 클래스" if class_trans else ""))
 
+    if debug_out:
+        print(f"[debug 모드] 패치 로그 활성화 → {debug_out}")
+
     os.makedirs(os.path.dirname(out_jar), exist_ok=True)
     stats = patch_jar(bak_jar, out_jar, translations, blocked_classes, jar_blocked,
-                      label="api", class_translations=class_trans)
+                      label="api", class_translations=class_trans, debug_out=debug_out)
 
     print(f"\nProcessed {stats['total']} class files")
     print(f"  Patched:   {stats['patched']}")
