@@ -27,6 +27,10 @@
     "rules.csv conditions는 번역되지 않아 == \"relief\" 불일치 → 룰 탐색 실패.",
     "→ ERROR: no rule found for option nex_stabilizePackage_main 에러.",
     "",
+    "=== \"Industry\" blocked_jar_strings 이유 ===",
+    "GroundBattleLog.class가 StringHelper.getString(\"log_abilityUsed\" + ucFirst(type)) 형태로 키를 조합.",
+    "type 값 \"Industry\"가 JAR에서 \"산업\"으로 번역 → \"log_abilityUsed산업\" 조회 실패.",
+    "",
     "=== \"alliance\" / \"Alliances\" blocked_jar_strings 이유 ===",
     "AllianceIntel.getIcon()이 getSpriteName(\"alliances\", \"intel\") 형태로 sprite 카테고리 키를 사용.",
     "translations.json에 alliance → 동맹, Alliances → 동맹이 있어 JAR 번역 시 키가 변환됨.",
@@ -59,6 +63,7 @@
   ],
 
   "blocked_jar_strings": [
+    "Industry",
     "alliance",
     "Alliances",
     "invasions",
