@@ -4231,5 +4231,15 @@
   "Trade with $theFaction military base.\n\nWeapons and other military hardware can be bought and sold here even if they're illegal on the open market. A commission and better standing with $theFaction results in higher-grade hardware being available.\n\nWill buy locally illegal goods as part of a no-questions-asked buyback program.\n\nSelling enough of a commodity will temporarily resolve a shortage.": "$theFaction 군사 기지와 거래합니다.\n\n공개 시장에서 불법이더라도 무기와 기타 군사 장비를 여기서 사고팔 수 있습니다. $theFaction과의 커미션 계약 및 더 높은 평판은 더 고급 장비를 구매할 수 있게 해줍니다.\n\n질문 없는 환매 프로그램의 일환으로 지역 불법 물자를 구매합니다.\n\n충분한 양의 물자를 판매하면 부족 현상이 일시적으로 해소됩니다.",
   "Resource\nStockpiles": "자원\n비축량",
   "The hulls of Omega ships are able to rapidly self-modify, split and combine to fulfill any needed purpose. Matter itself is but an art form to be shaped and reshaped, made an unmade as Omega desires.\n\nIncreases out-of-combat repair rate by %s%%, and %s%% of hull and armor damage is repaired after battle at no cost. Prevents D-mods and ensures ship is always recoverable.": "Omega 함선의 선체는 필요한 목적에 맞게 빠르게 자가 변형하고, 분열하고, 결합할 수 있습니다. 물질 자체는 Omega의 의지에 따라 형태가 빚어지고 다시 빚어지는 하나의 예술 형식일 뿐입니다.\n\n전투 외 수리 속도가 %s%% 증가하며, 전투 후 선체 및 장갑 피해의 %s%%가 비용 없이 수리됩니다. D-모드를 방지하며 함선이 항상 회수 가능하도록 보장합니다.",
-  "Greatly increases repair speed out of combat and repairs some damage after combat immediately at no cost.": "전투 외 수리 속도를 크게 높이고, 전투 후 일부 피해를 즉시 비용 없이 수리합니다."
+  "Greatly increases repair speed out of combat and repairs some damage after combat immediately at no cost.": "전투 외 수리 속도를 크게 높이고, 전투 후 일부 피해를 즉시 비용 없이 수리합니다.",
+  "Engage the automated defenses": "자동 방어 시설 교전",
+  "Re-engage the automated defenses": "자동 방어 시설 재교전",
+  "Opening the browser directly is not supported on this OS!\nThe forum thread URL has been copied to the clipboard instead.": "이 운영체제에서는 브라우저를 직접 열 수 없습니다!\n포럼 스레드 URL이 클립보드에 복사되었습니다.",
+  "There is 1 up-to-date mod": "최신 상태인 모드가 1개 있습니다",
+  "List mods without updates": "업데이트 없는 모드 목록 보기",
+  "List mods with updates": "업데이트 있는 모드 목록 보기",
+  "Not supported on this OS!": "이 운영체제에서는 지원되지 않습니다!",
+  "Opening mod index thread...": "모드 인덱스 스레드를 여는 중...",
+  "Go to mod index forum thread": "모드 인덱스 포럼 스레드 이동",
+  "You have retired your character. Unpause the game to continue.": "캐릭터를 은퇴시켰습니다. 게임 일시정지를 해제하여 계속 진행하세요."
 }

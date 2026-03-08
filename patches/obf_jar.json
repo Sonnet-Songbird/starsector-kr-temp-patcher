@@ -3215,5 +3215,14 @@
   ", Fringe Jump-point": ", 외곽 점프 포인트",
   "\n--- Or ---": "\n--- 또는 ---",
   " unknown location": " 미확인 위치",
-  " when you level up.": " 레벨 업 시."
+  " when you level up.": " 레벨 업 시.",
+  "(So, even if you're not taking any damage on the shields, keeping them off will let you put out more firepower.)": "(실드에 피해를 받지 않더라도 실드를 끈 상태로 유지하면 더 많은 화력을 발휘할 수 있습니다.)",
+  "(If you'd like to rename it later, you can do so by clicking on its name in the colony info screen.)": "(나중에 이름을 바꾸려면 식민지 정보 화면에서 이름을 클릭하면 됩니다.)",
+  "(If you only have one ship, it's deployed automatically.)": "(함선이 하나뿐이라면 자동으로 배치됩니다.)",
+  "... and right-click on the Comm Relay.": "... 그리고 통신 중계기를 우클릭하세요.",
+  "\n\nThis save slot is already current.": "\n\n이 저장 슬롯이 이미 현재 슬롯입니다.",
+  "<<< Hide advanced options": "<<< 고급 옵션 숨기기",
+  ")?\n\nThis decision is irreversible.": ")?\n\n이 결정은 되돌릴 수 없습니다.",
+  "?\n\nThis decision is irreversible.": "?\n\n이 결정은 되돌릴 수 없습니다.",
+  ", maximum number of officers exceeded": ", 장교 수 최대치 초과"
 }
