@@ -1,6 +1,6 @@
 id,name,order,tier,reqPoints,reqPointsPerExtraSkill,description,author,combat officer,admiral,admin,tags,icon,
 # COMBAT,,,,,,,,,,,,,
-helmsmanship,조타술,10,1,0,,"[허밍]처럼 믹스를 올바르게 밀면 노래가 나옵니다. 별부터 뼈까지 세상의 모든 것이 옳습니다. 교대근무를 마치고 나오는데, 마치 방금 잠에서 깨어난 것 같았습니다. [웃음] 말로는 알 수 없어요.","Nachiketa Portside Interview Project, Ep.3",TRUE,,,,graphics/icons/skills/helmsmanship.png,
+helmsmanship,조타술,10,1,0,,"믹스를 딱 맞게 밀었을 때, [허밍]처럼 노래가 되거든요. 별부터 뼈끝까지 세상이 제자리에 있는 느낌. 교대 마치고 나오면 방금 잠에서 깬 것 같아요. [웃음] 말로는 못 해요.","Nachiketa Portside Interview Project, Ep.3",TRUE,,,,graphics/icons/skills/helmsmanship.png,
 combat_endurance,전투 지구력,20,1,0,,"재난을 겪으면서도 14대는 견뎌냈습니다. 
  헤게모니를 통해 도메인은 지속됩니다. 
  의무를 통해 인류는 견뎌야 합니다.","Admiral Kali Molina, the Declaration of Hegemony, c49",TRUE,,,,graphics/icons/skills/combat_endurance3.png,
@@ -9,22 +9,23 @@ damage_control,손상 통제,40,2,0,,잃어버린 것은 잃어버린 것입니�
 field_modulation,야전 조정,50,2,0,,내가 '액티브 튜닝'이라고 생각하는 재능을 가진 사람은 거의 없습니다. 나는 음악가가 최고의 야전 장교가 된다고 생각합니다.,"Ardis Soloman, leaked data submitted to COMSEC redaction algorithm",TRUE,,,active_defenses,graphics/icons/skills/field_modulation.png,
 point_defense,점방어,60,3,0,,"나요, 레이저 같은 건 안 씁니다. 물론 대단한 빛의 쇼를 보여주긴 하죠. 하지만 좋은 Vulcan 매트릭스에서 나오는 DU 탄막처럼 들어오는 포화를 막을 수 있는 건 없습니다.","""Lower Deck Heroes"", a HEGCOM serial",TRUE,,,,graphics/icons/skills/advanced_countermeasures.png,
 target_analysis,표적 분석,70,4,0,,기계의 도움을 받는 인간의 정신은 상충되는 센서 데이터와 모순되는 전술적 지시에도 불구하고 효과적인 솔루션을 직관할 수 있습니다. 타겟팅 컴퓨터만으로는 전사를 완전히 대체할 수 없습니다.,"""On Space Combat, XXII ed."", from Domain Battlegroup XIV library ",TRUE,,,,graphics/icons/skills/target_analysis2.png,
-ballistic_mastery,탄도 숙달,80,4,0,,"Tri-Tach 음모를 막은 것은 무엇입니까? (총!)
- 러드가 잊어버린 게 뭐죠? (총!)
- 그들이 갖고 있지 않은 게 무엇인지 알 수 있나요? (크다, 크다, 총!)",drinking song of the Hegemony navy,TRUE,,,ballistic_weapons,graphics/icons/skills/ranged_specialization.png,
+ballistic_mastery,탄도 숙달,80,4,0,,"뭐가 Tri-Tach의 음모를 막았냐? (총!)
+루드 영감이 잊어버린 게 뭐냐? (총!)
+우리가 있고 걔네가 없는 게 뭐냐? (크고, 크고, 총!)",drinking song of the Hegemony navy,TRUE,,,ballistic_weapons,graphics/icons/skills/ranged_specialization.png,
 systems_expertise,시스템 전문화,90,5,4,2,"아니요, 저는 그것이 모순이라고 생각하지 않습니다. 그건, 어, 영적인 여행이에요. 당신은 테스트를 받았습니다. 그리고 악마는 디테일에 있다는 말이 있죠.","""Ludd's Footsoldiers"" holodoc, interview with Pather engineer",TRUE,,,,graphics/icons/skills/systems_expertise.png,
 missile_specialization,미사일 전문화,100,5,4,2,내 동료들은 그들의 기발함을 좋아하지 않습니다. 착륙에서 살아남을 필요가 없기 때문에 모든 규칙을 깨기 위해 이 모든 작은 우주선을 얻게 됩니다.,"Exit interview of K. Astraia, former ordnance designer, Culann Starforge",TRUE,,,missile_weapons,graphics/icons/skills/missile_specialization2.png,
 ,,,,,,,,,,,,,
 # LEADERSHIP,,,,,,,,,,,,,
-tactical_drills,전술 훈련,500,1,0,,완벽해요. 이제 다시 해 보세요.,"Cameron Fourth-Phobos, Coatl Gunnery Range",,TRUE,,,graphics/icons/skills/weapon_drills.png,
-coordinated_maneuvers,조직 기동,520,2,0,,"선생님- 다가오는 적들이 열심히 불타고 있습니다. 큰 것들. 2개를 센다. 아니, 3개. 더... 너무 많아요! 고에너지 읽기. 6시에 연락하세요.","Audio archive from CIC of HSS Ceraon, recovered 189.09.13",,TRUE,,,graphics/icons/skills/coordinated_maneuvers2.png,
-wolfpack_tactics,울프팩 전술,530,2,0,,한 마음으로 행동하는 함대는 그 아름다운 대형을 고위 간부들에게 너무나 사랑받는 뒹굴며 목을 자르라고 애원하는 짐승으로 만듭니다. 우리가 다시 늑대가 될 수 있도록 사냥개를 풀어주세요.,"Warlord Kanta, quoted in ""My Year With The Pirate Queen""",,TRUE,,,graphics/icons/skills/wolfpack.png,
-crew_training,선원 훈련,540,2,0,,"나는 당신의 유형을 알고 있습니다. 부츠에 흙을 묻힌 채 계약을 체결하고 스페이서 플레이 준비가 모두 완료되었습니다. 헤게모니 워프롭 홀로그램을 너무 많이 봤어요, 그렇죠? 지금 이것을 얻으십시오: 용기는 능력이 아닙니다. 영웅을 플레이하면 우리 모두가 죽게 될 것입니다. 신중하고 주의 깊은 작업이 작업을 완료하는 방법입니다.","Chaiya Mimas, Tri-Tachyon fleet division, job training introduction",,TRUE,,,graphics/icons/skills/crew_training.png,
+tactical_drills,전술 훈련,500,1,0,,"완벽해.
+다시.","Cameron Fourth-Phobos, Coatl Gunnery Range",,TRUE,,,graphics/icons/skills/weapon_drills.png,
+coordinated_maneuvers,조직 기동,520,2,0,,"함장님— 적 함선 전속 접근 중. 대형입니다. 둘 카운트. 아니, 셋. 더... 너무 많아요! 고에너지 신호 감지. 6시 방향 접촉.","Audio archive from CIC of HSS Ceraon, recovered 189.09.13",,TRUE,,,graphics/icons/skills/coordinated_maneuvers2.png,
+wolfpack_tactics,울프팩 전술,530,2,0,,"한 마음으로 움직이는 함대는, 후방 고위 장교들이 그토록 아끼는 예쁜 대형을 목 잘리기를 구걸하며 뒹구는 짐승으로 만든다. 우리가 다시 늑대가 될 수 있도록 사냥개를 풀어주어라.","Warlord Kanta, quoted in ""My Year With The Pirate Queen""",,TRUE,,,graphics/icons/skills/wolfpack.png,
+crew_training,선원 훈련,540,2,0,,"네 꼴이 뻔히 보여. 부츠에 흙 묻은 채로 계약서 싸인하고, 스페이서 다 된 줄 알고 있지. 헤게모니 전쟁 선전 홀로영상 너무 많이 봤지, 그렇지? 잘 들어: 용기가 능력이 아니야. 영웅 놀음 하다간 우리 다 죽어. 조심하고 신중하게 일하는 게 일을 해내는 방법이야.","Chaiya Mimas, Tri-Tachyon fleet division, job training introduction",,TRUE,,,graphics/icons/skills/crew_training.png,
 fighter_uplink,전투기 업링크,545,3,0,,"파이터 조크들은 자신들을 중심으로 전설을 만들어내지만, 그것들은 나 혼자 지휘하는 창끝에 불과합니다.","Commodore Jensulte of the Hegemony Navy, ~c82",,TRUE,,,graphics/icons/skills/fighter_uplink2.png,
 carrier_group,항공 전대,550,3,0,,통계에 따르면 그들은 여섯 번의 임무를 수행하기 전에 집중 포화 속에서 증발한다고 합니다. 그래도 우리는 여전히 그들이 되고 싶어합니다. 일단 조종석에 앉으면 그들은 우리 중 자신의 운명을 스스로 통제할 수 있는 유일한 사람입니다.,"Nachiketa Portside Interview Project, Ep.4",,TRUE,,,graphics/icons/skills/carrier_command.png,
 officer_training,장교 훈련,560,4,3,,"그들은 '상인, 밀수업자, 해적의 오합지졸 집단'일지도 모르지만, 그들에게 싸울 만한 것을 주면 그들이 당신을 놀라게 할 것이라고 생각합니다.","Navarch Nurul Park, comment upon integration of the Cibolan navy",,TRUE,,,graphics/icons/skills/officer_training.png,
 officer_management,장교 관리,570,4,3,,전망이 암울했기 때문에 용병 대장들에게 전투 보너스를 두 배로 약속했습니다. 모든 사상자를 냈는데도 그 중 절반만 배상하면 됐어요. 잘 됐어요.,"Carson Kang, GM of Valhalla fleet division, Tri-Tachyon",,TRUE,,,graphics/icons/skills/officer_management.png,
-best_of_the_best,최고 중의 최고,580,5,4,2,우리가 가지고 있는 아르테미시아는 살 수 없는 것입니다.,Orcus Rao at the negotiations ending the Second AI War (apocryphal),,TRUE,,,graphics/icons/skills/best_of_the_best.png,
+best_of_the_best,최고 중의 최고,580,5,4,2,"아르테미시아, 우리가 가진 건 돈으로 살 수 없는 거야.",Orcus Rao at the negotiations ending the Second AI War (apocryphal),,TRUE,,,graphics/icons/skills/best_of_the_best.png,
 support_doctrine,지원 교리,590,5,4,2,모든 생도가 재능이나 기술을 갖고 있는 것은 아니며 심지어 두 개의 뇌 세포를 함께 사용할 수 있는 것도 아니지만 지옥과 방사선으로 인해 그들은 규율을 갖고 졸업할 것입니다.,"unattributed comment by Coatl Academy staff, COMSEC archives",,TRUE,,,graphics/icons/skills/space_ops.png,
 force_concentration,병력 집중,590,5,4,2,내가 선택한 시간과 장소에서 승리를 거두면 역사는 한두 행성의 희생을 면제해 줄 것입니다.,"Fleet Admiral Andrada, address to the Hegemony Strategic Assembly ",,TRUE,,"npc_only, deprecated",graphics/icons/skills/space_ops.png,
 ,,,,,,,,,,,,,
@@ -38,7 +39,7 @@ electronic_warfare,전자전,1040,4,2,0,"오류. 401 // 연결이 거부되었�
  오류. 401 // 연결이 거부되었습니다. [다시 시도하시겠습니까?]","Celadon Immeasurable, alpha",,TRUE,,,graphics/icons/skills/EW.png,
 flux_regulation,플럭스 규제,1060,4,2,0,"경고: 이러한 설정을 변경함으로써 사용자는 장비 손상, 부상, 사망 또는 기타 변칙적인 시공간 효과나 효과에 대해 Tri-Tachyon Corporation의 책임을 포기하게 됩니다. 계속하시겠습니까?","Tri-Tachyon Corporation, standard license",,TRUE,,,graphics/icons/skills/flux_dynamics.png,
 cybernetic_augmentation,인공두뇌 증강,1080,5,4,2,윤리위원회에 있는 저 우울한 암호화폐 루딕(crypto-Luddics)의 말을 듣지 마십시오. 거부율은 소문이 암시하는 것과 전혀 가깝지 않습니다.,"""Doctor"" Wyatt Cydonia (alias), COMSEC intercept",,TRUE,,,graphics/icons/skills/cybernetic_augmentation.png,
-phase_corps,위상 코일 튜닝,1070,4,2,0,"트라이-타키온은 매일 신성한 창조물을 공개하며, 모독할 때마다 우리의 대대적인 저주가 다가옵니다. 우리의 길은 짐입니다. 우리의 길은 고통스럽습니다. 우리는 유일한 구원은 최후의 심판이라는 믿음으로 그들과 마주할 것입니다.","Livewell Cotton, Luddic Path terrorist, sermon of c205.2.12",,TRUE,,,graphics/icons/skills/phase_corps.png,
+phase_corps,위상 코일 튜닝,1070,4,2,0,"트라이-타키온은 매일 성스러운 창조를 억지로 열어젖히며, 모독할 때마다 우리 모두의 파멸이 드리운다. 우리의 길은 짐이다. 우리의 길은 고통이다. 우리는 유일한 구원이 최후의 심판이라는 믿음으로 그들과 마주할 것이다.","Livewell Cotton, Luddic Path terrorist, sermon of c205.2.12",,TRUE,,,graphics/icons/skills/phase_corps.png,
 special_modifications,특별 수정,1080,5,,,Domainers는 오래 지속되도록 설계되었습니다. 사실입니다. 하지만 그 부드러운 삶을 보면 그들은 이러한 것들을 한계까지 밀어붙이는 것이 두려웠음을 알 수 있습니다.,"Luna Hexagen, independent engineer, Agreus city",,,,"npc_only, deprecated",graphics/icons/skills/special_modifications.png,
 neural_link,신경 링크,1075,4,2,0,선장은 왜 배를 타고 내려가야 합니까? Tri-Tachyon 기업은 최고의 인재를 낭비하지 않습니다.,"VP Operations Nereid De Jong at unveiling ceremony for ""Project Heket""",,,,,graphics/icons/skills/neural_link.png,
 automated_ships,자동화 함선,1090,5,4,2,[편집됨],Hegemony COMSEC,,,,,graphics/icons/skills/automated_ships.png,
@@ -54,7 +55,7 @@ polarized_armor,극성 장갑,1540,3,1,,"붕괴 전 매뉴얼에는 절대 이�
 containment_procedures,격리 절차,1550,4,2,,죽음이 당신에게 오지 않도록 각 인장을 세 번 확인하십시오.,Spacer tradition,,,,,graphics/icons/skills/containment_procedures.png,
 makeshift_equipment,급조 장비,1560,4,2,,아무래도 우리가 여분의 부품을 궤도에 남겨둔 것 같아요. 괜찮을 거예요... [정적] ... 그냥 지켜보세요.,"audio backup transcription, Jericho Wheeler, leader of expedition ""H""-team",,,,,graphics/icons/skills/makeshift_equipment.png,
 industrial_planning,산업 계획,1570,4,2,,척박하지만 유망한 세계는 마젝의 문화와 산업의 중심지가 되기에 좋은 위치에 있습니다. SIE 모델은 Guayota의 디스크 자원 활용에 막대한 투자를 예상합니다.,"Tri-Tachyon strategic development memo, pre-Collapse",,,TRUE,,graphics/icons/skills/industrial_planning.png,
-derelict_contingent,유기된 작업,1590,5,4,2,"그들은 우리가 쓰레기, 빛나는 우주선에 탄 간부이자 제독이라고 생각합니다. 그들은 상황이 나빠지는 순간 우리를 버렸습니다. 하지만 섹터의 기반은 바로 우리이고 그들을 무너뜨리는 것도 우리입니다.","anonymous pirate agitator, HEGINT surveillance feed ",,TRUE,,player_only,graphics/icons/skills/derelict_contingent.png,
+derelict_contingent,유기된 작업,1590,5,4,2,"저 번쩍이는 우주선에 탄 간부들과 제독들은 우리를 쓰레기라 생각해. 상황이 나빠지자마자 우리를 버렸지. 하지만 섹터를 세운 건 우리고, 그들을 무너뜨릴 것도 우리야.","anonymous pirate agitator, HEGINT surveillance feed ",,TRUE,,player_only,graphics/icons/skills/derelict_contingent.png,
 hull_restoration,선체 복원,1580,5,4,2,진정한 스페이서가 집으로 만들 수 없는 선체는 없습니다.,"Sol Secondshift, veteran salvor",,,,,graphics/icons/skills/recovery_ops.png,
 ,,,,,,,,,,,,,
 ,,,,,,,,,,,,,
@@ -71,18 +72,18 @@ hypercognition,과잉인지,10001,0,,,"모든 데이터와 모든 인간의 생�
 ,,,,,,,,,,,,,
 "# removed in 0.95.1a, but kept around for save compatibility",,,,,,,,,,,,,
 space_operations,우주 작전,590,5,4,2,모든 세계의 하늘에는 같은 별이 보입니다.,Persean League founding charter,,,,"npc_only, deprecated",graphics/icons/skills/space_ops.png,
-planetary_operations,지상 작전,600,5,4,2,"진흙? 나는 상관하지 않는다. 스페이서는 항상 진흙을 맴돌고 있습니다.
- 참을 수 없는 피입니다.","Griffin Sweet, mercenary marine",,,,"npc_only, deprecated",graphics/icons/skills/planetary_ops.png,
+planetary_operations,지상 작전,600,5,4,2,"진흙? 난 괜찮아. 스페이서들은 항상 진흙 타령이더라.
+못 참는 건 피야.","Griffin Sweet, mercenary marine",,,,"npc_only, deprecated",graphics/icons/skills/planetary_ops.png,
 colony_management,식민지 관리,1590,5,4,2,생명이 있는 곳에는 하나님의 보좌가 있고 거기에는 모든 선한 것이 있습니다.,Sacred Texts of Ludd,,,,"npc_only, deprecated",graphics/icons/skills/colony_management.png,
 strike_commander,타격 지휘관,20,1,0,,당신은 날아갈 것이고 그들이 결코 알지 못했던 폭풍이 될 것입니다. 당신은 하늘 자체를 쪼개기 위해 온 벼락입니다!,"Navarch Mars Kato, address to the bomber crews of the Sirocco
 ",TRUE,,,"carrier, spec, npc_only, deprecated",graphics/icons/skills/strike_commander.png,
 ranged_specialization,원거리 전문화,60,3,0,,이 발사 솔루션을 보시겠습니까? 이는 방어 알고리즘이 잘못된 시간에 과잉 반응하게 만들 것입니다. 중요한 점은 그들이 그것이 오는 것을 지켜봐야 한다는 것입니다.,"CPO Cameron Fourth-Phobos, instructor posted to Coatl Gunnery Range",TRUE,,,"spec, npc_only, deprecated",graphics/icons/skills/ranged_specialization.png,
 shield_modulation,쉴드 변조,70,4,0,,내가 '액티브 튜닝'이라고 생각하는 재능을 가진 사람은 거의 없습니다. 나는 음악가가 최고의 방패 장교가 된다고 생각합니다.,"Ardis Soloman, leaked data submitted to COMSEC redaction algorithm",TRUE,,,"npc_only, deprecated",graphics/icons/skills/defensive_systems.png,
 phase_mastery,페이즈 마스터리,80,4,0,,"난 그 배에 다시 타지 않을 거예요, 절대로.","Court martial log, [REDACTED], dated ~c196?",TRUE,,,"phase, spec, elite_player_only, npc_only, deprecated",graphics/icons/skills/phase_mastery.png,
-reliability_engineering,신뢰성공학,1530,2,0,,결국 시간이 지나면 내 몸은 죽을 것입니다. 내 동료들은 나를 만든 별들로 나를 돌려보낼 것이고 내 배는 계속될 것이다.,Spacer tradition,TRUE,,,"npc_only, deprecated",graphics/icons/skills/reliability_engineering.png,
-weapon_drills,무기 훈련,500,1,0,,"Tri-Tach 음모를 막은 것은 무엇입니까? (총!)
- 러드가 잊어버린 게 뭐였죠? (총!)
- 그들이 가지고 있지 않은 것 중 우리가 얻은 것은 무엇입니까? (크다, 크다, 총!)",drinking song of the Hegemony navy,,,,"npc_only, deprecated",graphics/icons/skills/weapon_drills.png,
+reliability_engineering,신뢰성공학,1530,2,0,,"결국 시간과 방사선으로 내 몸은 죽겠지. 동료들이 나를 만든 별들로 돌려보내줄 테고, 내 배는 계속될 거야.",Spacer tradition,TRUE,,,"npc_only, deprecated",graphics/icons/skills/reliability_engineering.png,
+weapon_drills,무기 훈련,500,1,0,,"뭐가 Tri-Tach의 음모를 막았냐? (총!)
+루드 영감이 잊어버린 게 뭐냐? (총!)
+우리가 있고 걔네가 없는 게 뭐냐? (크고, 크고, 총!)",drinking song of the Hegemony navy,,,,"npc_only, deprecated",graphics/icons/skills/weapon_drills.png,
 auxiliary_support,보조 지원,510,1,0,,예비금이 없나요? 주위를 둘러 봐! 민간 부두에는 우주 비행이 가능한 선박이 수천 척 있고 생태 지역에는 10억 명의 시민이 있습니다. 침략이 일어나기 전에 비축물을 열어서 무기를 주기만 하면 됩니다.,Baikal Daud at the Defense of Chicomoztoc,,,,"npc_only, deprecated",graphics/icons/skills/auxiliary_support.png,
 ,,,,,,,,,,,,,
 ,,,,,,,,,,,,,
