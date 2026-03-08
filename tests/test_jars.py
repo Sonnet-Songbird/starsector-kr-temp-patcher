@@ -200,45 +200,61 @@ class TestClassPinpointTranslation(BaseTestCase):
                 "class_trans의 모든 원문이 이미 전역 사전에 있음 — 격리 테스트 해당 없음"
             )
 
+        # bak JAR에서 src가 있었는데 패치 후 없어졌으면 격리 실패
+        from patch_utils import decode_java_utf8, parse_constant_pool
+        game_core = Path(self._resolve_path(self.paths['game_core']))
+        jar_pairs = [
+            (game_core / 'starfarer.api.jar.bak', self.output_core / 'starfarer.api.jar'),
+            (game_core / 'starfarer_obf.jar.bak', self.output_core / 'starfarer_obf.jar'),
+        ]
+
         failures = []
-        for jar_path in [
-            self.output_core / 'starfarer.api.jar',
-            self.output_core / 'starfarer_obf.jar',
-        ]:
-            if not jar_path.exists():
+        for bak_path, pat_path in jar_pairs:
+            if not bak_path.exists() or not pat_path.exists():
                 continue
 
-            with zipfile.ZipFile(jar_path) as z:
-                all_classes = [n for n in z.namelist()
+            with zipfile.ZipFile(bak_path) as bak_z, zipfile.ZipFile(pat_path) as pat_z:
+                all_classes = [n for n in bak_z.namelist()
                                if n.endswith('.class') and n not in registered_classes]
-                data_map = {}
                 for name in all_classes:
                     try:
-                        data_map[name] = z.read(name)
+                        bak_data = bak_z.read(name)
+                        bak_entries, _ = parse_constant_pool(bak_data)
+                        bak_str_idx = {struct.unpack_from('>H', v)[0]
+                                       for tag, v in (e for e in bak_entries if e) if tag == 8}
+                        bak_strings = set()
+                        for i, entry in enumerate(bak_entries):
+                            if entry and entry[0] == 1 and i in bak_str_idx:
+                                try:
+                                    bak_strings.add(decode_java_utf8(entry[1]))
+                                except Exception:
+                                    pass
+
+                        for src in pinpoint_trans:
+                            if src not in bak_strings:
+                                continue
+                            # bak에 src 있음 → 패치 후 없어졌으면 격리 실패
+                            try:
+                                pat_data = pat_z.read(name)
+                                pat_entries, _ = parse_constant_pool(pat_data)
+                                pat_str_idx = {struct.unpack_from('>H', v)[0]
+                                               for tag, v in (e for e in pat_entries if e) if tag == 8}
+                                pat_strings = set()
+                                for i, entry in enumerate(pat_entries):
+                                    if entry and entry[0] == 1 and i in pat_str_idx:
+                                        try:
+                                            pat_strings.add(decode_java_utf8(entry[1]))
+                                        except Exception:
+                                            pass
+                                if src not in pat_strings:
+                                    tgt = pinpoint_trans[src]
+                                    failures.append(
+                                        f"[격리 실패] {name}: '{src}' → '{tgt}' 적용됨 (비등록 클래스)"
+                                    )
+                            except Exception:
+                                pass
                     except Exception:
                         pass
-
-            # 비등록 클래스에서 src가 있고 tgt도 있으면 격리 실패
-            from patch_utils import decode_java_utf8, parse_constant_pool
-            for name, data in data_map.items():
-                try:
-                    entries, _ = parse_constant_pool(data)
-                except Exception:
-                    continue
-                str_indices = {struct.unpack_from('>H', v)[0]
-                               for tag, v in (e for e in entries if e) if tag == 8}
-                strings = set()
-                for i, entry in enumerate(entries):
-                    if entry and entry[0] == 1 and i in str_indices:
-                        try:
-                            strings.add(decode_java_utf8(entry[1]))
-                        except Exception:
-                            pass
-                for src, tgt in pinpoint_trans.items():
-                    if src in strings and tgt in strings:
-                        failures.append(
-                            f"[격리 실패] {name}: '{src}' → '{tgt}' 적용됨 (비등록 클래스)"
-                        )
 
         self.assertFalse(
             failures,
