@@ -10,11 +10,8 @@
     "우선순위: class_trans > blocked_strings > blocked_jar_strings > 전역 사전",
     "즉, 전역 blocked_strings에 있더라도 이 파일에 명시된 클래스에서는 번역됨."
   ],
-  "com/fs/starfarer/api/impl/campaign/CoreReputationPlugin.class": {
-    " or better": " 이상",
-    " or worse": " 이하",
-    " or higher": " 이상",
-    " or lower": " 이하"
+  "com/fs/starfarer/api/impl/campaign/intel/misc/RemoteSurveyDataForPlanetIntel.class": {
+    " or higher": " 이상"
   },
   "com/fs/starfarer/api/impl/campaign/intel/BaseIntelPlugin.class": {
     " and ": " "
