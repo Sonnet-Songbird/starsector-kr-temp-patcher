@@ -7,7 +7,12 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / 'scripts'))
-from build_mods import _load_json_lazy
+from build_mods import (
+    _load_json_lazy,
+    _strip_comments_and_trailing_commas,
+    _normalize_lenient_json,
+    _split_string_segments,
+)
 
 from base_test import BaseTestCase
 
@@ -64,6 +69,79 @@ class TestMissionTranslation(BaseTestCase):
             self.skipTest(f"forlornhope MissionDefinition.java 없음: {f}")
         content = f.read_text(encoding='utf-8', errors='replace')
         self.assertIn('인빈서블', content, "forlornhope에 '인빈서블' 번역 없음")
+
+
+class TestLenientJSONParser(unittest.TestCase):
+    """Starsector 비표준 JSON 파서(_load_json_lazy 외) 단위 테스트."""
+
+    def test_strip_line_and_block_comments(self):
+        text = '{"a": 1, // line\n /* block */ "b": 2 # hash\n}'
+        cleaned = _strip_comments_and_trailing_commas(text)
+        self.assertEqual(_load_json_lazy(cleaned), {"a": 1, "b": 2})
+
+    def test_preserve_comment_like_inside_string(self):
+        # 문자열 안의 //, /*, # 는 주석이 아님
+        text = '{"url": "http://example.com/path", "note": "/* not comment */ # not"}'
+        self.assertEqual(
+            _load_json_lazy(text),
+            {"url": "http://example.com/path", "note": "/* not comment */ # not"},
+        )
+
+    def test_trailing_comma(self):
+        self.assertEqual(_load_json_lazy('{"a": 1,}'), {"a": 1})
+        self.assertEqual(_load_json_lazy('[1, 2, 3,]'), [1, 2, 3])
+
+    def test_unquoted_keys(self):
+        self.assertEqual(_load_json_lazy('{a: 1, b: 2}'), {"a": 1, "b": 2})
+
+    def test_java_float_suffix(self):
+        self.assertEqual(_load_json_lazy('{"x": 0.24f, "y": 5f}'), {"x": 0.24, "y": 5})
+
+    def test_bareword_enum_value(self):
+        # Java 상수 스타일 bareword 값
+        result = _load_json_lazy('{"module": MILITARY, "tags": [STATIONS, NAV]}')
+        self.assertEqual(result, {"module": "MILITARY", "tags": ["STATIONS", "NAV"]})
+
+    def test_bareword_reserved_kept(self):
+        # true/false/null 은 인용하지 않고 그대로 처리
+        self.assertEqual(
+            _load_json_lazy('{"a": true, "b": false, "c": null}'),
+            {"a": True, "b": False, "c": None},
+        )
+
+    def test_string_with_colon_not_treated_as_key(self):
+        # 회귀 테스트: 문자열 안 "producer: $x" 의 ':' 가 키 인용 패턴에 잘못 매칭되면 안 됨
+        text = '{"desc": "revenue per producer: $commodities"}'
+        self.assertEqual(
+            _load_json_lazy(text),
+            {"desc": "revenue per producer: $commodities"},
+        )
+
+    def test_combined_lenient_features(self):
+        text = '''
+        {
+            // 코멘트
+            speed: 0.5f,
+            module: MILITARY,
+            "tags": [STATIONS,],   # trailing comma
+            "desc": "level: 5 or higher",
+        }
+        '''
+        self.assertEqual(
+            _load_json_lazy(text),
+            {
+                "speed": 0.5,
+                "module": "MILITARY",
+                "tags": ["STATIONS"],
+                "desc": "level: 5 or higher",
+            },
+        )
+
+    def test_split_string_segments_handles_escaped_quote(self):
+        segs = _split_string_segments('{"a":"x\\"y","b":1}')
+        # 문자열 세그먼트는 따옴표 포함, 비문자열은 따옴표 제외
+        text_reconstructed = ''.join(s for _, s in segs)
+        self.assertEqual(text_reconstructed, '{"a":"x\\"y","b":1}')
 
 
 class TestNexerelinTranslation(BaseTestCase):
