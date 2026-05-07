@@ -2422,7 +2422,7 @@
   "Approach the spacer and offer to buy ": "우주인에게 접근하여 구매를 제안하세요 ",
   "% flux dissipation rate while venting": "% 배출 중 플럭스 소산율",
   "Deliver Report to Jangala - completed": "잔갈라에게 보고서 전달 - 완료",
-  "Paying bounty of %d from faction [%s]": "[%s] 세력으로부터 %d의 현상금 지불 중",
+  "Paying bounty of %d from faction [%s]": "[%2$s] 세력으로부터 %1$d의 현상금 지불 중",
   " in person, at his planetside chalet.": " 직접, 그의 행성 측 샬레에서.",
   "information regarding the arms dealer": "무기 거래상에 관한 정보",
   "Disregard the presence or absence of ": "다음의 유무를 무시하세요 ",
