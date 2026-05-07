@@ -74,31 +74,138 @@ CSV_SKIP_COLUMNS = {
 }
 
 
+def _split_string_segments(text: str) -> list[tuple[bool, str]]:
+    """텍스트를 [(is_string, segment), ...]로 분할. is_string=True는 문자열 리터럴(따옴표 포함)."""
+    segments: list[tuple[bool, str]] = []
+    buf: list[str] = []
+    in_string = False
+    i = 0
+    n = len(text)
+    while i < n:
+        c = text[i]
+        if not in_string:
+            if c == '"':
+                if buf:
+                    segments.append((False, ''.join(buf)))
+                    buf = []
+                buf.append(c)
+                in_string = True
+                i += 1
+            else:
+                buf.append(c)
+                i += 1
+        else:
+            buf.append(c)
+            i += 1
+            if c == '\\' and i < n:
+                buf.append(text[i])
+                i += 1
+            elif c == '"':
+                segments.append((True, ''.join(buf)))
+                buf = []
+                in_string = False
+    if buf:
+        segments.append((in_string, ''.join(buf)))
+    return segments
+
+
+def _apply_outside_strings(text: str, transform) -> str:
+    """문자열 리터럴 밖 영역에만 transform 적용."""
+    return ''.join(seg if is_str else transform(seg)
+                   for is_str, seg in _split_string_segments(text))
+
+
+def _strip_comments_and_trailing_commas(text: str) -> str:
+    """문자열 리터럴을 보존하면서 #, //, /* */ 주석과 후행 쉼표를 제거."""
+    out: list[str] = []
+    i = 0
+    n = len(text)
+    while i < n:
+        c = text[i]
+        if c == '"':
+            out.append(c)
+            i += 1
+            while i < n:
+                ch = text[i]
+                out.append(ch)
+                i += 1
+                if ch == '\\' and i < n:
+                    out.append(text[i])
+                    i += 1
+                elif ch == '"':
+                    break
+            continue
+        if c == '/' and i + 1 < n:
+            nxt = text[i + 1]
+            if nxt == '/':
+                while i < n and text[i] != '\n':
+                    i += 1
+                continue
+            if nxt == '*':
+                i += 2
+                while i + 1 < n and not (text[i] == '*' and text[i + 1] == '/'):
+                    i += 1
+                i += 2
+                continue
+        if c == '#':
+            while i < n and text[i] != '\n':
+                i += 1
+            continue
+        out.append(c)
+        i += 1
+    cleaned = ''.join(out)
+    cleaned = re.sub(r',(\s*[}\]])', r'\1', cleaned)
+    return cleaned
+
+
+_BAREWORD_RESERVED = {'true', 'false', 'null'}
+
+
+def _quote_bareword_value(match: re.Match) -> str:
+    prefix, word = match.group(1), match.group(2)
+    if word in _BAREWORD_RESERVED:
+        return match.group(0)
+    return f'{prefix}"{word}"'
+
+
+def _normalize_lenient_json(text: str) -> str:
+    """문자열 리터럴 밖에서 unquoted 키, Java f-suffix, bareword 값을 정상 JSON으로 변환."""
+    def transform(s: str) -> str:
+        # unquoted 키 자동 인용 (tips:[ → "tips":[)
+        s = re.sub(r'(?<!["\w])([a-zA-Z_][a-zA-Z0-9_]*)(\s*:)(?!\s*:)', r'"\1"\2', s)
+        # Java float f-suffix 제거 (0.24f → 0.24, 식별자의 일부가 아닌 경우만)
+        s = re.sub(r'(?<![A-Za-z_])(\d+(?:\.\d+)?)f\b', r'\1', s)
+        # bareword 값 인용 (Java enum 상수: MILITARY, [STATIONS] 등)
+        s = re.sub(
+            r'([:\[,]\s*)([A-Za-z_][A-Za-z0-9_]*)(?=\s*[,\]\}])',
+            _quote_bareword_value,
+            s,
+        )
+        return s
+    return _apply_outside_strings(text, transform)
+
+
 def _load_json_lazy(text: str):
     """
-    Starsector 비표준 JSON 파서 (3단계 시도).
+    Starsector 비표준 JSON 파서 (단계적 시도).
 
     1. 표준 json.loads
-    2. # 주석 + 후행 쉼표 제거
-    3. 추가로 unquoted 키 자동 인용 (tips.json 등 대응)
+    2. 주석(#, //, /* */) + 후행 쉼표 제거
+    3. + unquoted 키 인용 + Java f-suffix 제거 + bareword 값 인용
+       (모두 문자열 리터럴 밖에서만 적용)
     """
     try:
         return json.loads(text)
     except json.JSONDecodeError:
         pass
 
-    # 단계 2: # 주석 + 후행 쉼표
-    cleaned = re.sub(r'(?m)#[^\n]*', '', text)
-    cleaned = re.sub(r',(\s*[}\]])', r'\1', cleaned)
+    cleaned = _strip_comments_and_trailing_commas(text)
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:
         pass
 
-    # 단계 3: unquoted 키 자동 인용 (예: tips:[ → "tips":[)
-    # 문자열 리터럴 안이 아닌 위치의 bareword key 만 처리
-    cleaned2 = re.sub(r'(?<!["\w])([a-zA-Z_][a-zA-Z0-9_]*)(\s*:)(?!\s*:)', r'"\1"\2', cleaned)
-    return json.loads(cleaned2)
+    return json.loads(_normalize_lenient_json(cleaned))
 
 
 def translate_json_value(obj, translations: dict,
