@@ -10,7 +10,11 @@
 
 # 릴리즈 관련 (로컬 생성)
 /starsector-kr-patch-*.zip
+/starsector-kr-nexerelin-*.zip
 /release_notes.md
+
+# 로컬 전용 스크립트
+/scripts/local/
 
 # Python
 __pycache__/
