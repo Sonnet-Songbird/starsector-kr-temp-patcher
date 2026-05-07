@@ -53,6 +53,7 @@
     "mercConfig.json: minRep 키가 RepLevel 상수 이름을 값으로 가짐.",
     "exerelinFactionConfig/*.json: morality 키가 'neutral'/'evil'/'good' 등 코드 식별자를 값으로 가짐.",
     "agentConfig.json: specializations 키는 AgentIntel.Specialization enum 상수 이름을 값으로 가짐.",
+    "exerelin_config.json: builtInFactions 키가 faction ID 배열(player/neutral/hegemony 등)을 값으로 가짐.",
     "이 키 아래의 값은 코드 식별자이므로 blocked_json_keys 로 번역 제외함.",
     "RepLevel 값('hostile','neutral' 등)은 blocked_strings 대신 이 방식으로 처리."
   ],
@@ -100,7 +101,8 @@
     "repFloor",
     "repCeiling",
     "minRep",
-    "morality"
+    "morality",
+    "builtInFactions"
   ],
 
   "blocked_strings": [
