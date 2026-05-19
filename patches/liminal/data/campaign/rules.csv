@@ -1,0 +1,318 @@
+id,trigger,conditions,script,text,options,notes
+#RULESET_NAME liminal,,,,,,
+,,,,,,
+liminal_galatia_start0,PopulateOptions,"$id == station_galatia_academy
+!$player.liminal_hullmods_enabled",,"눈 한쪽 귀퉁이로 흥분한 연구자 무리가 당신을 손짓해 부르는 것이 보입니다.",97:liminal_galatia_liminalitystart:연구자들과 이야기하기,
+liminal_galatia_start_c1,PopulateOptions,"$id == station_galatia_academy
+$player.credits < 30000","SetTooltip liminal_galatia_liminalitystart ""Requires at least 30,000 credits.""
+SetTooltipHighlights liminal_galatia_liminalitystart ""30,000""
+SetEnabled liminal_galatia_liminalitystart false",,,
+liminal_galatia_liminalitystart,DialogOptionSelected,$option == liminal_galatia_liminalitystart,Liminal_ShowAndCreatePerson liminal_elna,"연구자 무리에게 다가갑니다. 나이와 눈에 역력한 수면 부족의 약간 광적인 기색으로 보아 대부분이 학생이나 박사후 연구원인 듯합니다.
+
+""$PlayerSirOrMadam! 잠깐 시간 좀 내주실 수 있나요?"" 그들 중 한 명인, 포니테일에 눈 밑에 다크서클이 진한 젊은 여성이 앞으로 나섭니다. ""함장님의 업적에 대해 정말 많이 들었습니다! 명성이 자자하시더군요 - 과학적 발전을 지지하기로 유명한 성공한 독립 함장님. 평생 한 번 올까 말까 한 기회를 드리려 합니다.""","liminal_galatia_hear_them_out:이야기를 들어보기
+liminal_galatia_busy:바쁘다고 말하기",
+liminal_galatia_busy,DialogOptionSelected,$option == liminal_galatia_busy,FireAll PopulateOptions,"""물론이죠, 물론이에요. 하지만 시간이 나시면 꼭 다시 와주세요 - 이건 모든 것을 바꿔놓을 수 있다고요!""",,
+liminal_galatia_hear_them_out,DialogOptionSelected,$option == liminal_galatia_hear_them_out,"ShowImageVisual liminal_liminality
+SetTextHighlightColors ""255,165,0,255""
+SetTextHighlights ""Liminality""
+FireAll liminal_galatia_options","그녀는 자신을 엘나 루소 박사라고 소개합니다. 쌍둥이 남동생 야른과 함께 프로젝트의 책임자라고 하는데, 더 높은 사람이 아직 눈치채지 못했기 때문만이라는 인상을 받습니다. 그들은 아카데미의 주요 통로에서 멀리 떨어진 조용한 구석의 작은 실험실로 당신을 안내합니다. 실내 중앙의 기계 장치 묶음 속에서, 약 1미터 크기의 부유하는 기하학적 형체처럼 보이는 것으로부터 주황색 광채가 뿜어져 나오는 것이 보입니다. 그 주위의 공기가... 어딘가 이상합니다. 마치 현실 자체가 휘는 것 같습니다.
+
+""이것이,"" 엘나가 간신히 흥분을 억누르며 말합니다. ""리미널리티입니다. 현재의 것과 있을 수 있는 것 사이의 다리! 올바른 자원과 연구를 투입한다면, 물리 법칙은 우리의 놀이터가 됩니다!""",,
+liminal_galatia_options_3,liminal_galatia_options,!$liminal_galatia_asked_3,,,liminal_galatia_where_from:어디서 구했는지 묻기,
+liminal_galatia_where_from,DialogOptionSelected,$option == liminal_galatia_where_from,"$liminal_galatia_asked_3 = true 0
+FireAll liminal_galatia_options","""어떤 고물상이 섹터 변방의 암석에 그야말로 박혀 있는 것을 발견했고, 결국 여기까지 흘러들어 왔어요."" 엘나가 불편한 듯 몸을 움직입니다. ""도메인 기록 어디에도 언급이 없어요. 쿠뢰즈까지 포함해서 거의 모두가 정체를 밝히려 했지만, 10여 년이 지나도 아무런 성과가 없자 그냥 신기한 물건으로 치부하고 먼지만 쌓이도록 내버려뒀죠.""
+
+""우리가 기회를 얻기 전까지는 그냥 신기한 물건이었죠,"" 야른이 씩 웃으며 말합니다.",,
+liminal_galatia_options_1,liminal_galatia_options,!$liminal_galatia_asked_1,,,liminal_galatia_how_work:어떤 기능을 하는지 묻기,
+liminal_galatia_how_work,DialogOptionSelected,$option == liminal_galatia_how_work,"$liminal_galatia_asked_1 = true 0
+Liminal_ShowAndCreatePerson liminal_jarn
+SetTextHighlightColors ""155,255,0,255"" ""255,165,0,255"" ""155,255,0,255"" ""155,255,0,255""
+SetTextHighlights ""Linkage"" ""Liminality"" ""Instruction"" ""Linkage"" ","""글쎄요, 솔직히 말하면 저희도 완전히 확신하진 못해요. 가장 유력한 추측은 이것이, 정체가 무엇이든, 우리 우주와... 다른 무언가 사이의 연결을 만들어낸다는 거예요. 어딘가 다른 곳과. 그 연결을 이용해서 물리 법칙을 국소적으로 바꿀 수 있어요. 마치 현실을 프로그래밍하는 것처럼요,"" 야른이 말합니다. ""연구는 아직 초기 단계예요.""
+
+""지금까지 알아낸 바로는, 리미널리티 옆의 무언가를 먼 곳의 물체와 연결하는 링키지와, 링키지에게 할 일을 알려주는 인스트럭션이 필요해요. 예를 들어...""
+
+그가 기호가 새겨진 금속판을 당신에게 던지더니, 두 번째 판을 유물 쪽으로 던집니다. 두 번째 판에는 첫 번째 판에 있던 기호를 포함한 빽빽한 기호들이 가득합니다.",liminal_galatia_catch_sheet:판을 받기,
+liminal_galatia_catch_sheet,DialogOptionSelected,$option == liminal_galatia_catch_sheet,"SetTextHighlightColors ""255,165,0,255"" ""155,255,0,255""
+SetTextHighlights ""Liminality"" ""Instructions""
+FireAll liminal_galatia_options","판을 받으면서, 두 번째 판이 리미널리티에 가까워질수록 속도가 느려지다가 공중에 떠서 주위를 선회하기 시작하는 것을 알아챕니다. 당신이 든 판은 손에서 빠져나가 큰 소리와 함께 천장에 부딪힙니다.
+
+""짜잔."" 야른이 손을 흔듭니다. ""반중력이에요. 금속 조각에 몇 글자 긁적인 것만으로 작동시킨, 저희가 처음으로 성공시킨 인스트럭션 중 하나예요. 다음에는 무엇을 할 수 있을지 상상해보세요.""",,
+,,,,,,
+liminal_galatia_options_5,liminal_galatia_options,"!$liminal_galatia_asked_5
+$liminal_galatia_asked_1
+$liminal_galatia_asked_2",,,liminal_galatia_why_not_bigger:헤게모니나 트라이-테키온에 접근하지 않는 이유 묻기,
+liminal_galatia_why_not_bigger,DialogOptionSelected,$option == liminal_galatia_why_not_bigger,"$liminal_galatia_asked_5 = true 0
+FireAll liminal_galatia_options","""도덕적, 철학적 이유를 제쳐두고요?""
+
+""규모 확장이 안 돼요,"" 야른이 말합니다. ""운용하는 데 엄청난 자원이 들고, 사용량이 늘수록 그 양이 기하급수적으로 증가해요. 소규모 함대라면 가능하죠. 하지만 헤게모니 전체에 장착하려면 우주에 존재하는 것보다 더 많은 자원이 필요할 거예요.""",,
+liminal_galatia_options_2,liminal_galatia_options,!$liminal_galatia_asked_2,,,liminal_galatia_what_need:당신에게 무엇이 필요한지 묻기,
+liminal_galatia_what_need,DialogOptionSelected,$option == liminal_galatia_what_need,"$liminal_galatia_asked_2 = true 0
+ShowImageVisual liminal_liminality
+SetTextHighlightColors h h ""255,165,0,255"" h h
+SetTextHighlights ""ongoing funding"" ""30,000"" ""Liminality"" ""hullmods"" ""operating costs""
+FireAll liminal_galatia_options","""자금이 필요해요. 상당한 자금이요. 이걸 기본 수준으로만 운용하는 데 얼마나 많은 에너지와 자원이 드는지 믿기 어려우실 거예요. 원하는 모든 것을 다 한다면, 아카데미조차 금방 파산시킬 거예요."" 엘나가 고개를 젓습니다.
+
+""하지만 함장님 같은 독립 함장이라면? 여기에 담긴 가능성을 볼 자원과 비전을 가진 분이라면? 될 수 있어요. 저희는 함장님의 투자가 필요해요, 지금뿐만 아니라 앞으로도요. 물론 지속적인 자금 지원 외에 선불금도 필요해요. 3만 크레딧이요."" 그들이 자금이 거의 바닥났다는 것을 알 수 있습니다.
+
+""하지만 그 대가로, 저희가 리미널리티를 이용해 함장님의 함대를 전례 없는 방식으로 강화해 드릴게요! 불가능한 일을 해내는 특수 함체 개조들이요. 시간을 거슬러 여행하는 함선을 원하세요? 별을 파괴하는 미사일을 발사하는 함선은요? 드릴 수 있어요. 이론적으로는요, 물론 연구를 다 마친 후에요. 그리고 물론 이 개조들의 운영 비용도 내셔야 해요.""",,
+liminal_galatia_options_4,liminal_galatia_options,"!$liminal_galatia_asked_4",,,"liminal_galatia_dangerous:""위험해 보이는데요.""",
+liminal_galatia_dangerous,DialogOptionSelected,$option == liminal_galatia_dangerous,"$liminal_galatia_asked_4 = true 0
+FireAll liminal_galatia_options","""오, 완전히 안전해요! 뭐, 대부분은요. 효과는 완전히 제어 및 복원 가능해요. 구현을 완벽하게 하려면 자금이 조금 더 필요할 뿐이에요. 말이 나온 김에...""",,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+liminal_galatia_options_6,liminal_galatia_options,"$liminal_galatia_asked_1
+$liminal_galatia_asked_2
+$liminal_galatia_asked_3
+$liminal_galatia_asked_4
+$liminal_galatia_asked_5",,,"liminal_galatia_accept:크레딧 30,000 지불
+liminal_galatia_refuse:지금은 거절하기",
+liminal_galatia_refuse,DialogOptionSelected,$option == liminal_galatia_refuse,FireAll PopulateOptions,,,
+liminal_galatia_accept,DialogOptionSelected,$option == liminal_galatia_accept,"SetTextHighlightColors h ""255,165,0,255"" h
+SetTextHighlights ""Gained access to the"" ""Liminality"" ""Check major events in your intel screen to continue.""
+Liminal_EnableHullmods
+Liminal_AddRP 5
+Liminal_ShowAndCreatePerson liminal_elna
+RemoveCommodity credits 30000
+$player.liminal_hullmods_enabled = true
+FireAll PopulateOptions","연구자들이 재빠르게 장비를 설치하고 계산을 시작합니다. 한 시간도 안 되어 그들은 표준 모드스펙처럼 생긴 것을 건네주는데, 그것조차 희미한 파란 광채로 맥동합니다.
+
+""이건 시작에 불과해요. 템플릿은 이제 기본 인스트럭션들을 담을 수 있지만, 더 많은 연구와 자금이 투입되면 훨씬 강력한 효과를 끌어낼 수 있어요. 새로운 돌파구가 생기면 연락드릴게요.""
+
+그들이 템플릿 사용법에 대한 상세한 안내를 제공합니다.
+
+리미널리티에 대한 접근권을 얻었습니다. 인텔 화면의 주요 이벤트를 확인하여 계속 진행하세요.",,
+,,,,,,
+liminal_research_dialog_first_time,LiminalityResearchTeamDialog,!$global.liminalSeenStarting,"$global.liminalSeenStarting = true
+Liminal_ShowAndCreatePerson liminal_jarn","화면에서 야른이 떠 있는 빛나는 리미널리티 옆 실험실에 있는 것이 보입니다.
+
+""크레딧 정말 감사해요! 엘나한테는 말하지 마세요, 하지만 우리가 모든 걸 얼마나 아슬아슬하게 접어야 할 뻔했는지 상상도 못 하실 거예요,"" 야른이 말합니다. ""이제 다시 일에 매달릴 수 있어요! 그리고 제대로 된 음식도 먹을 수 있고요!""
+
+""그리고 크레딧 얘기가 나왔으니까,"" 야른이 계속합니다. ""원하시는 만큼 마음껏 투자하셔도 돼요. 자금이 많을수록 더 빨리 멋진 새 장난감을 드릴 수 있거든요. 더 멋진 함선을 원하시잖아요? 자원을 직접 제공하실 수도 있고요.""
+
+그가 누나가 방에 들어오는 것을 보고 잠시 멈춥니다.",liminal_reshow_start:계속,
+liminal_research_dialog,LiminalityResearchTeamDialog,,ShowImageVisual liminal_liminality,"""아, $PlayerSirOrMadam! 다시 뵙게 되어 반갑습니다. 프로젝트에 대해 논의하러 오셨나요?"" 엘나가 묻습니다. ""꾸준히 진전을 이루고 있지만, 추가 자금 지원의 기회가 있습니다.""","liminal_funding_options:자금 지원 기회에 대해 논의하기
+liminal_leave:떠나기",
+liminal_back,liminal_rt_options,,,,99:liminal_back_execute:뒤로,
+liminal_back_execute,DialogOptionSelected,$option == liminal_back_execute,FireBest LiminalityResearchTeamDialog,,,
+liminal_funding_options,DialogOptionSelected,$option == liminal_funding_options,"Liminal_ShowAndCreatePerson liminal_jarn
+FireAll liminal_rt_options","""몇 가지 추가 지원이 있으면 연구 속도를 높일 수 있을 것 같아요! 그렇다고 금속을 한 배 가득 가져오지는 마세요, 그렇게까지 많이는 필요 없거든요.""",,
+liminal_metals,liminal_rt_options,!$player.liminalGaveMetals,,,"liminal_metals_give:금속 2,000",
+liminal_give_cond1,liminal_rt_options,"!$player.liminalGaveMetals
+$player.metals < 2000
+","SetTooltip liminal_metals_give ""Requires at least 2,000 metals.""
+SetTooltipHighlights liminal_metals_give ""2,000""
+SetEnabled liminal_metals_give false",,,
+liminal_metals_give,DialogOptionSelected,$option == liminal_metals_give,"RemoveCommodity metals 2000
+Liminal_AddRP 4
+$player.liminalGaveMetals = true
+FireAll liminal_rt_options","""감사해요! 정말 큰 도움이 될 거예요!""",,
+liminal_supplies,liminal_rt_options,!$player.liminalGaveSupplies,,,"liminal_supplies_give:보급품 10,000",
+liminal_give_cond3,liminal_rt_options,"!$player.liminalGaveSupplies
+$player.supplies < 10000
+","SetTooltip liminal_supplies_give ""Requires at least 10,000 supplies.""
+SetTooltipHighlights liminal_supplies_give ""10,000""
+SetEnabled liminal_supplies_give false",,,
+liminal_supplies_give,DialogOptionSelected,$option == liminal_supplies_give,"RemoveCommodity supplies 10000
+Liminal_AddRP 15
+$player.liminalGaveSupplies = true
+FireAll liminal_rt_options","""이건... 정말 놀랍네요! 이 자원이면 몇 달치 실험을 진행할 수 있어요!""",,
+liminal_alpha,liminal_rt_options,!$player.liminalGaveAlpha,,,"liminal_alpha_give:알파 코어 1개",
+liminal_give_cond4,liminal_rt_options,"!$player.liminalGaveAlpha
+$player.alpha_core < 1
+","SetTooltip liminal_alpha_give ""Requires 1 alpha core.""
+SetTooltipHighlights liminal_alpha_give ""1""
+SetEnabled liminal_alpha_give false",,,
+liminal_alpha_give,DialogOptionSelected,$option == liminal_alpha_give,"RemoveCommodity alpha_core 1
+Liminal_AddRP 15
+$player.liminalGaveAlpha = true
+FireAll liminal_rt_options","""알파 코어를요? 정말 괜찮으세요?"" 엘나가 긴장한 듯 묻습니다. ""뭐... 계산 용도로만 쓰면 괜찮겠죠...""",,
+liminal_gamma,liminal_rt_options,!$player.liminalGaveGamma,,,"liminal_gamma_give:감마 코어 2개",
+liminal_give_cond5,liminal_rt_options,"!$player.liminalGaveGamma
+$player.gamma_core < 2
+","SetTooltip liminal_gamma_give ""Requires 2 gamma cores.""
+SetTooltipHighlights liminal_gamma_give ""2""
+SetEnabled liminal_gamma_give false",,,
+liminal_gamma_give,DialogOptionSelected,$option == liminal_gamma_give,"RemoveCommodity gamma_core 2
+Liminal_AddRP 6
+$player.liminalGaveGamma = true
+FireAll liminal_rt_options","""이것들로 지루한 계산 일부를 자동화할 수 있겠어요. 감사합니다!""",,
+,,,,,,
+liminal_reshow_start,DialogOptionSelected,$option == liminal_reshow_start,FireBest LiminalityResearchTeamDialog,,,
+liminal_leave,DialogOptionSelected,$option == liminal_leave,DismissDialog,,,
+,,,,,,
+,,,,,,
+liminal_faction_see,OpenInteractionDialog,"$tag:liminal_invasion
+$hasMarket score:10000","ShowImageVisual liminal_planet
+SetTextHighlightColors bad bad hl
+SetTextHighlights ""sinister"" ""a wound in reality"" ""reality anchors are ready to be deployed""
+FireAll liminal_planet_select","궤도에서는 평범한 식민지처럼 보이던 것이 더 자세히 살펴보면 훨씬 불길한 무언가임이 드러납니다 - 안에서 보면 더 큰 건물들, 어디에도 동시에 연결되는 구조물들, 그리고 더 이상 완전한 인간이 아님을 시사하는 움직임을 보이는 주민들.
+
+스캔에서 지표면 아래의 거대한 에너지 신호가 탐지됩니다. 이것은 단순한 거점이 아닙니다 - 엔티티가 우리 우주로 진입하려는 교두보, 현실의 상처입니다.
+
+현실 앵커들이 배치 준비가 되어 있습니다. 가까이만 다가가면 상처를 봉합할 수 있지만, 지금까지 본 방어선으로 미루어 결코 쉬운 일이 아닐 것입니다.","99:liminal_leave:떠나기",
+liminal_see_fight_select_1,liminal_planet_select,$global.liminalRemainingPlanets == 4,,,liminal_faction_see_fight_1:앵커를 위치에 배치하기,
+liminal_see_fight_select_2,liminal_planet_select,$global.liminalRemainingPlanets == 3,,,liminal_faction_see_fight_2:앵커를 위치에 배치하기,
+liminal_see_fight_select_3,liminal_planet_select,$global.liminalRemainingPlanets == 2,,,liminal_faction_see_fight_3:앵커를 위치에 배치하기,
+liminal_see_fight_select_4,liminal_planet_select,$global.liminalRemainingPlanets == 1,,,liminal_faction_see_fight_4:앵커를 위치에 배치하기,
+liminal_faction_see_fight_1,DialogOptionSelected,$option == liminal_faction_see_fight_1,"SetTextHighlightColors ""255,165,0,255""
+SetTextHighlights ""they're drawing power directly from the wound""
+Liminal_AttackPlanetInteraction","뒤틀린 프리깃들의 거대한 무리가 맞서러 올라옵니다.
+
+함대가 접근하자, 대부분이 민간 셔틀임을 알아챕니다 - 침략 함대에 합류할 자격이 없다고 여겨진 낙오자들입니다. 하지만 그들은 현실의 상처 주위로 마치 벌레처럼 떼 지어 몰려듭니다.
+
+가까이 다가오자 센서 담당관의 목소리가 잠깁니다. ""$PlayerSirOrMadam... 저것들은 보통 셔틀이 아니에요. 무기 장착부... 에너지 수치... 상처에서 직접 에너지를 끌어오고 있어요.""
+
+엔티티가 버린 것들일지 몰라도, 그 힘의 원천과 이렇게 가까운 곳에서는 버려진 것들조차 치명적입니다. 함대가 전투 준비를 갖춥니다.",,
+liminal_faction_see_fight_2,DialogOptionSelected,$option == liminal_faction_see_fight_2,"SetTextHighlightColors ""255,165,0,255""
+SetTextHighlights ""draw power directly from the wound""
+Liminal_AttackPlanetInteraction","뒤틀린 프리깃들의 거대한 무리가 맞서러 올라옵니다.
+
+접근하자, 이 무리가 이전에 맞닥뜨렸던 것과 다르다는 것을 알아챕니다. 설계 자체가 전투를 위한 것입니다. 엔티티의 종복들이 학습하고 있습니다. 지난번에는 허를 찔렸을지 모르지만, 각 행성마다 더욱 만만치 않아질 것 같습니다.
+
+""$PlayerSirOrMadam, 이번 방어선은 지난번과 다르지만, 여전히 상처에서 직접 에너지를 끌어오고 있어요.""
+
+그들은 벌레처럼 떼 지어 달려들지만, 벌레도 적응합니다. 함대가 전투 준비를 갖춥니다.",,
+liminal_faction_see_fight_3,DialogOptionSelected,$option == liminal_faction_see_fight_3,"SetTextHighlightColors ""255,165,0,255""
+SetTextHighlights ""Twisted melodies surround you""
+Liminal_AttackPlanetInteraction","처음에는 함선이 몇 척뿐인 것을 보고 안도합니다. 몇 척쯤이야, 전함급이라도 별 문제가 없어야 합니다.
+
+그런데 더 가까이 다가오자 이 함선들을 알아보게 됩니다. 일반 대중에게는 알려지지 않았을지 몰라도, 당신이 유일무이하다고 생각했던 것들입니다.
+
+지구라트들. 한 척이 아니라, 여러 척. 그리고 지금까지 맞선 모든 것들과 마찬가지로 상처의 힘을 온전히 받고 있습니다.
+
+""어떻게...,"" 옆에서 목소리가 들립니다. ""그게 아니었나요...?""
+
+뒤틀린 선율들이 당신을 감쌉니다. 이미 익숙해진 줄 알았던 그 이상함에 의해 왜곡된 채. 처음으로, 주위의 모든 이들도 그것을 듣고 있음을 압니다.
+
+함대가 전투 준비를 갖춥니다.",,
+liminal_faction_see_fight_4,DialogOptionSelected,$option == liminal_faction_see_fight_4,"SetTextHighlightColors ""255,165,0,255""
+SetTextHighlights ""Your fleet readies for battle""
+Liminal_AttackPlanetInteraction","함대가 맞서러 올라옵니다. 이전의 모든 행성들과 달리, 이번에는 그 단어가 정확히 맞습니다.
+
+친숙한 함선들의 뒤틀린 반영을 보는 것에 결코 익숙해지지 못할 수도 있지만, 적어도 그것들과 싸우는 것에는 익숙해졌습니다. 앵커는 준비되었습니다.
+
+함대가 전투 준비를 갖춥니다.",,
+liminal_leave_option,LiminalLeaveOption,,,,liminal_leave:떠나기,
+liminal_faction_planet_non_staging,MarketPostOpen,"$faction.id == liminal
+$hasMarket score:10000","$tradeMode = NONE 0
+ShowImageVisual liminal_planet
+SetTextHighlightColors bad bad bad
+SetTextHighlights ""wrong"" ""no longer fully human"" ""There is little to do here""
+FireBest MarketPostDock","표면적으로는 모든 것이 정상처럼 보이지만, 착륙하면 모든 것이 잘못되어 있다는 것을 깨닫게 됩니다. 건물은 안에서 보면 더 크고, 구조물들은 어디에도 동시에 연결되며, 주민들은 더 이상 완전한 인간이 아님을 시사하는 방식으로 움직입니다. 여기서 할 수 있는 일은 거의 없습니다.",,
+,,,,,,
+,,,,,,
+liminal_begin_fleet_encounter,BeginFleetEncounter,!$player.liminal_begin_fleet_encounter score:10000,"$player.liminal_begin_fleet_encounter = true 0
+Liminal_FleetEncounter
+FireBest BeginFleetEncounter ",,,
+,,,,,,
+liminal_galatia_fightboss,PopulateOptions,"$id == station_galatia_academy
+Liminal_CanFightBoss",,"엘나가 당신에게 성큼성큼 다가옵니다. ""준비되셨나요?"" 그녀가 묻습니다.",99:liminal_galatia_fightboss_begin:엘나와 함께 가기,
+liminal_galatia_fightboss_begin,DialogOptionSelected,$option == liminal_galatia_fightboss_begin,"ShowImageVisual liminal_liminality_bad
+SetTextHighlightColors ""255,165,0,255"" ""255,165,0,255"" ""255,165,0,255"" ""255,165,0,255"" bad ""255,165,0,255"" ""255,165,0,255"" ""255,165,0,255""
+SetTextHighlights ""Liminality"" ""the Avatar of the Entity"" ""the Entity's"" ""Liminality"" ""all planets under the Entity's control will be destroyed"" ""the Entity"" ""Liminality"" ""Avatar"" ""The Entity's""
+Liminal_AttackBossInteraction","엘나가 리미널리티로 당신을 안내합니다. 테서랙트가 불길한 주황색 광채로 맥동하고, 그 주위의 공기가 물결치듯 일렁이며 뒤틀립니다. ""다리가 준비됐어요,"" 그녀가 조용히 말합니다. ""차원 사이의 공간으로 임시 연결을 만들 거예요. 거기에 들어가면 엔티티의 아바타를 찾아서 파괴해야 해요. 엔티티의 연결을 우리 우주에 묶어두는 마지막 고리예요.""
+
+그녀가 리미널리티 주위의 뒤틀린 공간을 바라보며 망설입니다. ""기억하세요 - 이 연결을 끊으면, 엔티티의 통제 아래 있는 모든 행성이 파괴될 거예요. 피할 방법이 없어요. 오염이 너무 깊이 침투해 있어요.""
+
+""하지만 지금 하지 않으면,"" 그녀가 목소리를 굳히며 계속합니다. ""엔티티는 더욱 강해질 거예요. 연결을 유지할 방법을 찾아내고, 영향력을 확장할 거예요. 이것이 우리의 유일한 기회예요.""
+
+그녀가 리미널리티를 활성화하자, 눈앞에 주황빛 소용돌이 포탈이 열립니다. 그 너머로 묘사조차 불가능한 공간이 보입니다 - 현실 자체가 휘고 뒤틀리는 곳. 저 멀리, 존재해서는 안 될 무언가로 �쳐진 수많은 함선들로 이루어진 거대한 형체가 꿈틀거립니다.
+
+""저게 아바타예요,"" 엘나가 말합니다. ""우리 우주 속의 엔티티의 현현이에요. 파괴하면 마침내 연결을 끊을 수 있어요.""
+
+함대가 최후의 전투를 위해 준비를 갖춥니다.",,
+liminal_warning_one,liminal_warning_one,,"ShowImageVisual liminal_liminality
+SetTextHighlightColors ""255,165,0,255"" ""155,255,0,255"" ""155,255,0,255"" ""255,165,0,255"" ""255,165,0,255"" ""155,255,0,255""
+SetTextHighlights ""Liminality"" ""Instructions"" ""Instructions"" ""Liminality"" ""Liminality"" ""Instructions""
+$global.liminal_warning_one = true","""$PlayerSirOrMadam! 놀라운 돌파구를 마련했어요!"" 엘나의 눈이 흥분으로 빛나지만, 표정 어딘가에 다른 무언가의 기색이 있습니다. ""리미널리티가 저희의 인스트럭션에 예상치 못한 방식으로 반응하고 있어요. 행동 패턴에서 그것이... 학습하고 있다는, 연구에 적응하고 있다는 것을 시사하는 패턴이 보여요.""
+
+""정말 매혹적이에요!"" 야른이 늘 그렇듯 열정적으로 덧붙입니다. ""저희가 사용하는 인스트럭션들이 점점 더 효율적이고 강력해지고 있어요. 마치 리미널리티가 자신을 더 잘 이해하도록 도와주는 것 같아요. 그리고 정말 멋진 것을 발견했어요 - 리미널리티는 단순히 다른 우주에서 온 것이 아니라, 실제로 테서랙트예요! 4차원 물체가 우리의 초라한 3차원에 투영된 것이죠. 뭐, 기술적으로는 시간이 있으니 모든 것이 4차원 물체의 투영이라고 할 수 있지만, 이것은 다른 종류의 투영이에요!""
+
+""그런데 몇 가지 이상 현상이 있어요,"" 엘나가 약간 신중한 어조로 계속합니다. ""가끔 리미널리티가 저희가 인스트럭션을 다 적기도 전에 반응하는 것 같아요. 그리고 에너지 수치가 점점 더 불규칙해지고 있어요. 하지만 그건 그냥 학습 과정의 일부겠죠, 그렇죠?""
+
+""맞아요!"" 야른이 활발히 고개를 끄덕입니다. ""저희는 가능한 것의 경계를 밀어붙이고 있어요. 에너지 스파이크 몇 번이야 걱정할 것 없어요.""","liminal_warning_one_continue:계속",
+liminal_warning_one_continue,DialogOptionSelected,$option == liminal_warning_one_continue,"SetTextHighlightColors ""155,255,0,255"" ""155,255,0,255""
+SetTextHighlights ""Instructions"" ""Instructions""
+Liminal_AddRP 15
+Liminal_ShowAndCreatePerson liminal_elna","""글쎄요,"" 엘나가 완전히 납득하지 못한 듯한 어조로 말합니다. ""어쨌든, 조만간 새로운 인스트럭션을 테스트할 수 있을 것 같아요.""
+
+""하지만 한 가지... 복잡한 문제가 생겼어요,"" 그녀가 계속합니다. ""추가 진전을 이루는 데 필요한 자원 요구량이 늘었어요. 안정성을 유지하려면 최소 연구 투자액을 올려야 해요.""
+
+""하지만 엄청난 진전을 이루고 있어요!"" 야른이 끼어듭니다. ""구조 속에 삽입된 다른 인스트럭션들의 단편을 찾았어요. 저희가 만든 것보다 훨씬 복잡한 것들이에요.""","liminal_leave:떠나기",
+liminal_warning_two,liminal_warning_two,,"ShowImageVisual liminal_liminality
+SetTextHighlightColors ""255,165,0,255"" ""155,255,0,255"" ""155,255,0,255""
+SetTextHighlights ""Liminality's"" ""Instructions"" ""Instructions""","""$PlayerSirOrMadam, 드릴 말씀이 있어요,"" 엘나가 평소와 다르게 진지한 목소리로 말합니다. ""리미널리티의 행동이 점점... 우려스러워지고 있어요. 에너지 수치가 차트를 벗어났고, 스스로 인스트럭션을 생성하기 시작했어요. 연구를 중단해야 한다고 생각해요.""
+
+""중단이요? 지금요? 이해하기 직전인데요?"" 야른의 목소리가 믿기지 않는다는 듯합니다. ""그냥 저희를 더 효율적으로 돕게 된 거잖아요! 저희가 이룬 것을 봐요 - 아무도 꿈꾸지 못했던 방식으로 가능한 것의 경계를 밀어붙였잖아요!""
+
+""내가 보는 것을 오빠는 못 보고 있어요,"" 엘나가 날카롭게 답합니다. ""그것이 생성하는 인스트럭션들... 우리 것과 달라요. 더 복잡하고, 더 강력해요. 그리고 뭔가를 하려는 것 같아요.""","liminal_warning_two_continue:계속",
+liminal_warning_two_continue,DialogOptionSelected,$option == liminal_warning_two_continue,"SetTextHighlightColors ""255,165,0,255"" ""255,165,0,255""
+SetTextHighlights ""Liminality"" ""Liminality""
+Liminal_ShowAndCreatePerson liminal_jarn
+$global.liminal_warning_two = true","""그래도 계속 밀고 나가고 싶으시다면,"" 엘나가 약간 목소리를 누그러뜨리며 계속합니다. ""준비를 해야 해요. 무슨 일이 일어날지 모르겠지만, 뭔가 불길한 예감이 들어요. 리미널리티가... 무언가를 기다리고 있는 것 같아요. 어딘가 다른 곳과 연결되고 있고, 그 어딘가가 좋은 곳이 아닌 것 같아요.""
+
+""너무 예민하게 구는 거야,"" 야른이 말합니다. ""리미널리티는 그냥 도구야, 현실들 사이의 다리. 그걸 통제하는 건 우리지, 반대가 아니야.""
+
+""그러길 바라요,"" 엘나가 조용히 말합니다. ""하지만 무슨 일이 생긴다면... 뭐, 그냥 준비가 되어 있으면 좋겠어요.""","liminal_warning_two_continue2:계속",
+liminal_warning_two_continue2,DialogOptionSelected,$option == liminal_warning_two_continue2,"SetTextHighlightColors ""255,165,0,255"" ""155,255,0,255""
+SetTextHighlights ""Liminality"" ""Instructions""
+Liminal_AddRP 15","""억지로 멈추게 할 수는 없어요. 이것이 우리 연구의 전부고, 거의 다 왔는데요,"" 엘나가 말합니다. ""그냥 멈출 가능성을 생각해봐 달라는 거예요. 기호들, 인스트럭션들 - 물리 법칙을 다시 쓰는 언어예요. 하지만 저희는 그 중 아주 작은 조각만 보고 있어요. 안으로 들어오려는 것이 언어 전체를 만든 거예요.""","liminal_leave:경고를 받아들이고 떠나기",
+liminal_crisis_begin,liminal_crisis_begin,,"ShowImageVisual liminal_liminality_bad
+SetTextHighlightColors ""255,165,0,255"" ""255,165,0,255""
+SetTextHighlights ""Liminality"" ""the Entity""
+$global.liminal_crisis_begin = true","""$PlayerSirOrMadam..."" 엘나의 목소리가 거의 속삭임입니다. 눈이 빨갛게 부어 있고, 며칠 동안 잠을 못 잔 것 같습니다. ""리미널리티가... 불안정해졌어요. 야른이... 그가..."" 그녀가 깊게 떨리는 숨을 내쉽니다. ""일이 벌어졌을 때 너무 가까이 있었어요. 에너지 수치가 차트를 벗어났고, 그 다음에..."" 그녀의 말이 끊깁니다.
+
+""겨우 통제를 되찾았지만..."" 그녀가 불길한 주황색 광채로 맥동하는 떠 있는 테서랙트를 바라봅니다. ""이제 단순한 다리가 아니에요. 무언가가 통과하려 하고 있어요. 엔티티라고 불리는 것이. 그 침략 함대들이 이미 돌파하여 행성들을 장악하려 하고 있어요.""","liminal_crisis_begin_continue:계속",
+liminal_crisis_begin_continue,DialogOptionSelected,$option == liminal_crisis_begin_continue,"SetTextHighlightColors ""255,165,0,255"" ""155,255,0,255""
+SetTextHighlights ""Liminality"" ""reality anchors""
+Liminal_ShowAndCreatePerson liminal_elna","""이미 시작됐어요. 네 곳의 거점을 탐지했어요 - 엔티티가... 오염시킨 행성들이요. 행성 자체가 변형되고, 다른 무언가로 뒤틀리고 있어요.""
+
+""하지만 막을 기회가 있어요. 리미널리티를 통제하고 안정시키려는 과정에서 현실 앵커들을 개발했어요 - 현실의 규칙을 강제하는 장치들이에요. 거점들의 중심에 충분히 가까이 가져갈 수 있다면, 현실의 균열들이 붕괴하고 엔티티는 교두보를 잃게 돼요.""","liminal_crisis_begin_continue2:계속",
+liminal_crisis_begin_continue2,DialogOptionSelected,$option == liminal_crisis_begin_continue2,"SetTextHighlightColors ""255,165,0,255"" ""255,165,0,255"" ""255,165,0,255""
+SetTextHighlights ""The Entity's"" ""the Entity's"" ""Servents of the Entity""
+Liminal_ShowAndCreatePerson liminal_elna","""엔티티의 함선들이 다른 차원에서 직접 에너지를 끌어오고 있어요. 이제 단순한 함선이 아니에요 - 엔티티의 의지의 연장선이에요. 엔티티의 종복들이죠. 충분히 많이 파괴하면 엔티티의 우주 연결을 약화시킬 수 있어요. 하지만 이건 임시방편일 뿐이에요, 거점들을 파괴해야 해요."" 그녀가 끼어들려는 모든 시도를 무시합니다. 남동생의 죽음을 마주하기 두렵고, 당신이 그것에 대해 물어보면 현실이 될까 봐 두려운 것입니다.
+
+""빨리 행동해야 해요. 기다릴수록 더 많은 행성이 잠식당할 거예요. 침략 함대들은... 전통적인 의미로 침략하지 않아요. 오염시키고, 변형시키고, 닿는 모든 것을 엔티티의 영역으로 만들어요. 그런 일이 일어나게 둘 수 없어요.""
+
+""제발..."" 그녀의 목소리가 갈라집니다. ""야른은 이 연구를 믿었어요. 선한 가능성을 믿었어요. 그의 죽음이 헛되이 되게 둘 수 없어요. 이것을 막아야 해요.""","liminal_crisis_begin_continue3:계속",
+liminal_crisis_begin_continue3,DialogOptionSelected,$option == liminal_crisis_begin_continue3,"SetTextHighlightColors ""255,165,0,255"" ""255,165,0,255""
+SetTextHighlights ""the Entity's"" ""Liminality""
+Liminal_ShowAndCreatePerson liminal_elna
+Liminal_AddRP 25","""현실 앵커들이 준비됐어요. 배치할 사람이 필요할 뿐이에요. 엔티티의 방어선을 뚫고 싸울 수 있는 사람. 불가능한 것도 감당할 수 있는 사람.""
+
+""그 사람이 바로 함장님이에요.""
+
+""거점들이 지도에 표시되어 있어요. 각각 철저히 방어될 거예요. 엔티티는 우리가 하려는 것을 알고 있고, 반격해올 거예요. 하지만 이 균열들을 봉합할 수 있다면, 엔티티의 우주 연결을 끊어낼 수 있다면..."" 그녀가 리미널리티를 바라보며 표정을 굳힙니다. ""그러면 야른에게 무슨 짓을 했는지 대가를 치르게 할 수 있을 거예요.""","liminal_leave:임무를 수락하기",
+liminal_crisis_progress,liminal_crisis_progress,,"ShowImageVisual liminal_liminality_bad
+SetTextHighlightColors ""255,165,0,255"" ""155,255,0,255"" ""255,165,0,255"" ""255,165,0,255""
+SetTextHighlights ""reality anchors"" ""the Entity's"" ""The Entity"" ""The Entity's""
+$global.liminal_crisis_progress = true
+Liminal_AddRP 25","""$PlayerSirOrMadam, 진전을 이루고 있어요!"" 엘나의 목소리에 조심스러운 낙관이 섞입니다. ""현실 앵커들이 의도대로 작동하고 있어요. 파괴하는 거점마다 엔티티의 우주 지배력이 약해지고 있어요.""
+
+""하지만..."" 그녀가 망설이며 표정이 어두워집니다. ""엔티티가 반격하고 있어요. 가진 모든 것을 쏟아붓고 있어요. 침략 함대들의 빈도는 줄었지만 더 공격적이 됐어요. 함선들이 더 강해졌어요. 우리가 하려는 것을 알고 있어요.""
+
+""좋아지기 전에 더 나빠질 거예요,"" 그녀가 계속합니다. ""하지만 이기고 있어요. 엔티티의 지배력이 약해지고 있어요. 조금만 더 버티면 돼요.""","liminal_leave:계속",
+liminal_crisis_end,liminal_crisis_end,,"ShowImageVisual liminal_liminality_bad
+SetTextHighlightColors ""255,165,0,255"" ""255,165,0,255"" ""255,165,0,255"" ""255,165,0,255"" ""255,165,0,255"" ""255,165,0,255""
+SetTextHighlights ""The Entity"" ""The Entity's"" ""Liminality"" ""Avatar of the Entity"" ""Liminality"" ""the Entity""
+$global.liminal_crisis_end = true
+Liminal_ShowAndCreatePerson liminal_elna","""$PlayerSirOrMadam!"" 실험실에 들어서자 엘나의 목소리가 긴박하게 들립니다. ""해냈어요! 거점들이 사라졌어요. 우리 우주에서 엔티티의 교두보들이 파괴됐어요.""
+
+""하지만 마지막으로 해야 할 일이 하나 있어요,"" 그녀가 진지한 표정으로 계속합니다. ""엔티티의 우주 연결이 완전히 끊어지지 않았어요. 리미널리티 자체를 통해 아직 붙잡고 있어요. 그 마지막 실을 잘라야 해요.""
+
+""연결을 추적했고,"" 그녀가 설명합니다. ""어디로 이어지는지 알아요. 차원 사이 어딘가에 엔티티의 아바타가 연결을 붙들고 있어요. 리미널리티를 사용해 그 공간으로 임시 다리를 만들 수 있지만...""
+
+그녀가 빛나는 테서랙트를 바라보며 망설입니다. ""연결을 끊으면, 엔티티가 지배하는 모든 행성이 파괴될 거예요. 오염이 정화되겠지만, 쉽지는 않을 거예요. 준비되셨나요?""","liminal_crisis_end_continue:고개를 끄덕이기",
+liminal_crisis_end_continue,DialogOptionSelected,$option == liminal_crisis_end_continue,"Liminal_AddRP 25
+SetTextHighlightColors hl
+SetTextHighlights ""Galatia Academy""
+Liminal_ShowAndCreatePerson liminal_elna","""좋아요,"" 엘나가 고개를 끄덕입니다. ""준비가 되시면, 갈라티아 아카데미로 돌아오세요.""","liminal_leave:계속",
+,,,,,,

@@ -1,0 +1,24 @@
+fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
+liminal_settingsHeader,리미널 헤더,Header,Liminal,,,,,
+liminal_rpmult,연구 포인트(RP) 획득량,Int,4,,리미널 이벤트 단계 완료 시 획득하는 연구 포인트 수. 소급 적용 안 됨. 아래 위기 시작 설정을 변경할 때 함께 조정하는 것을 권장합니다.,0,15,
+liminal_costmulttemplate,템플릿 비용 배율,Double,1.0,,[밸런스 대폭 변경] 리미널 템플릿 월별 크레딧 비용의 배율.,0,5.0,
+liminal_templateopmult,템플릿 OP 배율,Double,1.0,,[밸런스 대폭 변경] 템플릿 내에 담을 수 있는 인스트럭션 OP량의 배율.,0.2,2.0,
+,,,,,,,,
+liminal_crisisHeader,위기 헤더,Header,리미널 위기,,,,,
+liminal_crisis_enabled,위기 활성화,Boolean,true,,리미널 최종 엔드게임 위기 활성화 여부.,,,
+liminal_crisis_begins,위기 RP 시작 기준,Int,300,,위기가 시작되기까지 필요한 RP 수.,0,3000,
+liminal_crisis_difficulty,위기 난이도,Radio,Standard,"Easy, Standard, Hard","위기 난이도. 난이도가 높을수록 컴퓨터 자원을 더 많이 사용합니다. 최고 설정은 좋은 컴퓨터를 권장합니다. 권장 사항:
+- 쉬움: 바닐라
+- 표준: 균형 잡힌 모드 50~100개
+- 어려움: 불균형 모드 200개 이상",,,
+,,,,,,,,
+liminal_bossHeader,보스 헤더,Header,리미널 위기 보스,,,,,
+liminal_boss_compute,보스 컴퓨터 사용량,Double,0.4,,"[재시작하지 않으면 버그 발생] 최종 보스의 연산 집약도. 낮을수록 보스 규모는 줄어들지만 전체 난이도는 비슷하거나 약간 높아집니다. 0.5 초과 값은 권장하지 않습니다.",0.1,1.0,
+liminal_boss_difficulty,보스 난이도,Radio,Standard,"Easy, Standard, Hard","[재시작하지 않으면 버그 발생] 보스 난이도. 난이도가 높을수록 약간 더 많은 컴퓨터 자원을 사용합니다. 권장 사항:
+- 쉬움: 바닐라
+- 표준: 균형 잡힌 모드 50~100개
+- 어려움: 불균형 모드 200개 이상",,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
