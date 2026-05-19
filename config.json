@@ -32,6 +32,14 @@
         "scripts/patch_mod_jar.py",
         "scripts/translate_nex_rules_options.py"
       ]
+    },
+    {
+      "id":      "liminal",
+      "enabled": true,
+      "mod_jar": "jars/Liminal.jar",
+      "post_build": [
+        "scripts/patch_mod_jar.py"
+      ]
     }
   ],
   "pipelines": {
