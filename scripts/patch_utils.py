@@ -31,6 +31,19 @@ from pathlib import Path
 from typing import Optional
 
 
+def _fresh_zip_info(info: zipfile.ZipInfo) -> zipfile.ZipInfo:
+    """소스 ZipInfo에서 필수 필드만 복사한 새 ZipInfo 반환.
+
+    원본 info.extra에는 소스 JAR의 오프셋/크기를 담은 Zip64 확장 필드가 포함될 수 있음.
+    이를 그대로 복사하면 새 파일의 LOC 헤더가 오염되어 JVM이 'invalid LOC header' 오류를 냄.
+    extra를 포함하지 않는 신선한 ZipInfo를 생성해 이를 방지.
+    """
+    new_info = zipfile.ZipInfo(info.filename)
+    new_info.compress_type = info.compress_type
+    new_info.date_time = info.date_time
+    return new_info
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Java Modified UTF-8 디코딩/인코딩
 # ──────────────────────────────────────────────────────────────────────────────
@@ -340,7 +353,7 @@ def patch_jar(
             if info.filename.endswith('.class'):
                 total += 1
                 if is_blocked_class(info.filename, blocked_classes):
-                    dst_zip.writestr(info, data)
+                    dst_zip.writestr(_fresh_zip_info(info), data)
                     continue
                 # 클래스별 핀포인트 번역: 전역 사전 + 해당 클래스 사전 병합
                 # class_translations 항목이 전역 사전보다 우선(덮어씀)
@@ -351,12 +364,12 @@ def patch_jar(
                     cls_trans = effective_translations
                 result = rebuild_class(data, cls_trans)
                 if result is not None:
-                    dst_zip.writestr(info, result)
+                    dst_zip.writestr(_fresh_zip_info(info), result)
                     patched += 1
                     continue
 
             # Non-class files (META-INF, resources) → copy as-is
-            dst_zip.writestr(info, data)
+            dst_zip.writestr(_fresh_zip_info(info), data)
 
     if in_place:
         import os
