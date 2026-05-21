@@ -285,6 +285,12 @@ def translate_csv_file(filepath: Path, translations: dict) -> bool:
                 if cell in translations:
                     new_row[i] = translations[cell]
                     changed = True
+                elif (len(cell) >= 2
+                      and cell[0] == '"' and cell[-1] == '"'
+                      and cell[1:-1] in translations):
+                    # text 컬럼처럼 게임 스크립트 문법상 따옴표가 값에 포함된 경우
+                    new_row[i] = '"' + translations[cell[1:-1]] + '"'
+                    changed = True
         new_rows.append(new_row)
 
     if not changed:

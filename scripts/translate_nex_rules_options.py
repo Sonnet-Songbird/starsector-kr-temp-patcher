@@ -17,6 +17,8 @@ import re
 import sys
 from pathlib import Path
 
+_ADDTEXT_RE = re.compile(r'(AddText(?:Small)?\s+")(.*?)(")', re.DOTALL)
+
 sys.path.insert(0, str(Path(__file__).parent))
 from patch_utils import load_config, load_exclusions, resolve_path
 
@@ -64,6 +66,26 @@ def _split_option_line(line: str):
 
     # Unknown format — treat whole line as text
     return (hash_prefix, s)
+
+
+def _translate_script_addtext(cell: str, translations: dict):
+    """
+    script 컬럼 셀에서 AddText/AddTextSmall 명령의 quoted 인수만 번역.
+    반환: (new_cell, changed: bool)
+    """
+    changed = False
+
+    def replace_match(m):
+        nonlocal changed
+        inner = m.group(2)
+        translated = translations.get(inner, inner)
+        if translated != inner:
+            changed = True
+            return m.group(1) + translated + m.group(3)
+        return m.group(0)
+
+    new_cell = _ADDTEXT_RE.sub(replace_match, cell)
+    return new_cell, changed
 
 
 def translate_options_cell(cell: str, translations: dict):
@@ -144,25 +166,35 @@ def main():
 
         headers = rows[0]
         options_col = None
+        script_col = None
         for i, h in enumerate(headers):
-            if h.strip().lower() == 'options':
+            h_lower = h.strip().lower()
+            if h_lower == 'options':
                 options_col = i
-                break
+            elif h_lower == 'script':
+                script_col = i
 
-        if options_col is None:
-            print(f'  {rules_path.name}: options 컬럼 없음 — 건너뜀')
+        if options_col is None and script_col is None:
+            print(f'  {rules_path.name}: options/script 컬럼 없음 — 건너뜀')
             continue
 
         changed_cells = 0
         new_rows = [headers]
         for row in rows[1:]:
             new_row = list(row)
-            if options_col < len(new_row) and new_row[options_col].strip():
+            if options_col is not None and options_col < len(new_row) and new_row[options_col].strip():
                 new_cell, was_changed = translate_options_cell(
                     new_row[options_col], translations
                 )
                 if was_changed:
                     new_row[options_col] = new_cell
+                    changed_cells += 1
+            if script_col is not None and script_col < len(new_row) and new_row[script_col].strip():
+                new_cell, was_changed = _translate_script_addtext(
+                    new_row[script_col], translations
+                )
+                if was_changed:
+                    new_row[script_col] = new_cell
                     changed_cells += 1
             new_rows.append(new_row)
 
